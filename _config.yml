@@ -231,3 +231,5 @@ emails:
   price: "$29"
   count: 54
   buy_link: https://tabler.io/buy-emails
+
+host: '0.0.0.0'
