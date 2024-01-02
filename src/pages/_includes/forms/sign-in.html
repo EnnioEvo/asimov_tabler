@@ -1,23 +1,18 @@
-<form action="{{ site.base }}/" method="get" autocomplete="off" novalidate>
+<form action="http://127.0.0.1:8000/token" method="post" autocomplete="off" novalidate>
 	<div class="mb-3">
 		<label class="form-label">Indirizzo email</label>
-		<input type="email" class="form-control" placeholder="latua@email.com" autocomplete="off">
+		<input type="email" class="form-control" name="username" placeholder="latua@email.com" autocomplete="off">
 	</div>
 	<div class="mb-2">
 		<label class="form-label">
 			Password
 			<span class="form-label-description">
-					<a href="{{ site.base }}/forgot-password.html">Password dimenticata</a>
-				</span>
+				<a href="{{ site.base }}/forgot-password.html">Password dimenticata</a>
+			</span>
 		</label>
-		{% include ui/form/input-group.html type="password" append-button="eye:Mostra password" flat=true placeholder="La tua password" %}
+		<input type="password" class="form-control" name="password" placeholder="La tua password" autocomplete="off">
 	</div>
-<!--	<div class="mb-2">-->
-<!--		<label class="form-check">-->
-<!--			<input type="checkbox" class="form-check-input"/>-->
-<!--			<span class="form-check-label">Remember me on this device</span>-->
-<!--		</label>-->
-<!--	</div>-->
+	<!-- Additional fields or checkboxes can be added here if needed -->
 
 	<div class="form-footer">
 		<button type="submit" class="btn btn-primary w-100">Entra</button>
