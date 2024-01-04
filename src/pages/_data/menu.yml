@@ -1,7 +1,8 @@
 home:
   url: ""
-  title: Home
-  icon: home
+  title: Progetti
+  title-long: Progetti
+  icon: files
 
 #base:
 #  title: Inter faccia
@@ -181,11 +182,11 @@ home:
 #      url: tinymce.html
 #      badge: New
 
-forms:
-  url: lists.html
-  title: Progetti
-  title-long: Progetti
-  icon: files
+#forms:
+#  url: lists.html
+#  title: Progetti
+#  title-long: Progetti
+#  icon: files
 
 #extra:
 #  title: Extra
@@ -324,8 +325,8 @@ forms:
 #  url: icons.html
 
 emails:
-  title: "Crediti"
-  icon: coin-euro
+  title: "Account"
+  icon: settings
   url: settings.html
 
 help:
