@@ -1,5 +1,11 @@
 home:
   url: ""
+  title: Home
+  title-long: Home
+  icon: home
+
+projects:
+  url: projects.html
   title: Progetti
   title-long: Progetti
   icon: files
