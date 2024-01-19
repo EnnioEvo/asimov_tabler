@@ -8,7 +8,7 @@
 			<div class="text-secondary">
 				Mostra
 				<div class="mx-2 d-inline-block">
-					<input type="text" class="form-control form-control-sm" value="20" size="3" aria-label="Invoices count">
+					<input type="text" class="form-control form-control-sm" value="20" size="3" aria-label="DDLs count">
 				</div>
 				elementi
 			</div>
@@ -16,7 +16,7 @@
 			<div class="ms-auto text-secondary">
 				Search:
 				<div class="ms-2 d-inline-block">
-					<input type="text" class="form-control form-control-sm" aria-label="Search invoice">
+					<input type="text" class="form-control form-control-sm" aria-label="Search ddl">
 				</div>
 			</div>
 		</div>
@@ -24,74 +24,228 @@
 	</div>
 	<div class="table-responsive">
 
-		<table class="table card-table table-vcenter text-nowrap datatable" >
+		<table class="table card-table table-vcenter text-nowrap datatable">
 			<thead>
 			<tr>
-				<th class="w-1"><input class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select all invoices"></th>
 				<th class="w-1">No. {% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}</th>
-				<th>Ramo</th>
-				<th>Titolo</th>
-				<th>Presentatore</th>
-				<th>Gruppo</th>
-				<th>Status</th>
-				<th>Ultimo agg.</th>
-				<th></th>
+				<th> Ramo {% include parts/dropdown/filter_ramo.html %}</th>
+				<th>Titolo {% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}</th>
+				<th>1º firm. {% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {% include
+					parts/dropdown/filter_actions.html %}
+				</th>
+				<th>Gruppo {% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {% include
+					parts/dropdown/filter_actions.html %}
+				</th>
+				<th>Stato {% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {% include
+					parts/dropdown/filter_stato.html %}
+				</th>
+				<th>Ultimo agg. {% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {% include
+					parts/dropdown/filter_actions.html %}
+				</th>
+
+				<th>Segui</th>
 			</tr>
+
 			</thead>
+			<style>
+				/* Style for regular td elements */
+				.table td {
+					max-width: 10em; /* Set a default maximum width for td elements */
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+
+				/* Style for long_td elements that inherit from the regular td style */
+				.table td.long_td {
+					max-width: 400px; /* Set a longer maximum width for elements with the 'long_td' class */
+				}
+			</style>
 
 			<tbody>
 			{% for invoice in site.data.invoices limit: 8 %}
 			<tr>
-				<td><input class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select invoice"></td>
-				<td><span class="text-secondary">00{{ forloop.index | plus: 1400 }}</span></td>
-				<td><a href="invoice.html" class="text-reset" tabindex="-1">{{ invoice.name }}</a></td>
-				<td>
-					{% include ui/flag.html flag=invoice.country size="xs" class="me-2" %}{{ invoice.client }}
+				<td>926</span></td>
+				<td>S</td>
+				<td class="long_td">
+					Ratifica ed esecuzione dell'Accordo tra la Repubblica italiana e ...
 				</td>
 				<td>
-					{{ invoice.vat-no }}
+					Giancarlo Giorgetti
 				</td>
 				<td>
-					{{ invoice.date }}
+					PD
 				</td>
 				<td>
-					<span class="badge bg-{{ invoice.status }} me-1"></span> {{ invoice.status-name }}
+					<span class="badge bg-green me-1"></span>
 				</td>
-				<td>{{ invoice.price }}</td>
+				<td> 15 Gen 24</td>
 
 				<td class="text-end">
-					<span class="dropdown">
-						<button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Azioni</button>
-						{% include ui/dropdown-menu.html right=true %}
-					</span>
+					<a href="#" class="btn w-100 btn-icon" aria-label="Non seguire">
+						{% include ui/icon.html icon="plus"%}
+					</a>
 				</td>
 			</tr>
-<!--			<tr style="border-bottom: 1px solid rgba(204, 204, 204, 0.5);">-->
-<!--				<td colspan="9">looooooooooooooooooooooooooooooooooooooooong text</td>-->
-<!--			</tr>-->
-<!--			<style>-->
-<!--				table {-->
-<!--					border-collapse: collapse;-->
-<!--					width: 100%;-->
-<!--				}-->
-
-<!--				td {-->
-<!--					border: none; /* Set the default border for th and td */-->
-<!--					padding: 8px;-->
-<!--					text-align: left;-->
-<!--				}-->
-
-<!--				tr:not(:first-child) {-->
-<!--					border-top: none; /* Remove the top border for all rows except the first child (first row) */-->
-<!--				}-->
-<!--			</style>-->
 
 			{% endfor %}
 			</tbody>
 		</table>
 	</div>
 	<div class="card-footer d-flex align-items-center">
-		<p class="m-0 text-secondary">Showing <span>1</span> to <span>8</span> of <span>16</span> entries</p>
-		{% include ui/pagination.html class="m-0 ms-auto" %}
+		<p class="m-0 text-secondary"> 100 risultati
+			{% include ui/pagination.html class="m-0 ms-auto" %}
+			<span style="width: 2em"></span>
+		<div class="col-6 col-sm-4 col-md-2 col-xl-auto py-3">
+			<a href="#" class="btn w-100 btn-icon btn-primary" aria-label="Aggiorna">
+				{% include ui/icon.html icon="refresh"%}
+			</a>
+		</div>
 	</div>
 </div>
+
+<script>
+
+	function fill_table(data) {
+		var tbody = document.querySelector('tbody');
+		// Remove all children using a loop
+		while (tbody.firstChild) {
+			tbody.removeChild(tbody.firstChild);
+		}
+		var data_debug = [{
+			"id_fase": "57864",
+			"ddl": "http://dati.senato.it/ddl/57864",
+			"titolo": "Conversione in legge del decreto-legge 18 gennaio 2024, n. 4, recante disposizioni urgenti in materia di amministrazione straordinaria delle imprese di carattere strategico",
+			"stato_ddl": "assegnato (no esame)",
+			"data_stato_ddl": "2024-01-19",
+			"tipo_iniziativa": "Governativa",
+			"id_iter": "53411",
+			"assegnazione": null,
+			"relatore": null,
+			"data_presentazione": null,
+			"fase": null,
+			"legislatura": null,
+			"natura": "di conversione di decreto-legge",
+			"numero_fase": "986",
+			"numero_fase_compatto": null,
+			"presentato_trasmesso": "presentato",
+			"progressivo_iter": "1",
+			"ramo": "S",
+			"testo_presentato": "urn:nir:senato.repubblica:disegno.legge:19.legislatura;986",
+			"testo_approvato": null,
+			"primo_firmatario": "1",
+			"senatore": null,
+			"presentatori": 'Sen. Silvio Berlusconi'
+		}];
+
+
+		data.forEach(function (item) {
+			var tr = document.createElement('tr');
+
+			var numero_fase = document.createElement('td');
+			numero_fase.textContent = item.numero_fase;
+			tr.appendChild(numero_fase);
+
+			var ramo = document.createElement('td');
+			ramo.textContent = item.ramo;
+			tr.appendChild(ramo);
+
+			var titolo = document.createElement('td');
+			titolo.textContent = item.titolo;
+			titolo.className = "long_td";
+			tr.appendChild(titolo);
+
+			var presentatori = document.createElement('td');
+			presentatori.textContent = item.presentatori;
+			tr.appendChild(presentatori);
+
+			var gruppo = document.createElement('td');
+			gruppo.textContent = '';
+			tr.appendChild(gruppo);
+
+			var stato_ddl = document.createElement('td');
+			stato_ddl.textContent = item.stato_ddl;
+			tr.appendChild(stato_ddl);
+
+			var data_stato_ddl = document.createElement('td');
+			data_stato_ddl.textContent = item.data_stato_ddl;
+			tr.appendChild(data_stato_ddl);
+
+			// var seguito = item.seguito
+
+			// Continue creating and appending td elements for each piece of data you want to include
+
+			tbody.appendChild(tr);
+		});
+	}
+
+	function fetch_data(order_by) {
+		// Function to get the selected options from the dropdowns
+		function getSelectedOptions(selector) {
+			var selectedOptions = [];
+			document.querySelectorAll(selector + ' input[type=checkbox]:checked').forEach(function (checkbox) {
+				selectedOptions.push(checkbox.value);
+			});
+			return selectedOptions;
+		}
+
+		// Get the limit from the form
+		var limit = document.querySelector('input[aria-label="DDLs count"]').value;
+
+		// Get the keyword from the form
+		var keyword = document.querySelector('input[aria-label="Search ddl"]').value;
+
+		// Assuming you have a pagination element with links and data-page attributes
+		var page = document.querySelector('.pagination .active a').dataset.page || 1;
+
+		// Get the selected options from the dropdowns
+		var options = {
+			// Assuming the dropdowns have class 'dropdown-filter'
+			ramo: getSelectedOptions('div.dropdown-menu'),
+			presentatori: getSelectedOptions('.dropdown-filter.filter_actions'),
+			gruppo: getSelectedOptions('.dropdown-filter.filter_stato'),
+		};
+
+		// Prepare the data for the API request
+		var data = {
+			options: options,
+			order_by: order_by
+		};
+
+		// Perform the API request
+		fetch('http://127.0.0.1:8000/users/me/fetch_personalized_iters/?limit=' + limit + '&keyword=' + keyword + '&page=' + page, {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				// Assuming the token is stored in a meta tag
+				'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		})
+			.then(response => response.json())
+			.then(responseData => {
+				// Handle the response
+				console.log(responseData);
+				fill_table(responseData)
+
+			})
+			.catch(error => {
+				// Handle the error
+				console.error(error);
+			});
+	}
+
+
+	document.addEventListener("DOMContentLoaded", function (){
+		fetch_data({
+		field: "data_stato_ddl",
+		desc: true
+		})
+	});
+
+	// document.addEventListener("DOMContentLoaded", function () {
+	// 	fill_table();
+	// });
+
+</script>
