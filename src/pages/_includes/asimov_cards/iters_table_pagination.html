@@ -13,7 +13,11 @@
    </li>
 
    {% for i in (1..count) %}
-   <li class="page-item{% if i == active-item %} active{% endif %}"><a class="page-link" href="#">{{ i }}</a></li>
+   <li class="page-item{% if i == active-item %} active{% endif %}">
+		<a class="page-link" href="#" onclick="changePage({{ i }}); return false;">
+			{{ i }}
+		</a>
+	</li>
    {% endfor %}
 
    <li class="page-item{% if include.prev-description %} page-next{% endif %}">
@@ -28,3 +32,36 @@
       </a>
    </li>
 </ul>
+
+
+<script>
+
+	// Function to update the class of the active pagination item
+	function updatePaginationUI() {
+		var storedActiveItem = localStorage.getItem('active_item');
+		var activeItem = parseInt(storedActiveItem, 10);
+
+		var paginationItems = document.querySelectorAll('.page-item');
+		paginationItems.forEach(function (item, index) {
+			if (index === activeItem) {
+				item.classList.add('active');
+			} else {
+				item.classList.remove('active');
+			}
+		});
+	}
+
+
+
+	function changePage(newActiveItem) {
+
+		// Update the include variables
+		localStorage.setItem('active_item', newActiveItem);
+		updatePaginationUI(newActiveItem)
+
+		fill_table()
+		return false;
+	}
+
+
+</script>

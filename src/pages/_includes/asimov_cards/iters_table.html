@@ -1,6 +1,11 @@
 <div class="card">
-	<div class="card-header">
+	<div class="card-header d-flex justify-content-between align-items-center" style="height: 5em">
 		<h3 class="card-title">Tutti</h3>
+		<div class="col-6 col-sm-4 col-md-2 col-xl-auto py-3">
+			<a href="#" class="btn w-100 btn-icon" aria-label="Aggiorna">
+				{% include ui/icon.html icon="refresh"%}
+			</a>
+		</div>
 	</div>
 	<div class="card-body border-bottom py-3">
 
@@ -8,13 +13,13 @@
 			<div class="text-secondary">
 				Mostra
 				<div class="mx-2 d-inline-block">
-					<input type="text" class="form-control form-control-sm" value="20" size="3" aria-label="DDLs count">
+					<input id="display_n_results" type="text" class="form-control form-control-sm" value="20" size="3" aria-label="DDLs count">
 				</div>
 				elementi
 			</div>
 
 			<div class="ms-auto text-secondary">
-				Search:
+				Cerca:
 				<div class="ms-2 d-inline-block">
 					<input type="text" class="form-control form-control-sm" aria-label="Search ddl">
 				</div>
@@ -30,11 +35,10 @@
 				<th class="w-1">No. {% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}</th>
 				<th> Ramo {% include parts/dropdown/filter_ramo.html %}</th>
 				<th>Titolo {% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}</th>
-				<th>1º firm. {% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {% include
-					parts/dropdown/filter_actions.html %}
+				<th>1º firm. {% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}
 				</th>
 				<th>Gruppo {% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {% include
-					parts/dropdown/filter_actions.html %}
+					parts/dropdown/filter_gruppo.html %}
 				</th>
 				<th>Stato {% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {% include
 					parts/dropdown/filter_stato.html %}
@@ -65,7 +69,7 @@
 			<tbody id="iters_table_body">
 
 			<tr id="templateRow" style="display: none;">
-				<td id ="id_fase">926</span></td>
+				<td id ="numero_fase">926</span></td>
 				<td id ="ramo">S</td>
 				<td id ="titolo" class="long_td">
 					Ratifica ed esecuzione dell'Accordo tra la Repubblica italiana e ...
@@ -73,7 +77,7 @@
 				<td id ="presentatori">
 					Giancarlo Giorgetti
 				</td>
-				<td id ="gruppo">
+				<td id ="nome_gruppo">
 					PD
 				</td>
 				<td id ="stato_ddl">
@@ -81,7 +85,7 @@
 				</td>
 				<td id ="data_stato_ddl"> 15 Gen 24</td>
 
-				<td id ="segui" class="text-end">
+				<td id ="seguito" class="text-end">
 					<a href="#" class="btn w-100 btn-icon" aria-label="segui">
 						{% include ui/icon.html icon="plus"%}
 					</a>
@@ -92,27 +96,106 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="card-footer d-flex align-items-center">
-		<p class="m-0 text-secondary"> 100 risultati
-			{% include ui/pagination.html class="m-0 ms-auto" %}
-			<span style="width: 2em"></span>
-		<div class="col-6 col-sm-4 col-md-2 col-xl-auto py-3">
-			<a href="#" class="btn w-100 btn-icon btn-primary" aria-label="Aggiorna">
-				{% include ui/icon.html icon="refresh"%}
-			</a>
-		</div>
+	<div class="card-footer d-flex align-items-center" style="display: none">
+<!--		<p class="m-0 text-secondary"> <span id="num_displayed_results">50</span> risultati di <span id="num_total_results">100</span>-->
+			{% include asimov_cards/iters_table_pagination.html class="m-0 ms-auto" %}</p>
+
 	</div>
 </div>
 
 <script>
 
-	function fill_table(data) {
+	var ddls = [];
+
+	function fill_table() {
+
+		// Pagination
+		// var page = document.querySelector('.pagination .active a').dataset.page || 1;
+		var page = null;
+		var storedActiveItem = localStorage.getItem('active_item');
+		if (storedActiveItem) {
+			page = parseInt(storedActiveItem, 10);
+		}
+		else{
+			page = 1;
+			updatePaginationUI(page)
+		}
+
+		// Num results to display
+		var num_results = document.getElementById('display_n_results').value
+		num_results = parseInt(num_results, 10);
+
+		// Slice
+		var startIndex = (page - 1) * num_results;
+		var endIndex = page * num_results;
+		var pageData = ddls.slice(startIndex, endIndex);
+
 		var tbody = document.getElementById('iters_table_body');
 		var templateRow = document.getElementById('templateRow');
 		// Remove all children using a loop
 		while (tbody.children.length>1) {
 			tbody.removeChild(tbody.lastChild);
 		}
+
+		var fields = ['numero_fase', 'ramo', 'titolo', 'presentatori', 'nome_gruppo', 'stato_ddl', 'data_stato_ddl', 'seguito'];
+
+		// Fill a row
+		pageData.forEach(function (item) {
+			// Fill a column
+			// Clone the template row
+			var tr = templateRow.cloneNode(true);
+			while (tr.firstChild) {
+				tr.removeChild(tr.firstChild);
+			}
+			tr.removeAttribute('style');
+			tr.removeAttribute('id');
+
+			fields.forEach(function(field) {
+				var template = document.getElementById(field);
+				var newElement = template.cloneNode(true);
+				newElement.removeAttribute('id');
+				newElement.textContent = item[field];
+				tr.appendChild(newElement);
+			});
+			// var num_displayed_results = document.getElementById('num_displayed_results')
+			// num_displayed_results.textContent = tbody.childElementCount
+			// var num_total_results = document.getElementById('num_total_results')
+			// num_total_results.textContent = ddls.length
+
+			tbody.appendChild(tr);
+		});
+	}
+
+	function fetch_data(order_by) {
+		// Function to get the selected options from the dropdowns
+		function getSelectedOptions(selector) {
+			var selectedOptions = [];
+			document.querySelectorAll(selector + ' input[type=checkbox]:checked').forEach(function (checkbox) {
+				selectedOptions.push(checkbox.value);
+			});
+			return selectedOptions;
+		}
+
+		// // Get the limit from the form
+		// var limit = document.querySelector('input[aria-label="DDLs count"]').value;
+
+		// Get the keyword from the form
+		var keyword = document.querySelector('input[aria-label="Search ddl"]').value;
+
+
+		// Get the selected options from the dropdowns
+		var options = {
+			// Assuming the dropdowns have class 'dropdown-filter'
+			ramo: getSelectedOptions('div.dropdown-menu'),
+			presentatore: getSelectedOptions('.dropdown-filter.filter_actions'),
+		};
+
+		// Prepare the data for the API request
+		var data = {
+			options: options,
+			order_by: order_by
+		};
+
 		var data_debug = [{
 			"id_fase": "57864",
 			"ddl": "http://dati.senato.it/ddl/57864",
@@ -138,128 +221,44 @@
 			"senatore": null,
 			"presentatori": 'Sen. Silvio Berlusconi'
 		}];
-
-
-		data.forEach(function (item) {
-			// Clone the template row
-			var tr = templateRow.cloneNode(true);
-			while (tr.firstChild) {
-				tr.removeChild(tr.firstChild);
+		var debug = false
+		if(debug){
+			ddls = data_debug
+			fill_table()
+		}
+		else{
+			// Perform the API request
+			var endpoint = 'http://127.0.0.1:8000/users/me/fetch_personalized_iters/'
+			if(keyword){
+				endpoint += '?keyword=' + keyword
 			}
-			tr.removeAttribute('style');
-			tr.removeAttribute('id');
+			fetch(endpoint, {
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					// Assuming the token is stored in a meta tag
+					'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+				.then(response => response.json())
+				.then(responseData => {
+					// Handle the response
+					console.log(responseData);
+					ddls = responseData
+					fill_table()
 
-			var id_fase_template = document.getElementById('id_fase');
-			var id_fase = id_fase_template.cloneNode(true);
-			id_fase.removeAttribute('id');
-			id_fase.textContent = item.numero_fase;
-			tr.appendChild(id_fase);
-
-			var ramo_template = document.getElementById('ramo');
-			var ramo = ramo_template.cloneNode(true);
-			ramo.removeAttribute('id');
-			ramo.textContent = item.ramo;
-			tr.appendChild(ramo);
-
-			var titolo_template = document.getElementById('titolo');
-			var titolo = titolo_template.cloneNode(true);
-			titolo.removeAttribute('id');
-			titolo.textContent = item.titolo;
-			tr.appendChild(titolo);
-			//
-			var presentatori_template = document.getElementById('presentatori');
-			var presentatori = presentatori_template.cloneNode(true);
-			presentatori.removeAttribute('id');
-			presentatori.textContent = item.presentatori;
-			tr.appendChild(presentatori);
-			//
-			var gruppo_template = document.getElementById('gruppo');
-			var gruppo = gruppo_template.cloneNode(true);
-			gruppo.removeAttribute('id');
-			gruppo.textContent = item.gruppo;
-			tr.appendChild(gruppo);
-			//
-			var stato_ddl_template = document.getElementById('stato_ddl');
-			var stato_ddl = stato_ddl_template.cloneNode(true);
-			stato_ddl.removeAttribute('id');
-			stato_ddl.textContent = item.stato_ddl;
-			tr.appendChild(stato_ddl);
-			//
-			var data_stato_ddl_template = document.getElementById('data_stato_ddl');
-			var data_stato_ddl = data_stato_ddl_template.cloneNode(true);
-			data_stato_ddl.removeAttribute('id');
-			data_stato_ddl.textContent = item.data_stato_ddl;
-			tr.appendChild(data_stato_ddl);
-
-			var segui_template = document.getElementById('segui');
-			var segui = segui_template.cloneNode(true);
-			segui.removeAttribute('id');
-			tr.appendChild(segui);
-
-			// var seguito = item.seguito
-
-			// Continue creating and appending td elements for each piece of data you want to include
-
-			tbody.appendChild(tr);
-		});
-	}
-
-	function fetch_data(order_by) {
-		// Function to get the selected options from the dropdowns
-		function getSelectedOptions(selector) {
-			var selectedOptions = [];
-			document.querySelectorAll(selector + ' input[type=checkbox]:checked').forEach(function (checkbox) {
-				selectedOptions.push(checkbox.value);
-			});
-			return selectedOptions;
+				})
+				.catch(error => {
+					// Handle the error
+					console.error(error);
+				});
 		}
 
-		// Get the limit from the form
-		var limit = document.querySelector('input[aria-label="DDLs count"]').value;
-
-		// Get the keyword from the form
-		var keyword = document.querySelector('input[aria-label="Search ddl"]').value;
-
-		// Assuming you have a pagination element with links and data-page attributes
-		var page = document.querySelector('.pagination .active a').dataset.page || 1;
-
-		// Get the selected options from the dropdowns
-		var options = {
-			// Assuming the dropdowns have class 'dropdown-filter'
-			ramo: getSelectedOptions('div.dropdown-menu'),
-			presentatori: getSelectedOptions('.dropdown-filter.filter_actions'),
-			gruppo: getSelectedOptions('.dropdown-filter.filter_stato'),
-		};
-
-		// Prepare the data for the API request
-		var data = {
-			options: options,
-			order_by: order_by
-		};
-
-		// Perform the API request
-		fetch('http://127.0.0.1:8000/users/me/fetch_personalized_iters/?limit=' + limit + '&keyword=' + keyword + '&page=' + page, {
-			method: 'POST',
-			headers: {
-				'Accept': 'application/json',
-				// Assuming the token is stored in a meta tag
-				'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(data)
-		})
-			.then(response => response.json())
-			.then(responseData => {
-				// Handle the response
-				console.log(responseData);
-				fill_table(responseData)
-
-			})
-			.catch(error => {
-				// Handle the error
-				console.error(error);
-			});
 	}
+
+
 
 
 	document.addEventListener("DOMContentLoaded", function (){
@@ -268,6 +267,7 @@
 		desc: true
 		})
 	});
+	document.addEventListener("DOMContentLoaded", updatePaginationUI);
 
 	// document.addEventListener("DOMContentLoaded", function () {
 	// 	fill_table();

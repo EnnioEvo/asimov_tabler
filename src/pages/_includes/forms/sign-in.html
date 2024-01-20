@@ -17,8 +17,6 @@
 	</div>
 	<div id="successMessage" class="alert alert-success" style="display: none;">
 		Accesso riuscito.
-
-
 	</div>
 	<div class="form-footer">
 		<button type="submit" class="btn btn-primary w-100">Entra</button>
@@ -48,17 +46,13 @@
 			.then(data => {
 				// Store the access token in localStorage
 				localStorage.setItem('access_token', data.access_token);
-				// Show success message and hide error message
-				document.getElementById('successMessage').style.display = 'block';
 				document.getElementById('errorMessage').style.display = 'none';
 				// Redirect or perform additional actions as needed
 				window.location.href = '/';
 			})
 			.catch(error => {
 				console.error('Error during authentication:', error);
-				// Display error message and hide success message
 				document.getElementById('errorMessage').style.display = 'block';
-				document.getElementById('successMessage').style.display = 'none';
 			});
 	});
 
