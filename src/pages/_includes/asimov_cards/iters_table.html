@@ -62,33 +62,33 @@
 				}
 			</style>
 
-			<tbody>
-			{% for invoice in site.data.invoices limit: 8 %}
-			<tr>
-				<td>926</span></td>
-				<td>S</td>
-				<td class="long_td">
+			<tbody id="iters_table_body">
+
+			<tr id="templateRow" style="display: none;">
+				<td id ="id_fase">926</span></td>
+				<td id ="ramo">S</td>
+				<td id ="titolo" class="long_td">
 					Ratifica ed esecuzione dell'Accordo tra la Repubblica italiana e ...
 				</td>
-				<td>
+				<td id ="presentatori">
 					Giancarlo Giorgetti
 				</td>
-				<td>
+				<td id ="gruppo">
 					PD
 				</td>
-				<td>
+				<td id ="stato_ddl">
 					<span class="badge bg-green me-1"></span>
 				</td>
-				<td> 15 Gen 24</td>
+				<td id ="data_stato_ddl"> 15 Gen 24</td>
 
-				<td class="text-end">
-					<a href="#" class="btn w-100 btn-icon" aria-label="Non seguire">
+				<td id ="segui" class="text-end">
+					<a href="#" class="btn w-100 btn-icon" aria-label="segui">
 						{% include ui/icon.html icon="plus"%}
 					</a>
 				</td>
 			</tr>
 
-			{% endfor %}
+
 			</tbody>
 		</table>
 	</div>
@@ -107,10 +107,11 @@
 <script>
 
 	function fill_table(data) {
-		var tbody = document.querySelector('tbody');
+		var tbody = document.getElementById('iters_table_body');
+		var templateRow = document.getElementById('templateRow');
 		// Remove all children using a loop
-		while (tbody.firstChild) {
-			tbody.removeChild(tbody.firstChild);
+		while (tbody.children.length>1) {
+			tbody.removeChild(tbody.lastChild);
 		}
 		var data_debug = [{
 			"id_fase": "57864",
@@ -140,36 +141,60 @@
 
 
 		data.forEach(function (item) {
-			var tr = document.createElement('tr');
+			// Clone the template row
+			var tr = templateRow.cloneNode(true);
+			while (tr.firstChild) {
+				tr.removeChild(tr.firstChild);
+			}
+			tr.removeAttribute('style');
+			tr.removeAttribute('id');
 
-			var numero_fase = document.createElement('td');
-			numero_fase.textContent = item.numero_fase;
-			tr.appendChild(numero_fase);
+			var id_fase_template = document.getElementById('id_fase');
+			var id_fase = id_fase_template.cloneNode(true);
+			id_fase.removeAttribute('id');
+			id_fase.textContent = item.numero_fase;
+			tr.appendChild(id_fase);
 
-			var ramo = document.createElement('td');
+			var ramo_template = document.getElementById('ramo');
+			var ramo = ramo_template.cloneNode(true);
+			ramo.removeAttribute('id');
 			ramo.textContent = item.ramo;
 			tr.appendChild(ramo);
 
-			var titolo = document.createElement('td');
+			var titolo_template = document.getElementById('titolo');
+			var titolo = titolo_template.cloneNode(true);
+			titolo.removeAttribute('id');
 			titolo.textContent = item.titolo;
-			titolo.className = "long_td";
 			tr.appendChild(titolo);
-
-			var presentatori = document.createElement('td');
+			//
+			var presentatori_template = document.getElementById('presentatori');
+			var presentatori = presentatori_template.cloneNode(true);
+			presentatori.removeAttribute('id');
 			presentatori.textContent = item.presentatori;
 			tr.appendChild(presentatori);
-
-			var gruppo = document.createElement('td');
-			gruppo.textContent = '';
+			//
+			var gruppo_template = document.getElementById('gruppo');
+			var gruppo = gruppo_template.cloneNode(true);
+			gruppo.removeAttribute('id');
+			gruppo.textContent = item.gruppo;
 			tr.appendChild(gruppo);
-
-			var stato_ddl = document.createElement('td');
+			//
+			var stato_ddl_template = document.getElementById('stato_ddl');
+			var stato_ddl = stato_ddl_template.cloneNode(true);
+			stato_ddl.removeAttribute('id');
 			stato_ddl.textContent = item.stato_ddl;
 			tr.appendChild(stato_ddl);
-
-			var data_stato_ddl = document.createElement('td');
+			//
+			var data_stato_ddl_template = document.getElementById('data_stato_ddl');
+			var data_stato_ddl = data_stato_ddl_template.cloneNode(true);
+			data_stato_ddl.removeAttribute('id');
 			data_stato_ddl.textContent = item.data_stato_ddl;
 			tr.appendChild(data_stato_ddl);
+
+			var segui_template = document.getElementById('segui');
+			var segui = segui_template.cloneNode(true);
+			segui.removeAttribute('id');
+			tr.appendChild(segui);
 
 			// var seguito = item.seguito
 
