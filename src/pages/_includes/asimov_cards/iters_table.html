@@ -1,7 +1,7 @@
 <div class="card">
 	<div class="card-header d-flex justify-content-between align-items-center" style="height: 5em">
 		<h3 class="card-title">Tutti</h3>
-		<div class="col-6 col-sm-4 col-md-2 col-xl-auto py-3">
+		<div class="col-7 col-sm-4 col-md-2 col-xl-auto py-3">
 			<a href="#" class="btn w-100 btn-icon" aria-label="Aggiorna">
 				{% include ui/icon.html icon="refresh"%}
 			</a>
@@ -28,7 +28,7 @@
 		</div>
 
 	</div>
-	<div class="table-responsive">
+	<div class="table-responsive" style="width: fit-content">
 
 		<table class="table card-table table-vcenter text-nowrap datatable">
 			<style>
@@ -38,46 +38,39 @@
 					overflow: hidden;
 					text-overflow: ellipsis;
 				}
-				.table td.ramo, .table th.ramo{
-					max-width: 22px;
-					min-width: 22px;
-					width: 22px
+
+				.table td.ramo, .table th.ramo {
+					max-width: 40px;
 				}
-				.table td.numero_fase, .table th.numero_fase{
-					max-width: 22px;
-					min-width: 22px;
-					width: 22px
+
+				.table td.numero_fase, .table th.numero_fase {
+					max-width: 60px;
 				}
+
 				/* Style for long_td elements that inherit from the regular td style */
-				.table td.titolo, .table th.titolo{
-					max-width: 100px;
-					min-width: 100px;
-					width: 100px
+				.table td.titolo, .table th.titolo {
+					min-width: 50px;
+					max-width: 615px;
 				}
-				.table td.presentatori, .table th.presentatori{
-					max-width: 70px;
-					min-width: 70px;
-					width: 70px
+
+				.table td.presentatori, .table th.presentatori {
+					max-width: 210px;
 				}
-				.table td.nome_gruppo, .table th.nome_gruppo{
-					max-width: 44px;
-					min-width: 44px;
-					width: 44px
+
+				.table td.nome_gruppo, .table th.nome_gruppo {
+					max-width: 108px;
 				}
-				.table td.stato_ddl_semp, .table th.stato_ddl_semp{
-					max-width: 25px;
-					min-width: 25px;
-					width: 25px
+
+				.table td.stato_ddl_semp, .table th.stato_ddl_semp {
+					max-width: 69px;
 				}
-				.table td.data_stato_ddl, .table th.data_stato_ddl{
-					max-width: 55px;
-					min-width: 55px;
-					width: 55px
+
+				.table td.data_stato_ddl, .table th.data_stato_ddl {
+					max-width: 137px;
 				}
-				.table td.seguito, .table th.seguito{
-					max-width: 10px;
-					min-width: 10px;
-					width: 10px
+
+				.table td.seguito, .table th.seguito {
+					max-width: 67px;
 				}
 
 			</style>
@@ -88,13 +81,16 @@
 				<th class="titolo">Titolo{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}</th>
 				<th class="presentatori">1º firm.{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}
 				</th>
-				<th class="nome_gruppo">Gruppo{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {% include
+				<th class="nome_gruppo">Gruppo{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {%
+					include
 					parts/dropdown/filter_gruppo.html %}
 				</th>
-				<th class="stato_ddl_semp">{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {% include
+				<th class="stato_ddl_semp">{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {%
+					include
 					parts/dropdown/filter_stato.html %}
 				</th>
-				<th class="data_stato_ddl">Ultimo agg.{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {% include
+				<th class="data_stato_ddl">Ultimo agg.{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick"
+					%} {% include
 					parts/dropdown/filter_actions.html %}
 				</th>
 
@@ -108,19 +104,19 @@
 
 			<tr id="templateRow" style="display: none;">
 				<td id="ramo" class="ramo">S</td>
-				<td id="numero_fase" class="numero_fase"><a href="https://www.senato.it/leg/19/BGT/Schede/Ddliter/00000.htm" target="_blank">000</a></td>
-
+				<td id="numero_fase" class="numero_fase"><a href="https://www.senato.it/leg/19/BGT/Schede/Ddliter/00000.htm"
+																		  target="_blank">000</a></td>
 				<td id="titolo" class="titolo" title="">
 					Ratifica ed esecuzione dell'Accordo tra la Repubblica italiana e la Repubblica di San Marino
 				</td>
 				<td id="presentatori" class="presentatori" title="">
 					Giancarlo Giorgetti
 				</td>
-				<td id="nome_gruppo"  class="nome_gruppo" title="">
+				<td id="nome_gruppo" class="nome_gruppo" title="">
 					PD
 				</td>
 				<td id="stato_ddl_semp" class="stato_ddl_semp" title="Esito positivo">
-					<span class="badge bg-blue me-1" ></span>
+					<span class="badge bg-blue me-1"></span>
 				</td>
 				<td id="data_stato_ddl" class="data_stato_ddl"> 15 Gen 24</td>
 
@@ -128,8 +124,6 @@
 					<a href="#" class="btn w-100 btn-icon" aria-label="seguito">{% include ui/icon.html icon="plus"%}</a>
 				</td>
 			</tr>
-
-
 			</tbody>
 		</table>
 	</div>
@@ -150,14 +144,14 @@
 		'S': 'https://www.senato.it/leg/19/BGT/Schede/Ddliter/{id_fase}.htm'
 	}
 	var stata_ddl = {
-		'In corso': {'classList' : "badge bg-green m-2", "title" : "In corso"},
+		'In corso': {'classList': "badge bg-green m-2", "title": "In corso"},
 		'Esito positivo': {'classList': 'badge bg-blue m-2', 'title': 'Esito positivo'},
 		'Esito negativo': {'classList': 'badge bg-muted m-2', 'title': 'Esito negativo'}
 	}
 
 	function formatDate(dateString) {
 		var date = new Date(dateString);
-		var options = { day: 'numeric', month: 'short', year: 'numeric' };
+		var options = {day: 'numeric', month: 'short', year: 'numeric'};
 		var formattedDate = new Intl.DateTimeFormat('it-IT', options).format(date);
 		return formattedDate;
 	}
@@ -184,6 +178,8 @@
 					break;
 				case 'data_stato_ddl':
 					element.textContent = formatDate(item[field]);
+					break
+				case 'seguito':
 					break
 				default:
 					element.textContent = item[field];
