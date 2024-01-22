@@ -13,7 +13,8 @@
 			<div class="text-secondary">
 				Mostra
 				<div class="mx-2 d-inline-block">
-					<input id="display_n_results" type="text" class="form-control form-control-sm" value="20" size="3" aria-label="DDLs count">
+					<input id="display_n_results" type="text" class="form-control form-control-sm" value="20" size="3"
+							 aria-label="DDLs count">
 				</div>
 				elementi
 			</div>
@@ -30,65 +31,101 @@
 	<div class="table-responsive">
 
 		<table class="table card-table table-vcenter text-nowrap datatable">
-			<thead>
-			<tr>
-				<th class="w-1">No. {% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}</th>
-				<th> Ramo {% include parts/dropdown/filter_ramo.html %}</th>
-				<th>Titolo {% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}</th>
-				<th>1º firm. {% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}
-				</th>
-				<th>Gruppo {% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {% include
-					parts/dropdown/filter_gruppo.html %}
-				</th>
-				<th>Stato {% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {% include
-					parts/dropdown/filter_stato.html %}
-				</th>
-				<th>Ultimo agg. {% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {% include
-					parts/dropdown/filter_actions.html %}
-				</th>
-
-				<th>Segui</th>
-			</tr>
-
-			</thead>
 			<style>
 				/* Style for regular td elements */
-				.table td {
-					max-width: 10em; /* Set a default maximum width for td elements */
+				.table td, .table th {
 					white-space: nowrap;
 					overflow: hidden;
 					text-overflow: ellipsis;
 				}
-
-				/* Style for long_td elements that inherit from the regular td style */
-				.table td.long_td {
-					max-width: 400px; /* Set a longer maximum width for elements with the 'long_td' class */
+				.table td.ramo, .table th.ramo{
+					max-width: 22px;
+					min-width: 22px;
+					width: 22px
 				}
+				.table td.numero_fase, .table th.numero_fase{
+					max-width: 22px;
+					min-width: 22px;
+					width: 22px
+				}
+				/* Style for long_td elements that inherit from the regular td style */
+				.table td.titolo, .table th.titolo{
+					max-width: 100px;
+					min-width: 100px;
+					width: 100px
+				}
+				.table td.presentatori, .table th.presentatori{
+					max-width: 70px;
+					min-width: 70px;
+					width: 70px
+				}
+				.table td.nome_gruppo, .table th.nome_gruppo{
+					max-width: 44px;
+					min-width: 44px;
+					width: 44px
+				}
+				.table td.stato_ddl_semp, .table th.stato_ddl_semp{
+					max-width: 25px;
+					min-width: 25px;
+					width: 25px
+				}
+				.table td.data_stato_ddl, .table th.data_stato_ddl{
+					max-width: 55px;
+					min-width: 55px;
+					width: 55px
+				}
+				.table td.seguito, .table th.seguito{
+					max-width: 10px;
+					min-width: 10px;
+					width: 10px
+				}
+
 			</style>
+			<thead>
+			<tr>
+				<th class="ramo">{% include parts/dropdown/filter_ramo.html %}</th>
+				<th class="numero_fase">{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}</th>
+				<th class="titolo">Titolo{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}</th>
+				<th class="presentatori">1º firm.{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}
+				</th>
+				<th class="nome_gruppo">Gruppo{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {% include
+					parts/dropdown/filter_gruppo.html %}
+				</th>
+				<th class="stato_ddl_semp">{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {% include
+					parts/dropdown/filter_stato.html %}
+				</th>
+				<th class="data_stato_ddl">Ultimo agg.{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {% include
+					parts/dropdown/filter_actions.html %}
+				</th>
+
+				<th class="seguito">Segui</th>
+			</tr>
+
+			</thead>
+
 
 			<tbody id="iters_table_body">
 
 			<tr id="templateRow" style="display: none;">
-				<td id ="numero_fase">926</span></td>
-				<td id ="ramo">S</td>
-				<td id ="titolo" class="long_td">
-					Ratifica ed esecuzione dell'Accordo tra la Repubblica italiana e ...
+				<td id="ramo" class="ramo">S</td>
+				<td id="numero_fase" class="numero_fase"><a href="https://www.senato.it/leg/19/BGT/Schede/Ddliter/00000.htm" target="_blank">000</a></td>
+
+				<td id="titolo" class="titolo" title="">
+					Ratifica ed esecuzione dell'Accordo tra la Repubblica italiana e la Repubblica di San Marino
 				</td>
-				<td id ="presentatori">
+				<td id="presentatori" class="presentatori" title="">
 					Giancarlo Giorgetti
 				</td>
-				<td id ="nome_gruppo">
+				<td id="nome_gruppo"  class="nome_gruppo" title="">
 					PD
 				</td>
-				<td id ="stato_ddl_semp">
-					<span class="badge bg-green me-1"></span>
+				<td id="stato_ddl_semp" class="stato_ddl_semp" title="Esito positivo">
+					<span class="badge bg-blue me-1" ></span>
 				</td>
-				<td id ="data_stato_ddl"> 15 Gen 24</td>
+				<td id="data_stato_ddl" class="data_stato_ddl"> 15 Gen 24</td>
 
-				<td id ="seguito" class="text-end">
-					<a href="#" class="btn w-100 btn-icon" aria-label="segui">
-						{% include ui/icon.html icon="plus"%}
-					</a>
+				<td id="seguito" class="seguito">
+					<a href="#" class="btn w-100 btn-icon" aria-label="seguito">{% include ui/icon.html icon="plus"%}</a>
 				</td>
 			</tr>
 
@@ -97,8 +134,8 @@
 		</table>
 	</div>
 	<div class="card-footer d-flex align-items-center" style="display: none">
-<!--		<p class="m-0 text-secondary"> <span id="num_displayed_results">50</span> risultati di <span id="num_total_results">100</span>-->
-			{% include asimov_cards/iters_table_pagination.html class="m-0 ms-auto" %}</p>
+		<!--		<p class="m-0 text-secondary"> <span id="num_displayed_results">50</span> risultati di <span id="num_total_results">100</span>-->
+		{% include asimov_cards/iters_table_pagination.html class="m-0 ms-auto" %}</p>
 
 	</div>
 </div>
@@ -106,6 +143,57 @@
 <script>
 
 	var ddls = [];
+
+	var fields = ['ramo', 'numero_fase', 'titolo', 'presentatori', 'nome_gruppo', 'stato_ddl_semp', 'data_stato_ddl', 'seguito'];
+	var base_addresses = {
+		'C': 'https://www.camera.it/leg19/126?tab=&leg=19&idDocumento={numero_fase}',
+		'S': 'https://www.senato.it/leg/19/BGT/Schede/Ddliter/{id_fase}.htm'
+	}
+	var stata_ddl = {
+		'In corso': {'classList' : "badge bg-green m-2", "title" : "In corso"},
+		'Esito positivo': {'classList': 'badge bg-blue m-2', 'title': 'Esito positivo'},
+		'Esito negativo': {'classList': 'badge bg-muted m-2', 'title': 'Esito negativo'}
+	}
+
+	function formatDate(dateString) {
+		var date = new Date(dateString);
+		var options = { day: 'numeric', month: 'short', year: 'numeric' };
+		var formattedDate = new Intl.DateTimeFormat('it-IT', options).format(date);
+		return formattedDate;
+	}
+
+	function update_cell(element, item, field) {
+		try {
+			switch (field) {
+				case 'numero_fase':
+					var anchorElement = element.querySelector("a");
+					base_address = base_addresses[item['ramo']]
+					if (item['ramo'] == 'C') {
+						anchorElement.href = base_addresses['C'].replace('{numero_fase}', item.numero_fase);
+					} else {
+						anchorElement.href = base_addresses['S'].replace('{id_fase}', item.id_fase);
+					}
+					anchorElement.textContent = item[field]
+					break;
+				// throw new Error('Custom error message for numero_fase');
+				case 'stato_ddl_semp':
+					var spanElement = element.querySelector('span');
+					var status = stata_ddl[item[field]];
+					spanElement.classList = status['classList'];
+					element.title = status['title'];
+					break;
+				case 'data_stato_ddl':
+					element.textContent = formatDate(item[field]);
+					break
+				default:
+					element.textContent = item[field];
+			}
+		} catch (e) {
+
+		}
+
+
+	}
 
 	function fill_table() {
 
@@ -115,8 +203,7 @@
 		var storedActiveItem = localStorage.getItem('active_item');
 		if (storedActiveItem) {
 			page = parseInt(storedActiveItem, 10);
-		}
-		else{
+		} else {
 			page = 1;
 			updatePaginationUI(page)
 		}
@@ -133,11 +220,10 @@
 		var tbody = document.getElementById('iters_table_body');
 		var templateRow = document.getElementById('templateRow');
 		// Remove all children using a loop
-		while (tbody.children.length>1) {
+		while (tbody.children.length > 1) {
 			tbody.removeChild(tbody.lastChild);
 		}
 
-		var fields = ['numero_fase', 'ramo', 'titolo', 'presentatori', 'nome_gruppo', 'stato_ddl_semp', 'data_stato_ddl', 'seguito'];
 
 		// Fill a row
 		pageData.forEach(function (item) {
@@ -150,11 +236,11 @@
 			tr.removeAttribute('style');
 			tr.removeAttribute('id');
 
-			fields.forEach(function(field) {
+			fields.forEach(function (field) {
 				var template = document.getElementById(field);
 				var newElement = template.cloneNode(true);
 				newElement.removeAttribute('id');
-				newElement.textContent = item[field];
+				update_cell(newElement, item, field)
 				tr.appendChild(newElement);
 			});
 			// var num_displayed_results = document.getElementById('num_displayed_results')
@@ -162,8 +248,18 @@
 			// var num_total_results = document.getElementById('num_total_results')
 			// num_total_results.textContent = ddls.length
 
+
 			tbody.appendChild(tr);
 		});
+
+		var tds = document.querySelectorAll('.table td'); // Select all td elements
+		for (var i = 0; i < tds.length; i++) {
+			var td = tds[i];
+			if (td.offsetWidth < td.scrollWidth && !td.title) {
+				td.title = td.textContent;
+			}
+		}
+
 	}
 
 	function fetch_data(order_by) {
@@ -222,14 +318,13 @@
 			"presentatori": 'Sen. Silvio Berlusconi'
 		}];
 		var debug = false
-		if(debug){
+		if (debug) {
 			ddls = data_debug
 			fill_table()
-		}
-		else{
+		} else {
 			// Perform the API request
 			var endpoint = 'http://127.0.0.1:8000/users/me/fetch_personalized_iters/'
-			if(keyword){
+			if (keyword) {
 				endpoint += '?keyword=' + keyword
 			}
 			fetch(endpoint, {
@@ -259,12 +354,10 @@
 	}
 
 
-
-
-	document.addEventListener("DOMContentLoaded", function (){
+	document.addEventListener("DOMContentLoaded", function () {
 		fetch_data({
-		field: "data_stato_ddl",
-		desc: true
+			field: "data_stato_ddl",
+			desc: true
 		})
 	});
 	document.addEventListener("DOMContentLoaded", updatePaginationUI);
