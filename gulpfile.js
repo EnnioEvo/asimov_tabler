@@ -434,7 +434,7 @@ gulp.task('browser-sync', () => {
 				'/static': `${srcDir}/static`,
 			},
 		},
-		port: 3000,
+		port: 80,
 		open: false,
 		host: 'localhost',
 		notify: false,
