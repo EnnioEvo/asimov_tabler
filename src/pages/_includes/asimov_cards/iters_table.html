@@ -32,45 +32,61 @@
 
 		<table class="table card-table table-vcenter text-nowrap datatable">
 			<style>
+				.table tr {
+					max-height: 3.6em;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+
+
 				/* Style for regular td elements */
 				.table td, .table th {
+					max-height: 3.6em;
 					white-space: nowrap;
 					overflow: hidden;
 					text-overflow: ellipsis;
 				}
 
 				.table td.ramo, .table th.ramo {
-					max-width: 40px;
+					max-width: 3em;
 				}
 
 				.table td.numero_fase, .table th.numero_fase {
-					max-width: 60px;
+					max-width: 4.2em;
 				}
 
 				/* Style for long_td elements that inherit from the regular td style */
 				.table td.titolo, .table th.titolo {
-					min-width: 50px;
-					max-width: 615px;
+					/*min-width: 50vw;*/
+					/*max-width: 50vw;*/
+					max-height: 2em;
+					height: 2em;
+					min-height: 2em;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: normal;
 				}
 
 				.table td.presentatori, .table th.presentatori {
-					max-width: 210px;
+					max-width: 15em;
 				}
 
 				.table td.nome_gruppo, .table th.nome_gruppo {
-					max-width: 108px;
+					max-width: 11em;
 				}
 
 				.table td.stato_ddl_semp, .table th.stato_ddl_semp {
-					max-width: 69px;
+					max-width: 6em;
 				}
 
 				.table td.data_stato_ddl, .table th.data_stato_ddl {
-					max-width: 137px;
+					max-width: 14em;
 				}
 
 				.table td.seguito, .table th.seguito {
-					max-width: 67px;
+					max-width: 5em;
+					text-align: right;
 				}
 
 			</style>
@@ -91,7 +107,7 @@
 				</th>
 				<th class="data_stato_ddl">Ultimo agg.{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick"
 					%} {% include
-					parts/dropdown/filter_actions.html %}
+					parts/dropdown/filter_data.html %}
 				</th>
 
 				<th class="seguito">Segui</th>
@@ -121,7 +137,8 @@
 				<td id="data_stato_ddl" class="data_stato_ddl"> 15 Gen 24</td>
 
 				<td id="seguito" class="seguito">
-					<a href="#" class="btn w-100 btn-icon" aria-label="seguito">{% include ui/icon.html icon="plus"%}</a>
+					<a class="btn w-100 btn-icon" aria-label="plus">{% include ui/icon.html icon="plus"%}</a>
+					<a class="btn w-100 btn-icon" aria-label="minus" style="display: none">{% include ui/icon.html icon="x"%}</a>
 				</td>
 			</tr>
 			</tbody>
@@ -149,11 +166,33 @@
 		'Esito negativo': {'classList': 'badge bg-muted m-2', 'title': 'Esito negativo'}
 	}
 
+	function ellipse(str, num) {
+		if (str.length <= num) {
+			return str;
+		}
+		return str.substring(0, num) + '...';
+	}
+
 	function formatDate(dateString) {
 		var date = new Date(dateString);
 		var options = {day: 'numeric', month: 'short', year: 'numeric'};
 		var formattedDate = new Intl.DateTimeFormat('it-IT', options).format(date);
 		return formattedDate;
+	}
+
+	function switch_follow_button(element) {
+		// Get the "plus" and "minus" buttons
+		var plusButton = element.querySelector('.seguito a[aria-label="plus"]');
+		var minusButton = element.querySelector('.seguito a[aria-label="minus"]');
+
+		// Toggle the visibility
+		if (plusButton.style.display === 'none') {
+			plusButton.style.display = '';
+			minusButton.style.display = 'none';
+		} else {
+			plusButton.style.display = 'none';
+			minusButton.style.display = '';
+		}
 	}
 
 	function update_cell(element, item, field) {
@@ -170,6 +209,10 @@
 					anchorElement.textContent = item[field]
 					break;
 				// throw new Error('Custom error message for numero_fase');
+				case 'titolo':
+					element.textContent = ellipse(item[field], 130);
+					element.title = item[field]
+					break
 				case 'stato_ddl_semp':
 					var spanElement = element.querySelector('span');
 					var status = stata_ddl[item[field]];
@@ -180,6 +223,27 @@
 					element.textContent = formatDate(item[field]);
 					break
 				case 'seguito':
+					// var anchorElement = element.querySelector("a");
+					console.log(item[field])
+					if(item[field]===true){
+						switch_follow_button(element)
+					}
+					element.onclick = function() {
+						console.log(`item[field] is ${item[field]}`)
+						var success = false
+						followIter(item['id_iter'], item[field]).then(result => {
+							console.log(`result is ${result}`)
+							success = result;
+
+							if (success) {
+								console.log(`success is ${success}`)
+								item[field] = true
+								switch_follow_button(this)
+								console.log(`I switched ${this}`)
+							}
+						});
+					};
+
 					break
 				default:
 					element.textContent = item[field];
@@ -219,7 +283,6 @@
 		while (tbody.children.length > 1) {
 			tbody.removeChild(tbody.lastChild);
 		}
-
 
 		// Fill a row
 		pageData.forEach(function (item) {
@@ -288,31 +351,7 @@
 			order_by: order_by
 		};
 
-		var data_debug = [{
-			"id_fase": "57864",
-			"ddl": "http://dati.senato.it/ddl/57864",
-			"titolo": "Conversione in legge del decreto-legge 18 gennaio 2024, n. 4, recante disposizioni urgenti in materia di amministrazione straordinaria delle imprese di carattere strategico",
-			"stato_ddl": "assegnato (no esame)",
-			"data_stato_ddl": "2024-01-19",
-			"tipo_iniziativa": "Governativa",
-			"id_iter": "53411",
-			"assegnazione": null,
-			"relatore": null,
-			"data_presentazione": null,
-			"fase": null,
-			"legislatura": null,
-			"natura": "di conversione di decreto-legge",
-			"numero_fase": "986",
-			"numero_fase_compatto": null,
-			"presentato_trasmesso": "presentato",
-			"progressivo_iter": "1",
-			"ramo": "S",
-			"testo_presentato": "urn:nir:senato.repubblica:disegno.legge:19.legislatura;986",
-			"testo_approvato": null,
-			"primo_firmatario": "1",
-			"senatore": null,
-			"presentatori": 'Sen. Silvio Berlusconi'
-		}];
+		var data_debug = [{ "id_fase": "57864", "ddl": "http://dati.senato.it/ddl/57864", "titolo": "Conversione in legge del decreto-legge 18 gennaio 2024, n. 4, recante disposizioni urgenti in materia di amministrazione straordinaria delle imprese di carattere strategico", "stato_ddl": "assegnato (no esame)", "data_stato_ddl": "2024-01-19", "tipo_iniziativa": "Governativa", "id_iter": "53411", "assegnazione": null, "relatore": null, "data_presentazione": null, "fase": null, "legislatura": null, "natura": "di conversione di decreto-legge", "numero_fase": "986", "numero_fase_compatto": null, "presentato_trasmesso": "presentato", "progressivo_iter": "1", "ramo": "S", "testo_presentato": "urn:nir:senato.repubblica:disegno.legge:19.legislatura;986", "testo_approvato": null, "primo_firmatario": "1", "senatore": null, "presentatori": 'Sen. Silvio Berlusconi' }];
 		var debug = false
 		if (debug) {
 			ddls = data_debug
@@ -361,5 +400,41 @@
 	// document.addEventListener("DOMContentLoaded", function () {
 	// 	fill_table();
 	// });
+
+	function followIter(iterId, unfollow=false) {
+		var path = 'follow_iter'
+		if(unfollow){
+			path = 'unfollow_iter'
+		}
+
+		return fetch(`http://127.0.0.1:8000/users/me/${path}/?iter_id=` + iterId, {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
+				'Content-Type': 'application/json'
+			},
+			// Add a request body if needed
+			// body: JSON.stringify({}),
+		})
+			.then(response => {
+				if (response.ok) {
+					console.log(`Successfully ${path} iter ${iterId}`);
+					return true;
+				} else {
+					console.error('Error:', response.statusText);
+					return false;
+				}
+			})
+			.catch(error => {
+				// Handle other errors
+				console.error('Error:', error);
+				return false;
+			});
+	}
+
+	function unfollowIter(iterId) {
+		return followIter(iterId, true)
+	}
 
 </script>
