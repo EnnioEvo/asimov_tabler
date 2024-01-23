@@ -382,7 +382,8 @@
 				})
 				.catch(error => {
 					// Handle the error
-					console.error(error);
+					console.log('Authentication problem, try login again' + error.message);
+					window.location.href = '/sign-in.html';
 				});
 		}
 
