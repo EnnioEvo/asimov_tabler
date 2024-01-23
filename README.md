@@ -78,6 +78,33 @@ To use our build system and run our documentation locally, you'll need a copy of
 3. [Install Ruby](https://www.ruby-lang.org/en/documentation/installation/) - the recommended version is [2.7.6](https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.6.tar.gz).
 4. [Install Bundler](https://bundler.io) with `gem install bundler` and finally run `bundle install`. It will install all Ruby dependencies, such as [Jekyll and plugins](https://jekyllrb.com).
 
+```
+# Dependencies
+sudo apt update
+# brew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
+test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# others
+echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bashrc
+source ~/.bashrc  
+sudo apt-get install build-essential
+sudo apt-get install ruby-full
+# nvm
+curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash 
+source ~/.bashrc   
+nvm install node
+sudo apt install npm
+sudo gem install bundler
+bundle install
+# install pnpm
+sudo npm install -g pnpm
+pnpm install
+
+# run
+pnpm run start plugins
+```
+
 **OSX users**:
 
 1. NPM ```pnpm install```
