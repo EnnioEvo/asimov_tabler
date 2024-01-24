@@ -1,4 +1,4 @@
-<form id="loginForm" action="http://senato.asimov.law:8000/token" method="post" autocomplete="off" novalidate>
+<form id="loginForm" action="http://{{ site.data.endpoint[0].host }}:8000/token" method="post" autocomplete="off" novalidate>
 	<div class="mb-3">
 		<label class="form-label">Indirizzo email</label>
 		<input type="email" class="form-control" name="username" placeholder="latua@email.com" autocomplete="off">
@@ -28,7 +28,7 @@
 		event.preventDefault();
 
 		// Perform the form submission using Fetch or XMLHttpRequest
-		fetch('http://senato.asimov.law:8000/token', {
+		fetch('http://{{ site.data.endpoint[0].host }}:8000/token', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded',
@@ -45,7 +45,7 @@
 			})
 			.then(data => {
 				// Store the access token in localStorage
-				localStorage.setItem('access_token', data.access_token);
+				sessionStorage.setItem('access_token', data.access_token);
 				document.getElementById('errorMessage').style.display = 'none';
 				// Redirect or perform additional actions as needed
 				window.location.href = '/';

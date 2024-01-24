@@ -19,9 +19,9 @@ page-header-actions: buttons
 </div>
 
 <script>
-	const accessToken = localStorage.getItem('access_token');
+	const accessToken = sessionStorage.getItem('access_token');
 	// Fetch data from your API
-	fetch('http://senato.asimov.law:8000/users/me/projects/', {
+	fetch('http://{{ site.data.endpoint[0].host }}:8000/users/me/projects/', {
 		method: 'GET',
 		headers: {
 			'Accept': 'application/json',
@@ -32,6 +32,11 @@ page-header-actions: buttons
 		.then(response => {
 			// Check if the request was successful
 			if (!response.ok) {
+				// Check if the error is related to authentication (401 Unauthorized)
+				if (response.status === 401) {
+					window.location.href = '/sign-in.html';
+					throw new Error('Authentication error: Unauthorized');
+				}
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 			return response.json();
@@ -41,8 +46,7 @@ page-header-actions: buttons
 			updateItems(data);
 		})
 		.catch(error => {
-			console.log('Authentication problem, try login again' + error.message);
-			window.location.href = '/sign-in.html';
+			console.error('Error:', error.message);
 		});
 
 	// Function to update items on the page

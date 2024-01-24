@@ -7,44 +7,47 @@
 		<input type="text" class="form-control" name="example-text-input" placeholder="Il nome del tuo progetto">
 	</div>
 
-	<label class="form-label">Tipo di progetto</label>
-	<div class="form-selectgroup-boxes row mb-3">
-		{% for report in reports %}
-		{% assign r = report | split: ':' %}
-		<div class="col-lg-6">
-			<label class="form-selectgroup-item">
-				<input type="radio" name="report-type" value="{{ forloop.index }}" class="form-selectgroup-input" {% if forloop.index == 1 %} checked {% endif %}>
-				<span class="form-selectgroup-label d-flex align-items-center p-3">
-                    <span class="me-3">
-                        <span class="form-selectgroup-check"></span>
-                    </span>
-                    <span class="form-selectgroup-label-content">
-                        <span class="form-selectgroup-title strong mb-1">{{ r[0] }}</span>
-                        <span class="d-block text-secondary">{{ r[1] }}</span>
-                    </span>
-                </span>
-			</label>
-		</div>
-		{% endfor %}
-	</div>
+<!--	<label class="form-label">Tipo di progetto</label>-->
+<!--	<div class="form-selectgroup-boxes row mb-3">-->
+<!--		{% for report in reports %}-->
+<!--		{% assign r = report | split: ':' %}-->
+<!--		<div class="col-lg-6">-->
+<!--			<label class="form-selectgroup-item">-->
+<!--				<input type="radio" name="report-type" value="{{ forloop.index }}" class="form-selectgroup-input" {% if forloop.index == 1 %} checked {% endif %}>-->
+<!--				<span class="form-selectgroup-label d-flex align-items-center p-3">-->
+<!--                    <span class="me-3">-->
+<!--                        <span class="form-selectgroup-check"></span>-->
+<!--                    </span>-->
+<!--                    <span class="form-selectgroup-label-content">-->
+<!--                        <span class="form-selectgroup-title strong mb-1">{{ r[0] }}</span>-->
+<!--                        <span class="d-block text-secondary">{{ r[1] }}</span>-->
+<!--                    </span>-->
+<!--                </span>-->
+<!--			</label>-->
+<!--		</div>-->
+<!--		{% endfor %}-->
+<!--	</div>-->
 
-	<div class="row" id="pdf-upload">
+
+	<div class="row" id="provision-upload">
 		<div class="col-lg-12">
 			<div class="mb-3">
-				<div class="form-label">Carica PDF (solo il fascicolo ufficiale degli emendamenti)</div>
+				<div class="form-label">Carica PDF (atto ufficiale nel formato PDF del Senato)</div>
 				<input type="file" class="form-control">
 			</div>
 		</div>
 	</div>
 
-	<div class="row" id="url-input" style="display: none">
+	<div class="row" id="amends-upload">
 		<div class="col-lg-12">
 			<div class="mb-3">
-				<label class="form-label">Indica l'url del bollettino</label>
-				{% include ui/form/input-group.html prepend="https://tabler.io/reports/" flat=true input-class="ps-0" value="report-01" %}
+				<div class="form-label">Carica PDF (fascicolo degli emendamenti nel formato PDF del Senato)</div>
+				<input type="file" class="form-control">
 			</div>
 		</div>
 	</div>
+
+
 
 </div>
 
