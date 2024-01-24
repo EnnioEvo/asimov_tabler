@@ -358,7 +358,7 @@
 			fill_table()
 		} else {
 			// Perform the API request
-			var endpoint = 'http://127.0.0.1:8000/users/me/fetch_personalized_iters/'
+			var endpoint = 'http://senato.asimov.law:8000/users/me/fetch_personalized_iters/'
 			if (keyword) {
 				endpoint += '?keyword=' + keyword
 			}
@@ -408,7 +408,7 @@
 			path = 'unfollow_iter'
 		}
 
-		return fetch(`http://127.0.0.1:8000/users/me/${path}/?iter_id=` + iterId, {
+		return fetch(`http://senato.asimov.law:8000/users/me/${path}/?iter_id=` + iterId, {
 			method: 'POST',
 			headers: {
 				'Accept': 'application/json',
