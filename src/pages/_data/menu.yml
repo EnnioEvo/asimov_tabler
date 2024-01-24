@@ -330,26 +330,26 @@ projects:
 #  icon: ghost
 #  url: icons.html
 
-emails:
-  title: "Account"
-  icon: settings
-  url: settings.html
-
-help:
-  title: Help
-  icon: lifebuoy
-  children:
-    docs:
-      title: Documentation
-      url: https://tabler.io/docs
-    changelog:
-      url: changelog.html
-      title: Changelog
-    source-code:
-      url: https://github.com/tabler/tabler
-      title: Source code
-    sponsor:
-      color: pink
-      icon: heart
-      url: https://github.com/sponsors/codecalm
-      title: Sponsor project!
+#emails:
+#  title: "Account"
+#  icon: settings
+#  url: settings.html
+#
+#help:
+#  title: Help
+#  icon: lifebuoy
+#  children:
+#    docs:
+#      title: Documentation
+#      url: https://tabler.io/docs
+#    changelog:
+#      url: changelog.html
+#      title: Changelog
+#    source-code:
+#      url: https://github.com/tabler/tabler
+#      title: Source code
+#    sponsor:
+#      color: pink
+#      icon: heart
+#      url: https://github.com/sponsors/codecalm
+#      title: Sponsor project!

@@ -31,6 +31,9 @@
 	<div class="table-responsive" style="width: fit-content">
 
 		<table class="table card-table table-vcenter text-nowrap datatable">
+
+
+
 			<style>
 				.table tr {
 					max-height: 3.6em;
@@ -132,7 +135,7 @@
 					PD
 				</td>
 				<td id="stato_ddl_semp" class="stato_ddl_semp" title="Esito positivo">
-					<span class="badge bg-blue me-1"></span>
+					<i class="ti ti-arrow-big-right-lines"></i>
 				</td>
 				<td id="data_stato_ddl" class="data_stato_ddl"> 15 Gen 24</td>
 
@@ -161,9 +164,9 @@
 		'S': 'https://www.senato.it/leg/19/BGT/Schede/Ddliter/{id_fase}.htm'
 	}
 	var stata_ddl = {
-		'In corso': {'classList': "badge bg-green m-2", "title": "In corso"},
-		'Esito positivo': {'classList': 'badge bg-blue m-2', 'title': 'Esito positivo'},
-		'Esito negativo': {'classList': 'badge bg-muted m-2', 'title': 'Esito negativo'}
+		'In corso': {'component_id': "icon_in_corso", "title": "In corso"},
+		'Esito positivo': {'component_id': 'icon_esito_positivo', 'title': 'Esito positivo'},
+		'Esito negativo': {'component_id': 'icon_esito_negativo', 'title': 'Esito negativo'}
 	}
 
 	function ellipse(str, num) {
@@ -214,12 +217,18 @@
 					element.title = item[field]
 					break
 				case 'stato_ddl_semp':
-					var spanElement = element.querySelector('span');
 					var status = stata_ddl[item[field]];
-					spanElement.classList = status['classList'];
+					var templateIcon = document.getElementById(status['component_id']);
+					var icon = templateIcon.cloneNode(true);
+					// Remove all children using a loop
+					while (element.children.length > 1) {
+						element.removeChild(element.lastChild);
+					}
+					element.appendChild(icon)
 					element.title = status['title'];
 					break;
 				case 'data_stato_ddl':
+
 					element.textContent = formatDate(item[field]);
 					break
 				case 'seguito':
@@ -358,7 +367,7 @@
 			fill_table()
 		} else {
 			// Perform the API request
-			var endpoint = 'http://127.0.0.1:8000/users/me/fetch_personalized_iters/'
+			var endpoint = 'https://{{ site.data.endpoint[0].host }}:8000/users/me/fetch_personalized_iters/'
 			if (keyword) {
 				endpoint += '?keyword=' + keyword
 			}
@@ -367,12 +376,23 @@
 				headers: {
 					'Accept': 'application/json',
 					// Assuming the token is stored in a meta tag
-					'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
+					'Authorization': 'Bearer ' + sessionStorage.getItem('access_token'),
 					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify(data)
 			})
-				.then(response => response.json())
+				.then(response => {
+					// Check if the request was successful
+					if (!response.ok) {
+						// Check if the error is related to authentication (401 Unauthorized)
+						if (response.status === 401) {
+							window.location.href = '/sign-in.html';
+							throw new Error('Authentication error: Unauthorized');
+						}
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
+					return response.json();
+				})
 				.then(responseData => {
 					// Handle the response
 					console.log(responseData);
@@ -382,8 +402,7 @@
 				})
 				.catch(error => {
 					// Handle the error
-					console.log('Authentication problem, try login again' + error.message);
-					window.location.href = '/sign-in.html';
+					console.log(error.message);
 				});
 		}
 
@@ -408,11 +427,11 @@
 			path = 'unfollow_iter'
 		}
 
-		return fetch(`http://127.0.0.1:8000/users/me/${path}/?iter_id=` + iterId, {
+		return fetch(`https://{{ site.data.endpoint[0].host }}:8000/users/me/${path}/?iter_id=` + iterId, {
 			method: 'POST',
 			headers: {
 				'Accept': 'application/json',
-				'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
+				'Authorization': 'Bearer ' + sessionStorage.getItem('access_token'),
 				'Content-Type': 'application/json'
 			},
 			// Add a request body if needed
