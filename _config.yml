@@ -12,8 +12,8 @@ keep_files:
 use-iconfont: false
 rtl: false
 
-title: Tabler
-description: Premium and Open Source dashboard template with responsive and high quality UI.
+title: Asimov
+description:
 theme-color: "#0054a6"
 
 email: support@tabler.io

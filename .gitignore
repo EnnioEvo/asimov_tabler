@@ -31,3 +31,5 @@ node_modules/
 .next
 .vercel
 package-lock.json
+
+src/pages/_data/endpoint.yml

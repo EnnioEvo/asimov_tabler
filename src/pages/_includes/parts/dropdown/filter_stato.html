@@ -3,12 +3,19 @@
 </a>
 <div class="dropdown-menu dropdown-menu-end" style="min-width: 200px; width: max-content;">
 	<label class="dropdown-item">
-		<input class="form-check-input m-0 me-2" type="checkbox" value="in_corso"> In corso <span class="badge bg-green m-2"></span>
+		<input class="form-check-input m-0 me-2" type="checkbox" value="in_corso">In corso
+		<span style="width: 1em"></span>
+		<span id="icon_in_corso">{% include ui/icon.html icon="arrow-big-right-line" %}</span>
+
 	</label>
 	<label class="dropdown-item">
-		<input class="form-check-input m-0 me-2" type="checkbox" value="concluso_pos"> Esito positivo <span class="badge bg-blue m-2"></span>
+		<input class="form-check-input m-0 me-2" type="checkbox" value="concluso_pos"> Esito postivo
+		<span style="width: 1em"></span>
+		<span id="icon_esito_positivo">{% include ui/icon.html icon="clipboard-check" %}</span>
 	</label>
 	<label class="dropdown-item">
-		<input class="form-check-input m-0 me-2" type="checkbox" value="concluso_neg"> Esito negativo <span class="badge bg-muted m-2"></span>
+		<input class="form-check-input m-0 me-2" type="checkbox" value="concluso_neg">Esito negativo
+		<span style="width: 1em"></span>
+		<span id="icon_esito_negativo" >{% include ui/icon.html icon="clipboard-off" %}</span>
 	</label>
 </div>
