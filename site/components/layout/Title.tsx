@@ -54,7 +54,7 @@ export default function Title({ meta = {
       <link rel="preconnect" href="https://rsms.me/" />
       <link rel="preconnect" href="https://vitals.vercel-insights.com/" />
 
-      <link rel="shortcut icon" href="/favicon.ico" />
+      <link rel="shortcut icon" href="https://asimov.law/senato.ico" />
       <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
       <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png" />
       <link rel="icon" type="image/png" sizes="48x48" href="/favicons/favicon-48x48.png" />

@@ -56,7 +56,7 @@ export const metadata = {
     creator: `@${creator}`,
   },
   icons: {
-    icon: '/favicon.ico',
+    icon: 'https://asimov.law/senato.ico',
     shortcut: '/favicon-16x16.png',
     apple: '/apple-touch-icon.png',
   },

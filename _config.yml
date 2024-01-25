@@ -12,8 +12,8 @@ keep_files:
 use-iconfont: false
 rtl: false
 
-title: Asimov
-description:
+title: Senato
+description: Asimov
 theme-color: "#0054a6"
 
 email: support@tabler.io
