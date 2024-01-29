@@ -367,7 +367,7 @@
 			fill_table()
 		} else {
 			// Perform the API request
-			var endpoint = 'http://{{ site.data.endpoint[0].host }}:8000/users/me/fetch_personalized_iters/'
+			var endpoint = 'https://{{ site.data.endpoint[0].host }}:8000/users/me/fetch_personalized_iters/'
 			if (keyword) {
 				endpoint += '?keyword=' + keyword
 			}
@@ -427,7 +427,7 @@
 			path = 'unfollow_iter'
 		}
 
-		return fetch(`http://{{ site.data.endpoint[0].host }}:8000/users/me/${path}/?iter_id=` + iterId, {
+		return fetch(`https://{{ site.data.endpoint[0].host }}:8000/users/me/${path}/?iter_id=` + iterId, {
 			method: 'POST',
 			headers: {
 				'Accept': 'application/json',
