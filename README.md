@@ -96,7 +96,7 @@ source ~/.bashrc
 nvm install node
 sudo apt install npm
 sudo gem install bundler
-bundle install
+sudo bundle install
 # install pnpm
 sudo npm install -g pnpm
 pnpm install
