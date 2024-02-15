@@ -434,11 +434,11 @@ gulp.task('browser-sync', () => {
 				'/static': `${srcDir}/static`,
 			},
 		},
-		// https: {
-		// 	key: "/etc/letsencrypt/live/senato.asimov.law/privkey.pem",
-		// 	cert: "/etc/letsencrypt/live/senato.asimov.law/fullchain.pem"
-		// },
-		port: 80,
+		https: {
+			key: "/etc/letsencrypt/live/asimov.law/privkey.pem",
+			cert: "/etc/letsencrypt/live/asimov.law/fullchain.pem"
+		},
+		port: 3000,
 		open: false,
 		host: 'localhost',
 		notify: false,

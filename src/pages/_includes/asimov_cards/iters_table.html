@@ -75,7 +75,7 @@
 					max-width: 15em;
 				}
 
-				.table td.nome_gruppo, .table th.nome_gruppo {
+				.table td.nome_iniziativa, .table th.nome_iniziativa {
 					max-width: 11em;
 				}
 
@@ -100,9 +100,9 @@
 				<th class="titolo">Titolo{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}</th>
 				<th class="presentatori">1º firm.{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}
 				</th>
-				<th class="nome_gruppo">Gruppo{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {%
+				<th class="nome_iniziativa">Iniziativa{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {%
 					include
-					parts/dropdown/filter_gruppo.html %}
+					parts/dropdown/filter_iniziativa.html %}
 				</th>
 				<th class="stato_ddl_semp">{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {%
 					include
@@ -131,7 +131,7 @@
 				<td id="presentatori" class="presentatori" title="">
 					Giancarlo Giorgetti
 				</td>
-				<td id="nome_gruppo" class="nome_gruppo" title="">
+				<td id="nome_iniziativa" class="nome_iniziativa" title="">
 					PD
 				</td>
 				<td id="stato_ddl_semp" class="stato_ddl_semp" title="Esito positivo">
@@ -158,7 +158,7 @@
 
 	var ddls = [];
 
-	var fields = ['ramo', 'numero_fase', 'titolo', 'presentatori', 'nome_gruppo', 'stato_ddl_semp', 'data_stato_ddl', 'seguito'];
+	var fields = ['ramo', 'numero_fase', 'titolo', 'presentatori', 'nome_iniziativa', 'stato_ddl_semp', 'data_stato_ddl', 'seguito'];
 	var base_addresses = {
 		'C': 'https://www.camera.it/leg19/126?tab=&leg=19&idDocumento={numero_fase}',
 		'S': 'https://www.senato.it/leg/19/BGT/Schede/Ddliter/{id_fase}.htm'
@@ -215,6 +215,10 @@
 				case 'titolo':
 					element.textContent = ellipse(item[field], 130);
 					element.title = item[field]
+					break
+				case 'nome_iniziativa':
+					// var anchorElement = element.querySelector("a");
+					element.textContent = item['nome_gruppo']
 					break
 				case 'stato_ddl_semp':
 					var status = stata_ddl[item[field]];
@@ -274,7 +278,8 @@
 			page = parseInt(storedActiveItem, 10);
 		} else {
 			page = 1;
-			updatePaginationUI(page)
+			localStorage.setItem('active_item', 1);
+			updatePaginationUI()
 		}
 
 		// Num results to display
@@ -367,7 +372,7 @@
 			fill_table()
 		} else {
 			// Perform the API request
-			var endpoint = 'https://{{ site.data.endpoint[0].host }}:8000/users/me/fetch_personalized_iters/'
+			var endpoint = '{{ site.data.endpoint[0].host }}/users/me/fetch_personalized_iters/'
 			if (keyword) {
 				endpoint += '?keyword=' + keyword
 			}
@@ -427,7 +432,7 @@
 			path = 'unfollow_iter'
 		}
 
-		return fetch(`https://{{ site.data.endpoint[0].host }}:8000/users/me/${path}/?iter_id=` + iterId, {
+		return fetch(`{{ site.data.endpoint[0].host }}/users/me/${path}/?iter_id=` + iterId, {
 			method: 'POST',
 			headers: {
 				'Accept': 'application/json',

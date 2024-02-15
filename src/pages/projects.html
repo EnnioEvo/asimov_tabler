@@ -21,7 +21,7 @@ page-header-actions: buttons
 <script>
 	const accessToken = sessionStorage.getItem('access_token');
 	// Fetch data from your API
-	fetch('https://{{ site.data.endpoint[0].host }}:8000/users/me/projects/', {
+	fetch('{{ site.data.endpoint[0].host }}/users/me/projects/', {
 		method: 'GET',
 		headers: {
 			'Accept': 'application/json',

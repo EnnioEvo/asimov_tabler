@@ -2,32 +2,34 @@
 {% assign active-item = include.active-item | default: 1 %}
 <ul class="pagination {{ include.class }}">
    <li class="page-item{% if include.prev-description %} page-prev{% endif %} disabled">
-      <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+      <a class="page-link" href="#" onclick="changePage(Math.max(1, parseInt(localStorage.getItem('active_item'), 10) - 1)); return false;" tabindex="-1" aria-disabled="true">
          {% if include.prev-description %}
-            <div class="page-item-subtitle">previous</div>
-            <div class="page-item-title">{{ include.prev-description }}</div>
+            <div class="page-item-subtitle">precedente</div>
+            <div class="page-item-title">prec.</div>
          {% else %}
-            {% if include.icons %}{% include ui/icon.html icon="chevron-left" %}{% else %}{% include ui/icon.html icon="chevron-left" %} prev{% endif %}
+            {% if include.icons %}{% include ui/icon.html icon="chevron-left" %}{% else %}{% include ui/icon.html icon="chevron-left" %} prec.{% endif %}
          {% endif %}
       </a>
    </li>
 
-   {% for i in (1..count) %}
+
    <li class="page-item{% if i == active-item %} active{% endif %}">
-		<a class="page-link" href="#" onclick="changePage({{ i }}); return false;">
-			{{ i }}
+		<input type="number" id="page-number-input" class="form-control" placeholder="" style="width: 70px; height: 30px;" min="1">
+	</li>
+
+	<li class="page-item">
+		<a class="page-link" href="#" onclick="changePage(parseInt(document.querySelector('#page-number-input').value, 10)); return false;">
+			  vai
 		</a>
 	</li>
-   {% endfor %}
-
    <li class="page-item{% if include.prev-description %} page-next{% endif %}">
-      <a class="page-link" href="#">
+      <a class="page-link" href="#" onclick="changePage(parseInt(localStorage.getItem('active_item'), 10) + 1); return false;">
 
          {% if include.next-description %}
-            <div class="page-item-subtitle">next</div>
-            <div class="page-item-title">{{ include.next-description }}</div>
+            <div class="page-item-subtitle">prossimo</div>
+            <div class="page-item-title">pross.</div>
          {% else %}
-            {% if include.icons %}{% include ui/icon.html icon="chevron-right" %}{% else %}next {% include ui/icon.html icon="chevron-right" %}{% endif %}
+            {% if include.icons %}{% include ui/icon.html icon="chevron-right" %}{% else %}pross. {% include ui/icon.html icon="chevron-right" %}{% endif %}
          {% endif %}
       </a>
    </li>

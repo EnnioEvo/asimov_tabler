@@ -1,4 +1,4 @@
-<form id="loginForm" action="https://{{ site.data.endpoint[0].host }}:8000/token" method="post" autocomplete="off" novalidate>
+<form id="loginForm" action="{{ site.data.endpoint[0].host }}/token" method="post" autocomplete="off" novalidate>
 	<div class="mb-3">
 		<label class="form-label">Indirizzo email</label>
 		<input type="email" class="form-control" name="username" placeholder="latua@email.com" autocomplete="off">
@@ -28,7 +28,7 @@
 		event.preventDefault();
 
 		// Perform the form submission using Fetch or XMLHttpRequest
-		fetch('https://{{ site.data.endpoint[0].host }}:8000/token', {
+		fetch('{{ site.data.endpoint[0].host }}/token', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded',
