@@ -1,20 +1,20 @@
 <a class="text-decoration-none text-reset" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 	{% include ui/icon.html icon="adjustments" class="icon-sm icon-thick" %}
 </a>
-<div class="dropdown-menu dropdown-menu-end" style="min-width: 200px; width: max-content;">
+<div id="stato_ddl_dropdown"class="dropdown-menu dropdown-menu-end" style="min-width: 200px; width: max-content;">
 	<label class="dropdown-item">
-		<input class="form-check-input m-0 me-2" type="checkbox" value="in_corso">In corso
+		<input class="form-check-input m-0 me-2" type="checkbox" value="In corso">In corso
 		<span style="width: 1em"></span>
 		<span id="icon_in_corso">{% include ui/icon.html icon="arrow-big-right-line" %}</span>
 
 	</label>
 	<label class="dropdown-item">
-		<input class="form-check-input m-0 me-2" type="checkbox" value="concluso_pos"> Esito postivo
+		<input class="form-check-input m-0 me-2" type="checkbox" value="Esito positivo"> Esito postivo
 		<span style="width: 1em"></span>
 		<span id="icon_esito_positivo">{% include ui/icon.html icon="clipboard-check" %}</span>
 	</label>
 	<label class="dropdown-item">
-		<input class="form-check-input m-0 me-2" type="checkbox" value="concluso_neg">Esito negativo
+		<input class="form-check-input m-0 me-2" type="checkbox" value="Esito negativo">Esito negativo
 		<span style="width: 1em"></span>
 		<span id="icon_esito_negativo" >{% include ui/icon.html icon="clipboard-off" %}</span>
 	</label>

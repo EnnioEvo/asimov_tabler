@@ -1,8 +1,8 @@
 {% assign count = include.count | default: 5 %}
 {% assign active-item = include.active-item | default: 1 %}
 <ul class="pagination {{ include.class }}">
-   <li class="page-item{% if include.prev-description %} page-prev{% endif %} disabled">
-      <a class="page-link" href="#" onclick="changePage(Math.max(1, parseInt(localStorage.getItem('active_item'), 10) - 1)); return false;" tabindex="-1" aria-disabled="true">
+   <li id="prev-button" class="page-item{% if include.prev-description %} page-prev{% endif %} disabled">
+      <a class="page-link" href="javascript:void(0);" onclick="changePage(Math.max(1, parseInt(localStorage.getItem('table_page'), 10) - 1)); return false;" tabindex="-1" aria-disabled="true">
          {% if include.prev-description %}
             <div class="page-item-subtitle">precedente</div>
             <div class="page-item-title">prec.</div>
@@ -11,19 +11,19 @@
          {% endif %}
       </a>
    </li>
-
+   
 
    <li class="page-item{% if i == active-item %} active{% endif %}">
 		<input type="number" id="page-number-input" class="form-control" placeholder="" style="width: 70px; height: 30px;" min="1">
 	</li>
 
 	<li class="page-item">
-		<a class="page-link" href="#" onclick="changePage(parseInt(document.querySelector('#page-number-input').value, 10)); return false;">
+		<a class="page-link" href="javascript:void(0);" onclick="changePage(parseInt(document.querySelector('#page-number-input').value, 10)); return false;">
 			  vai
 		</a>
 	</li>
-   <li class="page-item{% if include.prev-description %} page-next{% endif %}">
-      <a class="page-link" href="#" onclick="changePage(parseInt(localStorage.getItem('active_item'), 10) + 1); return false;">
+   <li id="next-button" class="page-item{% if include.prev-description %} page-next{% endif %}">
+      <a class="page-link" href="javascript:void(0);" onclick="changePage(parseInt(localStorage.getItem('table_page'), 10) + 1); return false;">
 
          {% if include.next-description %}
             <div class="page-item-subtitle">prossimo</div>
@@ -39,27 +39,33 @@
 <script>
 
 	// Function to update the class of the active pagination item
-	function updatePaginationUI() {
-		var storedActiveItem = localStorage.getItem('active_item');
-		var activeItem = parseInt(storedActiveItem, 10);
+    function updatePaginationUI() {
+        var prevButton = document.querySelector('#prev-button');
+         currentPage = get_current_page()
+        if (currentPage > 1) {
+            prevButton.classList.remove('disabled');
+        } else {
+            prevButton.classList.add('disabled');
+        }
 
-		var paginationItems = document.querySelectorAll('.page-item');
-		paginationItems.forEach(function (item, index) {
-			if (index === activeItem) {
-				item.classList.add('active');
-			} else {
-				item.classList.remove('active');
-			}
-		});
-	}
-
+        // Update the input field's value
+        var pageNumberInput = document.querySelector('#page-number-input');
+        if (pageNumberInput) {
+            pageNumberInput.value = currentPage;
+        }
+		// Update the page label's value
+        var pageLabel = document.querySelector('#page_label');
+        if (pageLabel) {
+            pageLabel.textContent = currentPage;
+        }
+    }
 
 
 	function changePage(newActiveItem) {
 
 		// Update the include variables
-		localStorage.setItem('active_item', newActiveItem);
-		updatePaginationUI(newActiveItem)
+		localStorage.setItem('table_page', newActiveItem);
+		updatePaginationUI()
 
 		fill_table()
 		return false;

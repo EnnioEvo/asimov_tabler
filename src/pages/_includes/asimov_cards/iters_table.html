@@ -2,7 +2,7 @@
 	<div class="card-header d-flex justify-content-between align-items-center" style="height: 5em">
 		<h3 class="card-title">Tutti</h3>
 		<div class="col-7 col-sm-4 col-md-2 col-xl-auto py-3">
-			<a href="#" class="btn w-100 btn-icon" aria-label="Aggiorna">
+			<a id="refresh" href="javascript:void(0);" onclick="fetch_data({field: 'data_stato_ddl', desc: true})" class="btn w-100 btn-icon" aria-label="Aggiorna">
 				{% include ui/icon.html icon="refresh"%}
 			</a>
 		</div>
@@ -20,7 +20,7 @@
 			</div>
 
 			<div class="ms-auto text-secondary">
-				Cerca:
+				Cerca
 				<div class="ms-2 d-inline-block">
 					<input type="text" class="form-control form-control-sm" aria-label="Search ddl">
 				</div>
@@ -75,8 +75,8 @@
 					max-width: 15em;
 				}
 
-				.table td.nome_iniziativa, .table th.nome_iniziativa {
-					max-width: 11em;
+				.table td.nome_gruppo, .table th.nome_gruppo {
+					max-width: 12em;
 				}
 
 				.table td.stato_ddl_semp, .table th.stato_ddl_semp {
@@ -100,13 +100,13 @@
 				<th class="titolo">Titolo{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}</th>
 				<th class="presentatori">1º firm.{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}
 				</th>
-				<th class="nome_iniziativa">Iniziativa{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {%
+				<th class="nome_gruppo">Iniziativa{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {%
 					include
-					parts/dropdown/filter_iniziativa.html %}
+					parts/dropdown/filter_nome_gruppo.html %}
 				</th>
 				<th class="stato_ddl_semp">{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {%
 					include
-					parts/dropdown/filter_stato.html %}
+					parts/dropdown/filter_stato_ddl.html %}
 				</th>
 				<th class="data_stato_ddl">Ultimo agg.{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick"
 					%} {% include
@@ -131,7 +131,7 @@
 				<td id="presentatori" class="presentatori" title="">
 					Giancarlo Giorgetti
 				</td>
-				<td id="nome_iniziativa" class="nome_iniziativa" title="">
+				<td id="nome_gruppo" class="nome_gruppo" title="">
 					PD
 				</td>
 				<td id="stato_ddl_semp" class="stato_ddl_semp" title="Esito positivo">
@@ -148,7 +148,7 @@
 		</table>
 	</div>
 	<div class="card-footer d-flex align-items-center" style="display: none">
-		<!--		<p class="m-0 text-secondary"> <span id="num_displayed_results">50</span> risultati di <span id="num_total_results">100</span>-->
+				<p class="m-0 text-secondary"> Pagina <span id="page_label">1</span>
 		{% include asimov_cards/iters_table_pagination.html class="m-0 ms-auto" %}</p>
 
 	</div>
@@ -156,9 +156,15 @@
 
 <script>
 
+	document.querySelectorAll('.dropdown-item .form-check-input').forEach(function(checkbox) {
+	checkbox.addEventListener('click', function(event) {
+		event.stopPropagation();
+	});
+	});
+
 	var ddls = [];
 
-	var fields = ['ramo', 'numero_fase', 'titolo', 'presentatori', 'nome_iniziativa', 'stato_ddl_semp', 'data_stato_ddl', 'seguito'];
+	var fields = ['ramo', 'numero_fase', 'titolo', 'presentatori', 'nome_gruppo', 'stato_ddl_semp', 'data_stato_ddl', 'seguito'];
 	var base_addresses = {
 		'C': 'https://www.camera.it/leg19/126?tab=&leg=19&idDocumento={numero_fase}',
 		'S': 'https://www.senato.it/leg/19/BGT/Schede/Ddliter/{id_fase}.htm'
@@ -214,9 +220,10 @@
 				// throw new Error('Custom error message for numero_fase');
 				case 'titolo':
 					element.textContent = ellipse(item[field], 130);
+					element.textContent = item[field], 130;
 					element.title = item[field]
 					break
-				case 'nome_iniziativa':
+				case 'nome_gruppo':
 					// var anchorElement = element.querySelector("a");
 					element.textContent = item['nome_gruppo']
 					break
@@ -268,19 +275,24 @@
 
 	}
 
-	function fill_table() {
-
-		// Pagination
-		// var page = document.querySelector('.pagination .active a').dataset.page || 1;
-		var page = null;
-		var storedActiveItem = localStorage.getItem('active_item');
+	function get_current_page(){
+		var storedActiveItem = localStorage.getItem('table_page');
 		if (storedActiveItem) {
 			page = parseInt(storedActiveItem, 10);
 		} else {
 			page = 1;
-			localStorage.setItem('active_item', 1);
+			localStorage.setItem('table_page', 1);
 			updatePaginationUI()
 		}
+		return page
+	}
+
+	function fill_table() {
+
+		// Pagination
+		// var page = document.querySelector('.pagination .active a').dataset.page || 1;
+		var page = get_current_page();
+
 
 		// Num results to display
 		var num_results = document.getElementById('display_n_results').value
@@ -355,8 +367,9 @@
 		// Get the selected options from the dropdowns
 		var options = {
 			// Assuming the dropdowns have class 'dropdown-filter'
-			ramo: getSelectedOptions('div.dropdown-menu'),
-			presentatore: getSelectedOptions('.dropdown-filter.filter_actions'),
+			ramo: getSelectedOptions('#ramo_dropdown'),
+			nome_gruppo: getSelectedOptions('#nome_gruppo_dropdown'),
+			stato_ddl: getSelectedOptions('#stato_ddl_dropdown'),
 		};
 
 		// Prepare the data for the API request
