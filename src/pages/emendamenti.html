@@ -17,15 +17,17 @@ layout-hide-topbar: true
 				  <h3 class="card-title">Links and buttons</h3>
 				</div>
 				<div class="list-group list-group-flush scrollable overflow-auto" style="max-height: 35rem;" id="amendmentIdxs">
-				  <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
-					1.1
-				  </a>
 				</div>
 			  </div>
 		</div>
 		<div class="col-5 col-lg-5 col-xl-5 d-flex flex-column">
 			<div class="card-body markdown scrollable" style="height: 18rem; white-space: pre-line;" id="amendmentContent"></div>
-			<div class="card-body markdown scrollable" style="height: 17rem; white-space: pre-line;" id="amendmentAnalysis"></div>
+			<div class="card-body markdown scrollable" style="height: 17rem; white-space: pre-line;" id="amendmentAnalysis">
+			<strong>Titolo</strong>
+			<p id="titolo"></p>
+			<strong>Sintesi</strong>
+			<p id="sintesi"></p>
+			</div>
 		</div>
 		<div class="col-6 col-lg-6 col-xl-6 d-flex flex-column">
 			<div class="card-body markdown scrollable" style="height: 35rem; white-space: pre-line;" id="articleContent"></div>
@@ -42,18 +44,19 @@ layout-hide-topbar: true
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasEnd" aria-labelledby="offcanvasEndLabel">
 	<div class="offcanvas-header">
-		<h2 class="offcanvas-title" id="offcanvasEndLabel">End offcanvas</h2>
+		<h2 class="offcanvas-title" ><a id="offcanvasHeader" href="" target="_blank">End offcanvas</a></h2>
 		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 	</div>
 	<div class="offcanvas-body">
-		<div>
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab assumenda ea est, eum exercitationem fugiat illum itaque laboriosam magni necessitatibus, nemo nisi numquam quae reiciendis repellat sit soluta unde. Aut!
-		</div>
-		<div class="mt-3">
+		<strong>Sintesi</strong>
+		<p id="quotationSummary"></p>
+		<strong>Testo</strong>
+		<p id="quotationText"></p>
+		<!-- <div class="mt-3">
 			<button class="btn btn-primary" type="button" data-bs-dismiss="offcanvas">
 				Close offcanvas
 			</button>
-		</div>
+		</div> -->
 	</div>
 </div>
 <style>
@@ -77,15 +80,7 @@ layout-hide-topbar: true
 
 	let offCanvasBody = document.querySelector('.offcanvas-body');
 	let offcanvasToggleBtn = document.querySelector('a[data-bs-toggle="offcanvas"]');
-        
-	// document.querySelectorAll('.quotation').forEach(function (quotation) {
-	// 	quotation.addEventListener('click', function () {
-	// 		let formatoStandard = quotation.dataset.formato_standard;
-	// 		offCanvasBody.innerHTML = `<strong>Dettagli citazione</strong>
-	// 								<p>${formatoStandard}</p>`;
-	// 		offcanvasToggleBtn.click();
-	// 	});
-	// });
+    
 
 	var visualizationData;
 	function fetch_visualization_data(){
@@ -128,7 +123,8 @@ layout-hide-topbar: true
 	function fill_visualization(){
 		const amendmentDiv = document.getElementById('amendmentIdxs');
 		const amendmentContentDiv = document.getElementById('amendmentContent');
-		const amendmentAnalysisDiv = document.getElementById('amendmentAnalysis');
+		const titoloComponent = document.getElementById('titolo');
+		const sintesiComponent = document.getElementById('sintesi');
 		const articleContentDiv = document.getElementById('articleContent');
 
 		// Fill the first column with the ids of the amendments
@@ -139,6 +135,7 @@ layout-hide-topbar: true
 					let listItem = document.createElement('a');
 					listItem.href = '#';
 					listItem.className = 'list-group-item list-group-item-action';
+					"list-group-item list-group-item-action active" 
 					listItem.textContent = emKey;
 					// Set the data attribute to store the amendment key for later use
 					listItem.dataset.amendmentKey = emKey;
@@ -146,10 +143,12 @@ layout-hide-topbar: true
 						event.preventDefault();
 						// When the item is clicked, call the function to update content in other columns
 						updateOtherColumns(event.currentTarget.dataset.amendmentKey);
+						addEventToQuotations();
 					});
 					amendmentDiv.appendChild(listItem);
 				}
 			}
+			amendmentDiv.firstElementChild.click();
 		}
 
 		// Update the other two columns with the corresponding data of the amendment
@@ -159,30 +158,64 @@ layout-hide-topbar: true
 			let articleContent = visualizationData.articles_data[articleKey];
 
 			// Set the content for the amendmentContentDiv and amendmentAnalysisDiv
-			amendmentContentDiv.textContent = amendmentData.body;
-			amendmentAnalysisDiv.textContent = amendmentData.sintesi;
+			amendmentContentDiv.innerHTML = amendmentData.body;
+			titoloComponent.innerHTML = amendmentData.titolo;
+			sintesiComponent.textContent = amendmentData.sintesi;
 
 			// Set the content for the articleContentDiv
 			articleContentDiv.innerHTML = articleContent;
 
 			// Scroll back to the top of the content
 			amendmentContentDiv.scrollTop = 0;
-			amendmentAnalysisDiv.scrollTop = 0;
 			articleContentDiv.scrollTop = 0;
 
 			// Highlight the active amendment in the list
 			document.querySelectorAll('.list-group-item').forEach((item) => {
 				item.classList.remove('active');
 			});
-			document.querySelector(`[data-amendment-key="${amendmentKey}"]`).classList.add('active');
+			currentAm = document.querySelector(`[data-amendment-key="${amendmentKey}"]`)
+			currentAm.classList.add('active');
+			currentAm.ariaCurrent="true"
 		}
+
+		function showQuotation(quote_id) {
+        const quotationData = visualizationData.quotations_data[quote_id];
+        if (quotationData) {
+            const offcanvasTitle = document.getElementById('offcanvasHeader');
+            const quotationSummary = document.getElementById('quotationSummary');
+            const quotationText = document.getElementById('quotationText');
+
+            // Populate the offcanvas elements with quotation data
+            offcanvasTitle.textContent = quotationData.standardquote;
+            offcanvasTitle.href = quotationData.url;
+            quotationSummary.textContent = quotationData.note;
+            quotationText.textContent = quotationData.quotetext;
+
+            // Show the offcanvas
+            new bootstrap.Offcanvas(document.getElementById('offcanvasEnd')).show();
+        }
+    }
+
+		function addEventToQuotations(){
+			// Add event listeners to all span elements with data-quoteid
+			spans = document.querySelectorAll('span[data-quoteid]')
+			spans.forEach(span => {
+				span.classList.add('quotation');
+				span.addEventListener('click', function() {
+					const quote_id = this.getAttribute('data-quoteid');
+					// When the span is clicked, call showQuotation function
+					showQuotation(quote_id);
+				});
+			});
+		}
+
 
 		populateAmendmentList();
 	};
 
 	fetch_visualization_data()
 	
-	var x;
+	amendmentDiv.firstChild.click();
 
 
 </script>
