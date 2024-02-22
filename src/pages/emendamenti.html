@@ -1,7 +1,6 @@
 ---
 title: AC1633 - Emendamenti
 page-header: AC1633 - Emendamenti
-menu: extra.chat
 layout-sidebar: true
 layout-navbar-transparent: true
 layout-hide-topbar: true
@@ -179,7 +178,7 @@ layout-hide-topbar: true
 		}
 
 		function showQuotation(quote_id) {
-        const quotationData = visualizationData.quotations_data[quote_id];
+        const quotationData = visualizationData.quotations_data[quote_id-1];
         if (quotationData) {
             const offcanvasTitle = document.getElementById('offcanvasHeader');
             const quotationSummary = document.getElementById('quotationSummary');

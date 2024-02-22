@@ -1,0 +1,28 @@
+<div class="card">
+
+	<div class="card-body">
+
+		<div class="d-flex align-items-center">
+			<div class="card-actions btn-actions">
+				{% include parts/dropdown/iter_actions.html %}
+			</div>
+		</div>
+
+		<a href="/iter.html">
+		<div class="h1 mb-3" style="margin-bottom: 0.5rem !important;">{{include.title}}</div>
+		</a>
+
+		<div class="subheader" style="height: 1rem;"></div>
+		<div class="d-flex mb-2">
+			<div data-query-id="status" style="text-transform: capitalize">Esame in comm.</div>
+			<div class="ms-auto">
+				{% if False %}
+				{% include ui/trending.html value=7 %}
+				{% endif %}
+
+			</div>
+		</div>
+
+		{% include ui/progress.html value=75 color="primary" size="sm" %}
+	</div>
+</div>

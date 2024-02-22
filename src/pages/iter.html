@@ -1,0 +1,280 @@
+---
+title: Iter
+page-header: Iter
+menu: extra.chat
+layout-sidebar: true
+layout-navbar-transparent: true
+layout-hide-topbar: true
+---
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+
+</script>
+<script>
+	// Function to get the value of a query parameter by name
+	function getParameterByName(name) {
+		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+			results = regex.exec(location.search);
+		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+
+	// Get the value of the 'parameter' query parameter from the URL
+	var num_fase = getParameterByName('num_fase');
+	var id_fase = getParameterByName('id_fase');
+
+	var url = ""
+	if (id_fase) {
+		url = `https://www.senato.it/leg/19/BGT/Schede/Ddliter/${id_fase}.htm #content`
+	}
+	else if (num_fase) {
+		url = `https://www.camera.it/leg19/126?tab=&leg=19&idDocumento=${num_fase} #liquid_content`
+	}
+
+	// // Update the content of an element with the id 'parameterValue' with the parameter value
+	// window.onload = function() {
+	// 	// document.getElementById('parameterValue').innerHTML = parameterValue;
+	// 	console.log(parameterValue)
+	// };
+	$(document).ready(function () {
+		// Load the content of the specific div from the external page
+		$('#embed').load(url);
+	});
+</script>
+
+<div id="liquid_content" class="liquid_content">
+
+	<div class="xmanager_content" id="container_15326">
+		<div id="free_text_5588" class="jump">
+
+			<div class="jump">
+				<p><a name="altro_contenuto"></a></p>
+			</div>
+			<span class="clear"></span>
+		</div>
+		<div id="free_text_15329">
+
+			<div>
+				<div>
+					<h4 id="header"></h4>
+				</div>
+			</div>
+			<span class="clear"></span>
+		</div>
+		<div id="external_source_15330" class="scheda-pdl-2022 main_text" style="max-width: 40rem;">
+
+			<div class="container schedaPDL">
+				<div class="jumbotron numeroPDL titolo">
+					<h5 class="label" style="font-size: xx-large;">Atto Camera 1633</h5>
+					<p class="lead titolo">Conversione in legge del decreto-legge 30 dicembre 2023, n. 215, recante
+						disposizioni urgenti in materia di termini normativi</p>
+						<button onclick="window.location.href = '/emendamenti.html'" class="btn" style="margin-bottom: 2rem;">Vai agli Emendamenti</button>
+				</div>
+				<div class="collapse show" id="datiGenerali">
+					<div class="card card-body">
+						<div class="faseAttuale">
+							<span class="label">Fase Iter:</span> Esame in Assemblea
+						</div>
+						<div class="natura">
+							<span class="label">Natura:</span> Disegno di legge ordinario
+						</div>
+						<div class="presentazione">
+							<span class="label">Presentazione:</span> Presentato il 30 dicembre 2023
+						</div>
+						<div class="relatori">
+							<div class="inCommissione">
+								<span class="label">Relatori in Commissione:</span>
+								<ul>
+									<li>
+										<span><a href="https://documenti.camera.it/apps/commonServices/getDocumento.ashx?sezione=deputati&amp;tipoDoc=schedaDeputato&amp;idlegislatura=19&amp;idPersona=308899"
+												title="Vai alla scheda dell'On. RUSSO Paolo Emilio">RUSSO Paolo
+												Emilio</a></span> (<em>per la Commissione I Affari Costituzionali</em>)
+									</li>
+									<li>
+										<span><a href="https://documenti.camera.it/apps/commonServices/getDocumento.ashx?sezione=deputati&amp;tipoDoc=schedaDeputato&amp;idlegislatura=19&amp;idPersona=307603"
+												title="Vai alla scheda dell'On. COLUCCI Alessandro">COLUCCI
+												Alessandro</a></span> (<em>per la Commissione I Affari
+											Costituzionali</em>)
+									</li>
+									<li>
+										<span><a href="https://documenti.camera.it/apps/commonServices/getDocumento.ashx?sezione=deputati&amp;tipoDoc=schedaDeputato&amp;idlegislatura=19&amp;idPersona=307630"
+												title="Vai alla scheda dell'On. FRASSINI Rebecca">FRASSINI
+												Rebecca</a></span> (<em>per la Commissione V Bilancio e Tesoro</em>)
+									</li>
+									<li>
+										<span><a href="https://documenti.camera.it/apps/commonServices/getDocumento.ashx?sezione=deputati&amp;tipoDoc=schedaDeputato&amp;idlegislatura=19&amp;idPersona=308848"
+												title="Vai alla scheda dell'On. ROSSI Angelo">ROSSI Angelo</a></span>
+										(<em>per la Commissione V Bilancio e Tesoro</em>)
+									</li>
+								</ul>
+							</div>
+							<div class="inAssemblea">
+								<span class="label">Relatori in Assemblea:</span>
+								<ul>
+									<li>
+										<span><a href="https://documenti.camera.it/apps/commonServices/getDocumento.ashx?sezione=deputati&amp;tipoDoc=schedaDeputato&amp;idlegislatura=19&amp;idPersona=308899"
+												title="Vai alla scheda dell'On. RUSSO Paolo Emilio">RUSSO Paolo
+												Emilio</a></span> (<em>per la Commissione I Affari Costituzionali, per
+											la maggioranza</em>)
+									</li>
+									<li>
+										<span><a href="https://documenti.camera.it/apps/commonServices/getDocumento.ashx?sezione=deputati&amp;tipoDoc=schedaDeputato&amp;idlegislatura=19&amp;idPersona=307603"
+												title="Vai alla scheda dell'On. COLUCCI Alessandro">COLUCCI
+												Alessandro</a></span> (<em>per la Commissione I Affari Costituzionali,
+											per la maggioranza</em>)
+									</li>
+									<li>
+										<span><a href="https://documenti.camera.it/apps/commonServices/getDocumento.ashx?sezione=deputati&amp;tipoDoc=schedaDeputato&amp;idlegislatura=19&amp;idPersona=307630"
+												title="Vai alla scheda dell'On. FRASSINI Rebecca">FRASSINI
+												Rebecca</a></span> (<em>per la Commissione V Bilancio e Tesoro, per la
+											maggioranza</em>)
+									</li>
+									<li>
+										<span><a href="https://documenti.camera.it/apps/commonServices/getDocumento.ashx?sezione=deputati&amp;tipoDoc=schedaDeputato&amp;idlegislatura=19&amp;idPersona=308848"
+												title="Vai alla scheda dell'On. ROSSI Angelo">ROSSI Angelo</a></span>
+										(<em>per la Commissione V Bilancio e Tesoro, per la maggioranza</em>)
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="assegnazioneAttuale">
+							<div class="primaria">
+								<span class="label">Assegnazione</span> alle Commissioni riunite I Affari Costituzionali
+								e V Bilancio e Tesoro in sede Referente il 30 dicembre 2023
+							</div>
+							<div class="consultiva">Parere delle Commissioni II Giustizia, III Affari Esteri, IV Difesa,
+								VI Finanze (ex articolo 73, comma 1-bis, del regolamento, per gli aspetti attinenti alla
+								materia tributaria), VII Cultura, VIII Ambiente, IX Trasporti, X Attività produttive, XI
+								Lavoro (ex articolo 73, comma 1-bis, del regolamento, relativamente alle disposizioni in
+								materia previdenziale), XII Affari sociali, XIII Agricoltura, XIV Politiche UE e della
+								Commissione parlamentare per le questioni regionali</div>
+						</div>
+						<div class="iniziativa">
+							<span class="label">Iniziativa del Governo: </span><span><a
+									href="https://documenti.camera.it/apps/commonServices/getDocumento.ashx?sezione=deputati&amp;tipoDoc=schedaDeputato&amp;idlegislatura=19&amp;idPersona=302103"
+									title="Vai alla scheda dell'On. MELONI Giorgia">MELONI Giorgia</a></span>
+							(<em>Presidente del Consiglio dei ministri</em>), di concerto con <span><a
+									href="https://documenti.camera.it/apps/commonServices/getDocumento.ashx?sezione=deputati&amp;tipoDoc=schedaDeputato&amp;idlegislatura=19&amp;idPersona=50115"
+									title="Vai alla scheda dell'On. GIORGETTI Giancarlo">GIORGETTI Giancarlo</a></span>
+							(<em>Ministro dell'Economia e delle finanze</em>)
+						</div>
+						<div class="lettureParlamentari">
+							<div class="letturaParlamentare camera">
+								<span class="label">PRIMA LETTURA CAMERA</span>
+								<div class="descrizione">Disegno di legge (C. 1633)</div>
+								<div class="presentazione">Presentato il 30 dicembre 2023</div>
+								<div class="iterCommissione">
+									<span class="label">Iter in Commissione</span>
+									<ul>
+										<li>Esame in Commissione (iniziato l'11 gennaio 2024 e concluso il 14 febbraio
+											2024)
+										</li>
+									</ul>
+								</div>
+								<div class="iterAssemblea">
+									<span class="label">Iter in Assemblea</span>
+									<ul>
+										<li>Discussione in Assemblea (iniziata il 15 febbraio 2024. )</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="timeStamp">Aggiornata alle ore 04:15:20 del giorno 19/02/2024</div>
+			<script type="application/javascript">
+
+				init_accordion_aperto();
+				carica_accordion();
+				carica_accordion2();
+				function carica_accordion() {
+					var acc = document.getElementsByClassName("btn-block");
+					for (var i = 0; i < acc.length; i++) {
+						acc[i].addEventListener("click", function (event) {
+							var panel = this.parentElement.nextElementSibling;
+							var blocchi = document.getElementsByClassName("collapse");
+							for (var b = 0; b < blocchi.length; b++) {
+								if (panel.getAttribute('id') == blocchi[b].getAttribute('id')) {
+									blocchi[b].classList.toggle("show");
+									event.target.classList.toggle('opened');
+								}
+							}
+						});
+					}
+				}
+				function carica_accordion2() {
+					var acc = document.getElementsByClassName("btn-link");
+					for (var i = 0; i < acc.length; i++) {
+						acc[i].addEventListener("click", function (event) {
+							var panel = this.parentElement.parentElement.nextElementSibling;
+							var blocchi = document.getElementsByClassName("collapse");
+							for (var b = 0; b < blocchi.length; b++) {
+								if (panel.getAttribute('id') == blocchi[b].getAttribute('id')) {
+									blocchi[b].classList.toggle("show");
+									event.target.classList.toggle('opened');
+								}
+							}
+						});
+					}
+				}
+				function init_accordion_aperto() {
+					var elementi_lista = document.getElementsByClassName("schedaPDL")[0].children;
+					for (var l = 0; l < elementi_lista.length; l++) {
+						if (elementi_lista[l].classList.contains('show')) {
+							elementi_lista[l - 1].children[0].classList.add('opened');
+						}
+					}
+				}
+				function fHiddenObjNew(objManager, objId, objStatus, strMostra, strChiudi) {
+					var eObjManager = document.getElementById(objManager);
+					var eObj = document.getElementById(objId);
+					var eStatus = document.getElementById(objStatus);
+					if (eStatus.value == "false") {
+						eObjManager.className = "showAltreProposte_on";
+						eObj.style.display = "block";
+						eObjManager.innerHTML = strChiudi;
+						eStatus.value = "true";
+					}
+					else {
+						eObjManager.className = "showAltreProposte";
+						eObj.style.display = "none";
+						eObjManager.innerHTML = strMostra;
+						eStatus.value = "false";
+					}
+					eObjManager = "";
+					eObj = "";
+					eStatus = "";
+					return false;
+				}
+				function fHiddenObj(objManager, objId, objStatus) {
+					var eObjManager = document.getElementById(objManager);
+					var eObj = document.getElementById(objId);
+					var eStatus = document.getElementById(objStatus);
+					alert(objId.style.display);
+					if (objId.style.display == "none") {
+						eObjManager.className = "showAltreProposte_on";
+						eObj.style.display = "";
+						eStatus.value = "true";
+					}
+					else {
+						eObjManager.className = "showAltreProposte";
+						eObj.style.display = "none";
+						eStatus.value = "false";
+					}
+					eObjManager = "";
+					eObj = "";
+					eStatus = "";
+					return false;
+				}
+
+			</script>
+
+			<span class="clear"></span>
+		</div><span class="clear"></span>
+	</div>
+
+</div>

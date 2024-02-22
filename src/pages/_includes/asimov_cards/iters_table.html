@@ -2,7 +2,7 @@
 	<div class="card-header d-flex justify-content-between align-items-center" style="height: 5em">
 		<h3 class="card-title">Tutti</h3>
 		<div class="col-7 col-sm-4 col-md-2 col-xl-auto py-3">
-			<a id="refresh" href="javascript:void(0);" onclick="fetch_data({field: 'data_stato_ddl', desc: true})" class="btn w-100 btn-icon" aria-label="Aggiorna">
+			<a id="refresh" href="javascript:void(0);" onclick="fetch_table({field: 'data_stato_ddl', desc: true})" class="btn w-100 btn-icon" aria-label="Aggiorna">
 				{% include ui/icon.html icon="refresh"%}
 			</a>
 		</div>
@@ -22,7 +22,7 @@
 			<div class="ms-auto text-secondary">
 				Cerca
 				<div class="ms-2 d-inline-block">
-					<input type="text" class="form-control form-control-sm" aria-label="Search ddl">
+					<input type="text" class="form-control form-control-sm" aria-label="Search ddl" id="searchInput">
 				</div>
 			</div>
 		</div>
@@ -71,7 +71,7 @@
 					white-space: normal;
 				}
 
-				.table td.presentatori, .table th.presentatori {
+				.table td.presentatore, .table th.presentatore {
 					max-width: 15em;
 				}
 
@@ -96,21 +96,46 @@
 			<thead>
 			<tr>
 				<th class="ramo">{% include parts/dropdown/filter_ramo.html %}</th>
-				<th class="numero_fase">{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}</th>
-				<th class="titolo">Titolo{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}</th>
-				<th class="presentatori">1º firm.{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %}
+				<th class="numero_fase">
+					<a class="text-decoration-none text-reset" href="javascript:void(0);" desc="true" 
+					onclick="switchSortingAttribute(this); fill_table(sort_ddls(ddls, 'numero_fase', this.getAttribute('desc'), 'int'));" 
+					aria-haspopup="true" aria-expanded="false">
+						{% include ui/icon.html icon="selector" class="icon-sm icon-thick" %}
+					</a>
 				</th>
-				<th class="nome_gruppo">Iniziativa{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {%
-					include
-					parts/dropdown/filter_nome_gruppo.html %}
+				<th class="titolo">Titolo
+					<a class="text-decoration-none text-reset" href="javascript:void(0);" desc="true" 
+					onclick="switchSortingAttribute(this); fill_table(sort_ddls(ddls, 'titolo', this.getAttribute('desc')));" 
+					aria-haspopup="true" aria-expanded="false">
+					{% include ui/icon.html icon="selector" class="icon-sm icon-thick" %}
+					</a>
 				</th>
-				<th class="stato_ddl_semp">{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick" %} {%
-					include
-					parts/dropdown/filter_stato_ddl.html %}
+				<th class="presentatore">1º firm.
+					<a class="text-decoration-none text-reset" href="javascript:void(0);" desc="true" 
+					onclick="switchSortingAttribute(this); fill_table(sort_ddls(ddls, 'presentatore', this.getAttribute('desc')));" 
+					aria-haspopup="true" aria-expanded="false">
+						{% include ui/icon.html icon="selector" class="icon-sm icon-thick" %}
+					</a>
 				</th>
-				<th class="data_stato_ddl">Ultimo agg.{% include ui/icon.html icon="chevron-up" class="icon-sm icon-thick"
-					%} {% include
-					parts/dropdown/filter_data.html %}
+				<th class="nome_gruppo">Iniziativa
+					<a class="text-decoration-none text-reset" href="javascript:void(0);" desc="true" 
+					onclick="switchSortingAttribute(this); fill_table(sort_ddls(ddls, 'nome_gruppo', this.getAttribute('desc')));" 
+					aria-haspopup="true" aria-expanded="false">
+						{% include ui/icon.html icon="selector" class="icon-sm icon-thick" %}
+					</a> 
+					{% include parts/dropdown/filter_nome_gruppo.html %}
+				</th>
+				<th class="stato_ddl_semp">
+					{% include parts/dropdown/filter_stato_ddl.html %}
+				</th>
+				<th class="data_stato_ddl">
+					Ultimo agg.
+					<a class="text-decoration-none text-reset" href="javascript:void(0);" desc="true" 
+					onclick="switchSortingAttribute(this); fill_table(sort_ddls(ddls, 'data_stato_ddl', this.getAttribute('desc')));" 
+					aria-haspopup="true" aria-expanded="false">
+						{% include ui/icon.html icon="selector" class="icon-sm icon-thick" %}
+					</a>
+					{% include parts/dropdown/filter_data.html %}
 				</th>
 
 				<th class="seguito">Segui</th>
@@ -128,7 +153,7 @@
 				<td id="titolo" class="titolo" title="">
 					Ratifica ed esecuzione dell'Accordo tra la Repubblica italiana e la Repubblica di San Marino
 				</td>
-				<td id="presentatori" class="presentatori" title="">
+				<td id="presentatore" class="presentatore" title="">
 					Giancarlo Giorgetti
 				</td>
 				<td id="nome_gruppo" class="nome_gruppo" title="">
@@ -156,15 +181,13 @@
 
 <script>
 
-	document.querySelectorAll('.dropdown-item .form-check-input').forEach(function(checkbox) {
-	checkbox.addEventListener('click', function(event) {
-		event.stopPropagation();
-	});
-	});
+
+	var searchInput= document.querySelector('#searchInput');
+	searchInput.onkeydown = function (event){ if (event.key === 'Enter') {fetch_table({field: 'data_stato_ddl', desc: true});}} 
 
 	var ddls = [];
 
-	var fields = ['ramo', 'numero_fase', 'titolo', 'presentatori', 'nome_gruppo', 'stato_ddl_semp', 'data_stato_ddl', 'seguito'];
+	var fields = ['ramo', 'numero_fase', 'titolo', 'presentatore', 'nome_gruppo', 'stato_ddl_semp', 'data_stato_ddl', 'seguito'];
 	var base_addresses = {
 		'C': 'https://www.camera.it/leg19/126?tab=&leg=19&idDocumento={numero_fase}',
 		'S': 'https://www.senato.it/leg/19/BGT/Schede/Ddliter/{id_fase}.htm'
@@ -172,7 +195,8 @@
 	var stata_ddl = {
 		'In corso': {'component_id': "icon_in_corso", "title": "In corso"},
 		'Esito positivo': {'component_id': 'icon_esito_positivo', 'title': 'Esito positivo'},
-		'Esito negativo': {'component_id': 'icon_esito_negativo', 'title': 'Esito negativo'}
+		'Esito negativo': {'component_id': 'icon_esito_negativo', 'title': 'Esito negativo'},
+		"Trasmesso all'altro ramo": {'component_id': 'icon_trasmesso', 'title': "Trasmesso all'altro ramo"}
 	}
 
 	function ellipse(str, num) {
@@ -180,6 +204,31 @@
 			return str;
 		}
 		return str.substring(0, num) + '...';
+	}
+
+	function switchSortingAttribute(element) {
+		var isDesc = element.getAttribute('desc');
+		var newOrder = isDesc === 'true' ? 'false' : 'true';
+		element.setAttribute('desc', newOrder);
+	}
+
+	function sort_ddls(ddls, field, desc = 'false', type_ = null) {
+		desc = desc === 'true' ? false : true;
+		ddls.sort(function(ddl1, ddl2) {
+			f1 = ddl1[field];
+			f2 = ddl2[field];
+			if(type_ == 'int'){
+				f1 = parseInt(f1);
+				f2 = parseInt(f2);
+			}
+			if (desc){
+				return f1 > f2; 
+			}
+			else{
+				return f1 < f2;
+			}
+		});
+		return ddls;
 	}
 
 	function formatDate(dateString) {
@@ -219,7 +268,7 @@
 					break;
 				// throw new Error('Custom error message for numero_fase');
 				case 'titolo':
-					element.textContent = ellipse(item[field], 130);
+					// element.textContent = ellipse(item[field], 130);
 					element.textContent = item[field], 130;
 					element.title = item[field]
 					break
@@ -235,7 +284,7 @@
 					while (element.children.length > 1) {
 						element.removeChild(element.lastChild);
 					}
-					element.appendChild(icon)
+					element.appendChild(icon);
 					element.title = status['title'];
 					break;
 				case 'data_stato_ddl':
@@ -244,6 +293,10 @@
 					break
 				case 'seguito':
 					// var anchorElement = element.querySelector("a");
+					if(item['stato_ddl_semp'] != 'In corso'){
+						element.querySelector('.seguito a[aria-label="plus"]').classList.add('disabled');
+						return
+					}
 					console.log(item[field])
 					if(item[field]===true){
 						switch_follow_button(element)
@@ -252,13 +305,14 @@
 						console.log(`item[field] is ${item[field]}`)
 						var success = false
 						followIter(item['id_iter'], item[field]).then(result => {
-							console.log(`result is ${result}`)
+							console.log(`result is ${result}`);
 							success = result;
 
 							if (success) {
 								console.log(`success is ${success}`)
-								item[field] = true
-								switch_follow_button(this)
+								item[field] = !item[field];
+								switch_follow_button(this);
+								fill_tiles();
 								console.log(`I switched ${this}`)
 							}
 						});
@@ -287,7 +341,7 @@
 		return page
 	}
 
-	function fill_table() {
+	function fill_table(ddls) {
 
 		// Pagination
 		// var page = document.querySelector('.pagination .active a').dataset.page || 1;
@@ -328,12 +382,6 @@
 				update_cell(newElement, item, field)
 				tr.appendChild(newElement);
 			});
-			// var num_displayed_results = document.getElementById('num_displayed_results')
-			// num_displayed_results.textContent = tbody.childElementCount
-			// var num_total_results = document.getElementById('num_total_results')
-			// num_total_results.textContent = ddls.length
-
-
 			tbody.appendChild(tr);
 		});
 
@@ -347,7 +395,76 @@
 
 	}
 
-	function fetch_data(order_by) {
+	var followed_ongoing_iters;
+
+
+	function fill_tiles(){
+
+		var tcontainer = document.getElementById('tilesContainer');
+		var tileTemplate = document.getElementById('tileTemplate');
+		// Remove all children of the same class of tileTemplate
+		var templateClass = document.getElementById('tileTemplate').className;
+		var elementsToRemove = tcontainer.querySelectorAll('.' + templateClass.replace(' ', '.'));
+		elementsToRemove.forEach(function(element) {
+			tcontainer.removeChild(element);
+		});
+
+		// Fill tiles
+		followed_ongoing_iters.forEach(function (item) {
+				ddl = item.ddls[0]   // we assume they are orderd chronologically
+				var newTile = tileTemplate.cloneNode(true);
+				newTile.removeAttribute('style');
+				newTile.removeAttribute('id');
+				newTile.querySelector('.h1.mb-3').textContent = 'A' + ddl['ramo'] + ddl['numero_fase']
+				newTile.querySelector('[data-query-id="status"]').textContent = ddl['stato_ddl']
+				tcontainer.insertBefore(newTile, tcontainer.lastElementChild);
+				if(item.ddls.length>1){
+					previous_ddl = item.ddls[1]
+					newTile.querySelector('.subheader').textContent = 'Prec. A' + previous_ddl['ramo'] + previous_ddl['numero_fase']
+				}
+		});
+		
+	}
+
+	function fetch_tiles(){
+		var endpoint = '{{ site.data.endpoint[0].host }}/users/me/fetch_ongoing_followed_iters/'
+		return 	fetch(endpoint, {
+				method: 'GET',
+				headers: {
+					'Accept': 'application/json',
+					// Assuming the token is stored in a meta tag
+					'Authorization': 'Bearer ' + sessionStorage.getItem('access_token'),
+					'Content-Type': 'application/json'
+				},
+			})
+				.then(response => {
+					// Check if the request was successful
+					if (!response.ok) {
+						// Check if the error is related to authentication (401 Unauthorized)
+						if (response.status === 401) {
+							window.location.href = '/sign-in.html';
+							throw new Error('Authentication error: Unauthorized');
+						}
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
+					return response.json();
+				})
+				.then(responseData => {
+					// Handle the response
+					console.log(responseData);
+					followed_ongoing_iters = responseData
+					fill_tiles()
+
+				})
+				.catch(error => {
+					// Handle the error
+					console.log(error.message);
+				});
+	}
+
+
+		
+	function fetch_table(order_by) {
 		// Function to get the selected options from the dropdowns
 		function getSelectedOptions(selector) {
 			var selectedOptions = [];
@@ -361,7 +478,7 @@
 		// var limit = document.querySelector('input[aria-label="DDLs count"]').value;
 
 		// Get the keyword from the form
-		var keyword = document.querySelector('input[aria-label="Search ddl"]').value;
+		var keyword = searchInput.value;
 
 
 		// Get the selected options from the dropdowns
@@ -378,11 +495,11 @@
 			order_by: order_by
 		};
 
-		var data_debug = [{ "id_fase": "57864", "ddl": "http://dati.senato.it/ddl/57864", "titolo": "Conversione in legge del decreto-legge 18 gennaio 2024, n. 4, recante disposizioni urgenti in materia di amministrazione straordinaria delle imprese di carattere strategico", "stato_ddl": "assegnato (no esame)", "data_stato_ddl": "2024-01-19", "tipo_iniziativa": "Governativa", "id_iter": "53411", "assegnazione": null, "relatore": null, "data_presentazione": null, "fase": null, "legislatura": null, "natura": "di conversione di decreto-legge", "numero_fase": "986", "numero_fase_compatto": null, "presentato_trasmesso": "presentato", "progressivo_iter": "1", "ramo": "S", "testo_presentato": "urn:nir:senato.repubblica:disegno.legge:19.legislatura;986", "testo_approvato": null, "primo_firmatario": "1", "senatore": null, "presentatori": 'Sen. Silvio Berlusconi' }];
+		var data_debug = [{ "id_fase": "57864", "ddl": "http://dati.senato.it/ddl/57864", "titolo": "Conversione in legge del decreto-legge 18 gennaio 2024, n. 4, recante disposizioni urgenti in materia di amministrazione straordinaria delle imprese di carattere strategico", "stato_ddl": "assegnato (no esame)", "data_stato_ddl": "2024-01-19", "tipo_iniziativa": "Governativa", "id_iter": "53411", "assegnazione": null, "relatore": null, "data_presentazione": null, "fase": null, "legislatura": null, "natura": "di conversione di decreto-legge", "numero_fase": "986", "numero_fase_compatto": null, "presentato_trasmesso": "presentato", "progressivo_iter": "1", "ramo": "S", "testo_presentato": "urn:nir:senato.repubblica:disegno.legge:19.legislatura;986", "testo_approvato": null, "primo_firmatario": "1", "senatore": null, "presentatore": 'Sen. Silvio Berlusconi' }];
 		var debug = false
 		if (debug) {
 			ddls = data_debug
-			fill_table()
+			fill_table(ddls)
 		} else {
 			// Perform the API request
 			var endpoint = '{{ site.data.endpoint[0].host }}/users/me/fetch_personalized_iters/'
@@ -415,7 +532,7 @@
 					// Handle the response
 					console.log(responseData);
 					ddls = responseData
-					fill_table()
+					fill_table(ddls)
 
 				})
 				.catch(error => {
@@ -428,10 +545,11 @@
 
 
 	document.addEventListener("DOMContentLoaded", function () {
-		fetch_data({
+		fetch_table({
 			field: "data_stato_ddl",
 			desc: true
 		})
+		fetch_tiles();
 	});
 	document.addEventListener("DOMContentLoaded", updatePaginationUI);
 
