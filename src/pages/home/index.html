@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<!-- This site was created in Webflow. https://www.webflow.com -->
+<!-- Last Published: Wed May 10 2023 22:47:02 GMT+0000 (Coordinated Universal Time) -->
+<html data-wf-domain="asimov.law" data-wf-page="644a707854dba82378e6dd3e" data-wf-site="644a707754dba83fffe6dd3a" data-wf-status="1" class=" w-mod-js w-mod-ix"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><style>.wf-force-outline-none[tabindex="-1"]:focus{outline:none;}</style>
+    <meta charset="utf-8">
+    <title>Asimov AI</title>
+    <meta content="Asimov AI - Soluzioni IA per legislativi. Prenota un demo adesso!" name="description">
+    <meta content="Asimov AI | Rivoluziona le tue analisi legislative" property="og:title">
+    <meta content="Asimov AI - Soluzioni IA per legislativi. Potenzia e semplifica i tuoi processi di monitoraggio attraverso il nostro software avanzato e intuitivo." property="og:description">
+    <meta content="images/asimov.jpg" property="og:image">
+    <meta content="Asimov AI | Rivoluziona le tue analisi legislative" property="twitter:title">
+    <meta content="Asimov AI | Rivoluziona le tue analisi legislative. Potenzia e semplifica i tuoi processi di monitoraggio attraverso il nostro software avanzato e intuitivo. Prenota adesso una demo!" property="twitter:description">
+    <meta content="images/asimov.jpg" property="twitter:image">
+    <meta content="website" property="og:type">
+    <meta content="summary_large_image" name="twitter:card">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta content="Webflow" name="generator">
+    <link href="styles.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript">!function (o, c) {
+        var n = c.documentElement, t = " w-mod-";
+        n.className += t + "js", ("ontouchstart" in o || o.DocumentTouch && c instanceof DocumentTouch) && (n.className += t + "touch")
+    }(window, document);</script>
+    <script type="text/javascript"
+            src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            // https://dashboard.emailjs.com/admin/account
+            emailjs.init('m_i9Hvh1Jhy68tUam');
+        })();
+    </script>
+    <script type="text/javascript">
+        window.onload = function () {
+            document.getElementById('wf-form-Contact-1-Form').addEventListener('submit', function (event) {
+                event.preventDefault();
+                // generate a five digit number for the contact_number variable
+                this.contact_number.value = Math.random() * 100000 | 0;
+                // these IDs from the previous steps
+                emailjs.sendForm('service_demo', 'template_kq2h32o', this)
+                    .then(function () {
+                        console.log('SUCCESS!');
+                    }, function (error) {
+                        console.log('FAILED...', error);
+                    });
+            });
+        }
+    </script>
+    <link href="https://i.postimg.cc/sg4J55jp/asimov-head.png"
+          rel="shortcut icon" type="image/x-icon"/>
+    <link href="https://i.postimg.cc/sg4J55jp/asimov-head.png"
+          rel="apple-touch-icon"/><!-- Add Swiper library to the <head> tag -->
+    <link href="https://unpkg.com/swiper/swiper-bundle.min.css" rel="stylesheet"/>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="page-wrapper">
+    <div class="global-styles w-embed">
+        <style>
+
+            /* Make text look crisper and more legible in all browsers */
+            body {
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                font-smoothing: antialiased;
+                text-rendering: optimizeLegibility;
+            }
+
+            /* Responsive design */
+            @media only screen and (max-width: 1440px) and (min-width: 992px) {
+                html {
+                    font-size: 1.1111vw;
+                }
+            }
+
+            /* Focus state style for keyboard navigation for the focusable elements */
+            *[tabindex]:focus-visible,
+            input[type="file"]:focus-visible {
+                outline: 0.125rem solid #4d65ff;
+                outline-offset: 0.125rem;
+            }
+
+            /* Get rid of top margin on first element in any rich text element */
+            .w-richtext > :not(div):first-child, .w-richtext > div:first-child > :first-child {
+                margin-top: 0 !important;
+            }
+
+            /* Get rid of bottom margin on last element in any rich text element */
+            .w-richtext > :last-child, .w-richtext ol li:last-child, .w-richtext ul li:last-child {
+                margin-bottom: 0 !important;
+            }
+
+            /* Prevent all click and hover interaction with an element */
+            .pointer-events-off {
+                pointer-events: none;
+            }
+
+            /* Enables all click and hover interaction with an element */
+            .pointer-events-on {
+                pointer-events: auto;
+            }
+
+            /* Create a class of .div-square which maintains a 1:1 dimension of a div */
+            .div-square::after {
+                content: "";
+                display: block;
+                padding-bottom: 100%;
+            }
+
+            /* Make sure containers never lose their center alignment */
+            .container-medium, .container-small, .container-large {
+                margin-right: auto !important;
+                margin-left: auto !important;
+            }
+
+            /*
+            Make the following elements inherit typography styles from the parent and not have hardcoded values.
+            Important: You will not be able to style for example "All Links" in Designer with this CSS applied.
+            Uncomment this CSS to use it in the project. Leave this message for future hand-off.
+            */
+            /*
+            a,
+            .w-input,
+            .w-select,
+            .w-tab-link,
+            .w-nav-link,
+            .w-dropdown-btn,
+            .w-dropdown-toggle,
+            .w-dropdown-link {
+              color: inherit;
+              text-decoration: inherit;
+              font-size: inherit;
+            }
+            */
+
+            /* Apply "..." after 3 lines of text */
+            .text-style-3lines {
+                display: -webkit-box;
+                overflow: hidden;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+            }
+
+            /* Apply "..." after 2 lines of text */
+            .text-style-2lines {
+                display: -webkit-box;
+                overflow: hidden;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+            }
+
+            /* Adds inline flex display */
+            .display-inlineflex {
+                display: inline-flex;
+            }
+
+            /* These classes are never overwritten */
+            .hide {
+                display: none !important;
+            }
+
+            @media screen and (max-width: 991px) {
+                .hide, .hide-tablet {
+                    display: none !important;
+                }
+            }
+
+            @media screen and (max-width: 767px) {
+                .hide-mobile-landscape {
+                    display: none !important;
+                }
+            }
+
+            @media screen and (max-width: 479px) {
+                .hide-mobile {
+                    display: none !important;
+                }
+            }
+
+            .margin-0 {
+                margin: 0rem !important;
+            }
+
+            .padding-0 {
+                padding: 0rem !important;
+            }
+
+            .spacing-clean {
+                padding: 0rem !important;
+                margin: 0rem !important;
+            }
+
+            .margin-top {
+                margin-right: 0rem !important;
+                margin-bottom: 0rem !important;
+                margin-left: 0rem !important;
+            }
+
+            .padding-top {
+                padding-right: 0rem !important;
+                padding-bottom: 0rem !important;
+                padding-left: 0rem !important;
+            }
+
+            .margin-right {
+                margin-top: 0rem !important;
+                margin-bottom: 0rem !important;
+                margin-left: 0rem !important;
+            }
+
+            .padding-right {
+                padding-top: 0rem !important;
+                padding-bottom: 0rem !important;
+                padding-left: 0rem !important;
+            }
+
+            .margin-bottom {
+                margin-top: 0rem !important;
+                margin-right: 0rem !important;
+                margin-left: 0rem !important;
+            }
+
+            .padding-bottom {
+                padding-top: 0rem !important;
+                padding-right: 0rem !important;
+                padding-left: 0rem !important;
+            }
+
+            .margin-left {
+                margin-top: 0rem !important;
+                margin-right: 0rem !important;
+                margin-bottom: 0rem !important;
+            }
+
+            .padding-left {
+                padding-top: 0rem !important;
+                padding-right: 0rem !important;
+                padding-bottom: 0rem !important;
+            }
+
+            .margin-horizontal {
+                margin-top: 0rem !important;
+                margin-bottom: 0rem !important;
+            }
+
+            .padding-horizontal {
+                padding-top: 0rem !important;
+                padding-bottom: 0rem !important;
+            }
+
+            .margin-vertical {
+                margin-right: 0rem !important;
+                margin-left: 0rem !important;
+            }
+
+            .padding-vertical {
+                padding-right: 0rem !important;
+                padding-left: 0rem !important;
+            }
+
+        </style>
+    </div>
+    <div class="nav w-nav" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease"
+         data-easing2="ease" data-w-id="0a6e0b66-5928-39c2-0c96-ac4ac008443f" role="banner">
+        <div class="padding-global">
+            <div class="container-large">
+                <div class="nav_component"><a class="nav_logo-wrapper w-nav-brand" href="#"><img alt="Asimov logo"
+                                                                                                 class="nav_logo"
+                                                                                                 loading="lazy"
+                                                                                                 src="https://i.postimg.cc/SKbd1Lp3/asimov-logo.png"/></a>
+                    <nav class="nav_menu w-nav-menu" role="navigation">
+                        <div class="nav_link-wrapper"><a class="nav_link w-nav-link" href="#Features">Prodotto</a>
+                            <div class="nav_link-line"></div>
+                        </div>
+                        <div class="nav_link-wrapper"><a class="nav_link w-nav-link" href="#Benefits">Vantaggi</a>
+                            <div class="nav_link-line"></div>
+                        </div>
+                        <!--                        <div class="nav_link-wrapper"><a class="nav_link w-nav-link" href="#Testimonials">Testimonials</a>-->
+                        <!--                            <div class="nav_link-line"></div>-->
+                        <!--                        </div>-->
+                        <div class="nav_link-wrapper"><a class="nav_link w-nav-link" href="#Steps">Come funziona</a>
+                            <div class="nav_link-line"></div>
+                        </div>
+                        <div class="nav_link-wrapper"><a class="nav_link w-nav-link" href="#FAQ">Domande frequenti</a>
+                            <div class="nav_link-line"></div>
+                        </div>
+                    </nav>
+                    <a class="button hide-mobile-portrait w-button" href="#Contact">Prenota una demo</a>
+                    <a class="button hide-mobile-portrait w-button" href="/app.html">Vai all'app</a>
+                    <div class="menu-button w-nav-button">
+                        <div class="menu-icon1">
+                            <div class="menu-icon1_line-top"></div>
+                            <div class="menu-icon1_line-middle">
+                                <div class="menu-icon_line-middle-inner"></div>
+                            </div>
+                            <div class="menu-icon1_line-bottom"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <main class="main-wrapper">
+        <section class="section_home-header">
+            <div class="padding-global">
+                <div class="container-large">
+                    <div class="home-header_component">
+                        <div class="home-header_content" data-w-id="c3eda4b8-fcbc-f189-23c6-a53fd8a9835e"
+                             id="w-node-c3eda4b8-fcbc-f189-23c6-a53fd8a9835e-78e6dd3e" style="opacity:0">
+                            <div class="home-header_text-news"
+                                 id="w-node-_34e98ca2-fdba-dd5a-a42d-9d40045003b1-78e6dd3e">NEWS: Presto disponibili nuove funzionalità di monitoraggio!
+                            </div>
+                            <div class="padding-bottom padding-medium"></div>
+                            <h1 class="text-align-center text-color-white">Rivoluziona le tue analisi legislative</h1>
+                            <div class="padding-bottom padding-small"></div>
+                            <div class="text-size-medium text-color-white is-mobile-text-center"> Strumenti IA per
+                                l'analisi legislativa
+                            </div>
+                            <div class="padding-bottom padding-medium"></div>
+                            <div class="button-group"><a class="button w-button" href="#Contact">Prenota una Demo</a><a class="button is-secondary w-button" href="mailto:info@asimov.law">Contattaci</a>
+                            </div>
+                        </div>
+                        <div class="home-header_image-wrapper"
+                             id="w-node-_30572ae9-eb1b-922e-9bf4-cb1a9b5a4e89-78e6dd3e"><img
+                                alt="Man wearing a headset sitting smiling looking at the laptop."
+                                class="home-header_image" loading="lazy"
+                                sizes="(max-width: 767px) 100vw, (max-width: 991px) 664px, 46vw"
+                                src="https://i.postimg.cc/FzHBCPZZ/asimov.jpg"
+                                srcset="https://i.postimg.cc/FzHBCPZZ/asimov.jpg 500w, https://i.postimg.cc/FzHBCPZZ/asimov.jpg 800w, https://i.postimg.cc/FzHBCPZZ/asimov.jpg 1080w, https://i.postimg.cc/FzHBCPZZ/asimov.jpg 1328w"
+                                width="1200"/>
+                            <div class="home-header_gradient"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid"></div>
+            <div class="background-effect w-embed">
+                <style>
+                    .home-header_text-news {
+                        background-image: radial-gradient(202.04% 202.04% at 50% 111.22%, rgba(255, 254, 241, 0.2) 0%, rgba(120, 120, 120, 0.2) 23.95%);
+                    }
+
+                    .grid {
+                        width: 70vw;
+                        height: 87.5rem;
+                        position: absolute;
+                        top: -6.25rem;
+                        left: -6.25rem;
+                        background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+                        background-size: 6.25rem 6.25rem;
+                        animation: moveGrid 50s linear infinite;
+                    }
+
+                    @media screen and (max-width: 990px) and (min-width: 240px) {
+                        .grid {
+                            width: 100vw;
+                            left: 0;
+                        }
+                    }
+
+                    @keyframes moveGrid {
+                        0% {
+                            transform: translateY(-50%);
+                        }
+                        100% {
+                            transform: translateY(0);
+                        }
+                    }
+                </style>
+            </div>
+        </section>
+        <section class="section_home-features" id="Features">
+            <div class="padding-global">
+                <div class="container-large">
+                    <div class="home-features_component">
+                        <div class="home-features_top">
+                            <div class="home-features_title-wrapper">
+                                <div class="home-features_title-content"><h2>Integra l'<span class="text-color-purple">IA</span>
+                                    nei tuoi processi di monitoraggio
+                                </h2>
+                                    <div class="is-mobile-text-small">Semplifica i tuoi processi di monitoraggio
+                                        attraverso il nostro software avanzato e intuitivo
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="home-features_bottom">
+                            <div class="home-features_tabs w-tabs" data-current="Tab 1" data-duration-in="300"
+                                 data-duration-out="100" data-easing="ease">
+                                <div class="home-features_tabs-menu w-tab-menu"><a
+                                        class="home-features_tabs-link w-inline-block w-tab-link w--current"
+                                        data-w-id="c3a39ec6-5ece-73fb-c499-b32f5c735010" data-w-tab="Tab 1">
+                                    <div class="icon-embed-xsmall w-embed">
+                                        <svg aria-hidden="true" fill="none" height="100%"
+                                             preserveAspectRatio="xMidYMid meet" role="img" viewBox="0 0 24 24"
+                                             width="100%" xmlns="http://www.w3.org/2000/svg">
+                                            <g clip-path="url(#clip0_91_8208)">
+                                                <path d="M7.29101 20.824L2.00001 22L3.17601 16.709C2.40154 15.2604 1.99754 13.6426 2.00001 12C2.00001 6.477 6.47701 2 12 2C17.523 2 22 6.477 22 12C22 17.523 17.523 22 12 22C10.3574 22.0025 8.73963 21.5985 7.29101 20.824ZM7.58101 18.711L8.23401 19.061C9.39256 19.6801 10.6864 20.0027 12 20C13.5823 20 15.129 19.5308 16.4446 18.6518C17.7602 17.7727 18.7855 16.5233 19.391 15.0615C19.9965 13.5997 20.155 11.9911 19.8463 10.4393C19.5376 8.88743 18.7757 7.46197 17.6569 6.34315C16.538 5.22433 15.1126 4.4624 13.5607 4.15372C12.0089 3.84504 10.4004 4.00346 8.93854 4.60896C7.47674 5.21447 6.22731 6.23984 5.34825 7.55544C4.4692 8.87103 4.00001 10.4177 4.00001 12C4.00001 13.334 4.32501 14.618 4.94001 15.766L5.28901 16.419L4.63401 19.366L7.58101 18.711ZM7.00001 12H9.00001C9.00001 12.7956 9.31608 13.5587 9.87869 14.1213C10.4413 14.6839 11.2044 15 12 15C12.7957 15 13.5587 14.6839 14.1213 14.1213C14.6839 13.5587 15 12.7956 15 12H17C17 13.3261 16.4732 14.5979 15.5355 15.5355C14.5979 16.4732 13.3261 17 12 17C10.6739 17 9.40216 16.4732 8.46448 15.5355C7.5268 14.5979 7.00001 13.3261 7.00001 12Z" fill="#4bacff"></path>
+                                            </g>
+                                            <defs>
+                                                <clipPath id="clip0_91_8208">
+                                                    <rect fill="white" height="24" width="24"/>
+                                                </clipPath>
+                                            </defs>
+                                        </svg>
+                                    </div>
+                                    <div class="home-features_tabs-title">Efficiente</div>
+                                    <p>Asimov permette di risparmiare fino al 90% del tempo nell'analisi dei fascicoli
+                                        di emendamenti</p></a><a
+                                        class="home-features_tabs-link w-inline-block w-tab-link"
+                                        data-w-id="d1d69912-2772-77fb-d127-3f6b0fde0158" data-w-tab="Tab 2">
+                                    <div class="icon-embed-xsmall w-embed">
+                                        <svg aria-hidden="true" fill="none" height="100%"
+                                             preserveAspectRatio="xMidYMid meet" role="img" viewBox="0 0 24 24"
+                                             width="100%" xmlns="http://www.w3.org/2000/svg">
+                                            <g clip-path="url(#clip0_91_8212)">
+                                                <path d="M18.5 10L22.9 21H20.745L19.544 18H15.454L14.255 21H12.101L16.5 10H18.5ZM10 2V4H16V6H14.032C13.2606 8.32208 12.0295 10.465 10.412 12.301C11.1333 12.9446 11.9157 13.5163 12.748 14.008L11.997 15.886C10.9225 15.2766 9.9176 14.552 9 13.725C7.21358 15.3417 5.09804 16.5522 2.799 17.273L2.263 15.344C4.23284 14.7159 6.04802 13.6793 7.59 12.302C6.44869 11.0099 5.49806 9.56127 4.767 8H7.007C7.56435 9.02886 8.23267 9.9936 9 10.877C10.2501 9.4361 11.2353 7.7853 11.91 6.001L2 6V4H8V2H10ZM17.5 12.885L16.253 16H18.745L17.5 12.885Z"
+                                                      fill="#4bacff"/>
+                                            </g>
+                                            <defs>
+                                                <clipPath id="clip0_91_8212">
+                                                    <rect fill="white" height="24" width="24"/>
+                                                </clipPath>
+                                            </defs>
+                                        </svg>
+                                    </div>
+                                    <div class="home-features_tabs-title">Preciso</div>
+                                    <p>Asimov è preciso quanto un Junior Analyst</p></a><a
+                                        class="home-features_tabs-link w-inline-block w-tab-link"
+                                        data-w-id="fcf51702-710a-0fe3-204b-977f18465a51" data-w-tab="Tab 3">
+                                    <div class="icon-embed-xsmall w-embed">
+                                        <svg aria-hidden="true" fill="none" height="100%"
+                                             preserveAspectRatio="xMidYMid meet" role="img" viewBox="0 0 24 24"
+                                             width="100%" xmlns="http://www.w3.org/2000/svg">
+                                            <g clip-path="url(#clip0_91_8216)">
+                                                <path d="M21 18H6C5.73478 18 5.48043 18.1054 5.29289 18.2929C5.10536 18.4804 5 18.7348 5 19C5 19.2652 5.10536 19.5196 5.29289 19.7071C5.48043 19.8946 5.73478 20 6 20H21V22H6C5.20435 22 4.44129 21.6839 3.87868 21.1213C3.31607 20.5587 3 19.7956 3 19V4C3 3.46957 3.21071 2.96086 3.58579 2.58579C3.96086 2.21071 4.46957 2 5 2H21V18ZM5 16.05C5.162 16.017 5.329 16 5.5 16H19V4H5V16.05ZM16 9H8V7H16V9Z"
+                                                      fill="#4bacff"/>
+                                            </g>
+                                            <defs>
+                                                <clipPath id="clip0_91_8216">
+                                                    <rect fill="white" height="24" width="24"></rect>
+                                                </clipPath>
+                                            </defs>
+                                        </svg>
+                                    </div>
+                                    <div class="home-features_tabs-title">Veloce</div>
+                                    <p>Analizza centinaia di emendamenti in meno di un'ora</p></a></div>
+                                <div class="home-features_tabs-content w-tab-content">
+                                    <div class="home-features_tabs-content w-tab-pane w--tab-active" data-w-tab="Tab 1">
+                                        <div class="home-features_tabs-content-mobile">
+                                            <div class="icon-embed-xsmall w-embed">
+                                                <!--                                                <svg aria-hidden="true" fill="none" height="100%"-->
+                                                <!--                                                     preserveAspectRatio="xMidYMid meet" role="img" viewBox="0 0 24 24"-->
+                                                <!--                                                     width="100%" xmlns="http://www.w3.org/2000/svg">-->
+                                                <!--                                                    <g clip-path="url(#clip0_92_8303)">-->
+                                                <!--                                                        <path d="M7.29101 20.824L2.00001 22L3.17601 16.709C2.40154 15.2604 1.99754 13.6426 2.00001 12C2.00001 6.477 6.47701 2 12 2C17.523 2 22 6.477 22 12C22 17.523 17.523 22 12 22C10.3574 22.0025 8.73963 21.5985 7.29101 20.824ZM7.58101 18.711L8.23401 19.061C9.39256 19.6801 10.6864 20.0027 12 20C13.5823 20 15.129 19.5308 16.4446 18.6518C17.7602 17.7727 18.7855 16.5233 19.391 15.0615C19.9965 13.5997 20.155 11.9911 19.8463 10.4393C19.5376 8.88743 18.7757 7.46197 17.6569 6.34315C16.538 5.22433 15.1126 4.4624 13.5607 4.15372C12.0089 3.84504 10.4004 4.00346 8.93854 4.60896C7.47674 5.21447 6.22731 6.23984 5.34825 7.55544C4.4692 8.87103 4.00001 10.4177 4.00001 12C4.00001 13.334 4.32501 14.618 4.94001 15.766L5.28901 16.419L4.63401 19.366L7.58101 18.711ZM7.00001 12H9.00001C9.00001 12.7956 9.31608 13.5587 9.87869 14.1213C10.4413 14.6839 11.2044 15 12 15C12.7957 15 13.5587 14.6839 14.1213 14.1213C14.6839 13.5587 15 12.7956 15 12H17C17 13.3261 16.4732 14.5979 15.5355 15.5355C14.5979 16.4732 13.3261 17 12 17C10.6739 17 9.40216 16.4732 8.46448 15.5355C7.5268 14.5979 7.00001 13.3261 7.00001 12Z"-->
+                                                <!--                                                              fill="#4bacff"/>-->
+                                                <!--                                                    </g>-->
+                                                <!--                                                    <defs>-->
+                                                <!--                                                        <clipPath id="clip0_92_8303">-->
+                                                <!--                                                            <rect fill="white" height="24" width="24"/>-->
+                                                <!--                                                        </clipPath>-->
+                                                <!--                                                    </defs>-->
+                                                <!--                                                </svg>-->
+                                            </div>
+                                            <!--                                            <div class="text-size-medium text-weight-medium">Welcome Leo</div>-->
+                                            <!--                                            <p>Describe your problem below and I will be your guide.</p>-->
+                                        </div>
+                                    </div>
+                                    <div class="home-features_tabs-content w-tab-pane" data-w-tab="Tab 2">
+                                        <div class="home-features_tabs-content-mobile">
+                                            <div class="icon-embed-xsmall w-embed">
+                                                <svg aria-hidden="true" fill="none" height="100%"
+                                                     preserveAspectRatio="xMidYMid meet" role="img" viewBox="0 0 24 24"
+                                                     width="100%" xmlns="http://www.w3.org/2000/svg">
+                                                    <g clip-path="url(#clip0_91_8212)">
+                                                        <path d="M18.5 10L22.9 21H20.745L19.544 18H15.454L14.255 21H12.101L16.5 10H18.5ZM10 2V4H16V6H14.032C13.2606 8.32208 12.0295 10.465 10.412 12.301C11.1333 12.9446 11.9157 13.5163 12.748 14.008L11.997 15.886C10.9225 15.2766 9.9176 14.552 9 13.725C7.21358 15.3417 5.09804 16.5522 2.799 17.273L2.263 15.344C4.23284 14.7159 6.04802 13.6793 7.59 12.302C6.44869 11.0099 5.49806 9.56127 4.767 8H7.007C7.56435 9.02886 8.23267 9.9936 9 10.877C10.2501 9.4361 11.2353 7.7853 11.91 6.001L2 6V4H8V2H10ZM17.5 12.885L16.253 16H18.745L17.5 12.885Z"
+                                                              fill="#4bacff"/>
+                                                    </g>
+                                                    <defs>
+                                                        <clipPath id="clip0_91_8212">
+                                                            <rect fill="white" height="24" width="24"/>
+                                                        </clipPath>
+                                                    </defs>
+                                                </svg>
+                                            </div>
+                                            <div class="text-size-medium text-weight-medium">Choose your preferred
+                                                language
+                                            </div>
+                                            <p>- English<br/>- Spanish<br/>- Portuguese</p></div>
+                                    </div>
+                                    <div class="home-features_tabs-content w-tab-pane" data-w-tab="Tab 3">
+                                        <div class="home-features_tabs-content-mobile">
+                                            <div class="icon-embed-xsmall w-embed">
+                                                <svg aria-hidden="true" fill="none" height="100%"
+                                                     preserveAspectRatio="xMidYMid meet" role="img" viewBox="0 0 24 24"
+                                                     width="100%" xmlns="http://www.w3.org/2000/svg">
+                                                    <g clip-path="url(#clip0_91_8216)">
+                                                        <path d="M21 18H6C5.73478 18 5.48043 18.1054 5.29289 18.2929C5.10536 18.4804 5 18.7348 5 19C5 19.2652 5.10536 19.5196 5.29289 19.7071C5.48043 19.8946 5.73478 20 6 20H21V22H6C5.20435 22 4.44129 21.6839 3.87868 21.1213C3.31607 20.5587 3 19.7956 3 19V4C3 3.46957 3.21071 2.96086 3.58579 2.58579C3.96086 2.21071 4.46957 2 5 2H21V18ZM5 16.05C5.162 16.017 5.329 16 5.5 16H19V4H5V16.05ZM16 9H8V7H16V9Z"
+                                                              fill="#4bacff"/>
+                                                    </g>
+                                                    <defs>
+                                                        <clipPath id="clip0_91_8216">
+                                                            <rect fill="white" height="24" width="24"/>
+                                                        </clipPath>
+                                                    </defs>
+                                                </svg>
+                                            </div>
+                                            <div class="text-size-medium text-weight-medium">Check your previous
+                                                tickets
+                                            </div>
+                                            <p>Through machine learning, we summarize all your open tickets</p></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="home-features_tabs-content-wrapper">
+                                <div class="home-features_tabs-content-bubble is-1"
+                                     data-w-id="da56f9a9-b9dd-ad73-1b92-e9f86216de4f"></div>
+                                <div class="home-features_tabs-content-bubble is-2"
+                                     data-w-id="da56f9a9-b9dd-ad73-1b92-e9f86216de50"></div>
+                                <div class="home-features_tabs-content-mockup"><img alt="iphone mockup" class="image"
+                                                                                    loading="lazy"
+                                                                                    src="images/macbook.png"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section_home-benefits" id="Benefits">
+            <div class="padding-global">
+                <div class="container-large">
+                    <div class="home-benefits_title">
+                        <div class="text-align-center text-color-white"><h2 animate="true">Sblocca vantaggi unici</h2>
+                            <div class="padding-bottom padding-small"></div>
+                            <p animate="true">Scopri i vantaggi dell'analisi legislativa IA</p></div>
+                    </div>
+                </div>
+            </div>
+            <div class="home-benefits_component">
+                <div class="home-benefits_lottie" data-animation-type="lottie" data-autoplay="0" data-direction="1"
+                     data-duration="0" data-is-ix2-target="1" data-loop="0" data-renderer="canvas"
+                     data-src="https://uploads-ssl.webflow.com/644a707754dba83fffe6dd3a/644b224e43a3f6bc8bf9d427_Benefits.json"
+                     data-w-id="fe1e2cf7-9f13-b644-7099-aade0c50cfe9"></div>
+                <div class="home-benefits_items-wrapper">
+                    <div class="home-benefits_item is-1" id="w-node-_7b3803d6-6245-591a-d92c-2687b4230bc6-78e6dd3e">
+                        <div class="home-benefits_item-line-wrapper">
+                            <div class="home-benefits_item-line" data-w-id="02f6c9bf-06f6-2967-6727-cad26d176c9f"
+                                 style="height:0rem"></div>
+                            <div class="home-benefits_item-line-icon w-embed">
+                                <svg aria-hidden="true" fill="none" height="100%" preserveAspectRatio="xMidYMid meet"
+                                     role="img" viewBox="0 0 24 24" width="100%" xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_116_8208)">
+                                        <path d="M6 6H18V18H6V6ZM6 2H8V5H6V2ZM6 19H8V22H6V19ZM2 6H5V8H2V6ZM2 16H5V18H2V16ZM19 6H22V8H19V6ZM19 16H22V18H19V16ZM16 2H18V5H16V2ZM16 19H18V22H16V19Z"
+                                              fill="url(#paint0_linear_116_8208)"/>
+                                    </g>
+                                    <defs>
+                                        <linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_116_8208"
+                                                        x1="12" x2="12" y1="-31.2089" y2="22">
+                                            <stop stop-color="#00CAFF"/>
+                                            <stop offset="1" stop-color="#0095FF"/>
+                                        </linearGradient>
+                                        <clipPath id="clip0_116_8208">
+                                            <rect fill="currentColor" height="24" width="24"/>
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="home-benefits_item-text">Maggiore efficenza</div>
+                    </div>
+                    <div class="home-benefits_item is-2" id="w-node-_7decec43-20fe-217b-bf53-eafad10e89ab-78e6dd3e">
+                        <div class="home-benefits_item-text">Più funzioni</div>
+                        <div class="home-benefits_item-line-wrapper">
+                            <div class="home-benefits_item-line-icon is-2 w-embed">
+                                <svg aria-hidden="true" fill="none" height="100%" preserveAspectRatio="xMidYMid meet"
+                                     role="img" viewBox="0 0 24 24" width="100%" xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_116_8220)">
+                                        <path d="M4.87295 3H19.127C19.2847 2.99998 19.4403 3.0373 19.5809 3.1089C19.7215 3.18051 19.8432 3.28437 19.936 3.412L23.759 8.668C23.8269 8.76152 23.8604 8.8757 23.8536 8.99112C23.8469 9.10653 23.8003 9.21603 23.722 9.301L12.367 21.602C12.3201 21.6526 12.2634 21.693 12.2002 21.7206C12.1371 21.7482 12.0689 21.7624 12 21.7624C11.931 21.7624 11.8628 21.7482 11.7997 21.7206C11.7365 21.693 11.6798 21.6526 11.633 21.602L0.277952 9.302C0.199303 9.21697 0.152618 9.10726 0.145869 8.99163C0.139121 8.876 0.172729 8.76161 0.240952 8.668L4.06395 3.412C4.15673 3.28437 4.2784 3.18051 4.419 3.1089C4.55961 3.0373 4.71516 2.99998 4.87295 3Z"
+                                              fill="url(#paint0_linear_116_8220)"/>
+                                    </g>
+                                    <defs>
+                                        <linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_116_8220"
+                                                        x1="11.9998" x2="11.9998" y1="-28.154" y2="21.7624">
+                                            <stop stop-color="#00CAFF"/>
+                                            <stop offset="1" stop-color="#0095FF"/>
+                                        </linearGradient>
+                                        <clipPath id="clip0_116_8220">
+                                            <rect fill="currentColor" height="24" width="24"/>
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div class="home-benefits_item-line is-2" data-w-id="7decec43-20fe-217b-bf53-eafad10e89ad"
+                                 style="height:0rem"></div>
+                        </div>
+                    </div>
+                    <div class="home-benefits_item is-1" id="w-node-_0d2a3fc7-277f-448a-09cf-3a8f621472e5-78e6dd3e">
+                        <div class="home-benefits_item-line-wrapper">
+                            <div class="home-benefits_item-line" data-w-id="0d2a3fc7-277f-448a-09cf-3a8f621472e7"
+                                 style="height:0rem"></div>
+                            <div class="home-benefits_item-line-icon w-embed">
+                                <svg aria-hidden="true" fill="none" height="100%" preserveAspectRatio="xMidYMid meet"
+                                     role="img" viewBox="0 0 24 24" width="100%" xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_116_8216)">
+                                        <path d="M3.783 2.826L12 1L20.217 2.826C20.4391 2.87536 20.6377 2.99897 20.78 3.1764C20.9224 3.35384 21 3.57452 21 3.802V13.789C20.9999 14.7767 20.756 15.7492 20.2899 16.62C19.8238 17.4908 19.1499 18.2331 18.328 18.781L12 23L5.672 18.781C4.85027 18.2332 4.17646 17.4911 3.71035 16.6205C3.24424 15.7498 3.00024 14.7776 3 13.79V3.802C3.00004 3.57452 3.07764 3.35384 3.21999 3.1764C3.36234 2.99897 3.56094 2.87536 3.783 2.826ZM13 10V5L8 12H11V17L16 10H13Z"
+                                              fill="url(#paint0_linear_116_8216)"/>
+                                    </g>
+                                    <defs>
+                                        <linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_116_8216"
+                                                        x1="12" x2="12" y1="-35.5298" y2="23">
+                                            <stop stop-color="#00CAFF"/>
+                                            <stop offset="1" stop-color="#0095FF"/>
+                                        </linearGradient>
+                                        <clipPath id="clip0_116_8216">
+                                            <rect fill="currentColor" height="24" width="24"/>
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="home-benefits_item-text">Maggiore accuratezza</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--        <section class="section_home-testimonials" id="Testimonials">-->
+        <!--            <div class="padding-vertical padding-huge">-->
+        <!--                <div class="padding-global">-->
+        <!--                    <div class="container-large">-->
+        <!--                        <div class="home-testimonials_title">-->
+        <!--                            <div class="text-align-center"><h2 animate="true">Success stories from our <span-->
+        <!--                                    class="text-color-purple">Clients</span></h2>-->
+        <!--                                <div class="padding-bottom padding-small"></div>-->
+        <!--                                <div class="max-width-small align-center"><p animate="true">Discover how Asimov AI is-->
+        <!--                                    making a difference in their customer support experience.</p></div>-->
+        <!--                            </div>-->
+        <!--                        </div>-->
+        <!--                        <div class="padding-bottom padding-xlarge"></div>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+        <!--                <div class="home-testimonials_component">-->
+        <!--                    <div class="home-testimonials_swiper">-->
+        <!--                        <div class="swiper is-testimonial w-dyn-list">-->
+        <!--                            <div class="swiper-wrapper w-dyn-items" role="list">-->
+        <!--                                <div class="swiper-slide is-testimonial swiper-slide-active w-dyn-item" role="listitem">-->
+        <!--                                    <div class="home-testimonials_wrapper">-->
+        <!--                                        <div class="icon-embed-xsmall w-embed">-->
+        <!--                                            <svg aria-hidden="true" fill="none" height="100%"-->
+        <!--                                                 preserveAspectRatio="xMidYMid meet" role="img" viewBox="0 0 24 24"-->
+        <!--                                                 width="100%" xmlns="http://www.w3.org/2000/svg">-->
+        <!--                                                <g clip-path="url(#clip0_78_8188)">-->
+        <!--                                                    <path d="M21 3C21.552 3 22 3.448 22 4V18C22 18.552 21.552 19 21 19H6.455L2 22.5V4C2 3.448 2.448 3 3 3H21ZM20 5H4V18.385L5.763 17H20V5ZM10.515 7.412L10.962 8.1C9.294 9.003 9.323 10.452 9.323 10.764C9.478 10.744 9.641 10.74 9.803 10.755C10.705 10.839 11.416 11.58 11.416 12.5C11.416 13.466 10.632 14.25 9.666 14.25C9.129 14.25 8.616 14.005 8.292 13.66C7.777 13.114 7.5 12.5 7.5 11.505C7.5 9.755 8.728 8.187 10.515 7.412ZM15.515 7.412L15.962 8.1C14.294 9.003 14.323 10.452 14.323 10.764C14.478 10.744 14.641 10.74 14.803 10.755C15.705 10.839 16.416 11.58 16.416 12.5C16.416 13.466 15.632 14.25 14.666 14.25C14.129 14.25 13.616 14.005 13.292 13.66C12.777 13.114 12.5 12.5 12.5 11.505C12.5 9.755 13.728 8.187 15.515 7.412Z"-->
+        <!--                                                          fill="#4bacff"/>-->
+        <!--                                                </g>-->
+        <!--                                                <defs>-->
+        <!--                                                    <clipPath id="clip0_78_8188">-->
+        <!--                                                        <rect fill="white" height="24" width="24"/>-->
+        <!--                                                    </clipPath>-->
+        <!--                                                </defs>-->
+        <!--                                            </svg>-->
+        <!--                                        </div>-->
+        <!--                                        <div class="home-testimonials_name-wrapper">-->
+        <!--                                            <div class="home-testimonials_name">Tara Haefner</div>-->
+        <!--                                            <div class="home-testimonials_comma">,</div>-->
+        <!--                                            <div class="home-testimonials_job">CEO</div>-->
+        <!--                                        </div>-->
+        <!--                                        <p class="home-testimonials_text">With Asimov AI, we&#x27;ve been able to-->
+        <!--                                            provide 24/7 support to our global customers. The multilingual capabilities-->
+        <!--                                            have truly enhanced our customer service, and we couldn&#x27;t be happier-->
+        <!--                                            with the results.</p></div>-->
+        <!--                                </div>-->
+        <!--                                <div class="swiper-slide is-testimonial swiper-slide-active w-dyn-item" role="listitem">-->
+        <!--                                    <div class="home-testimonials_wrapper">-->
+        <!--                                        <div class="icon-embed-xsmall w-embed">-->
+        <!--                                            <svg aria-hidden="true" fill="none" height="100%"-->
+        <!--                                                 preserveAspectRatio="xMidYMid meet" role="img" viewBox="0 0 24 24"-->
+        <!--                                                 width="100%" xmlns="http://www.w3.org/2000/svg">-->
+        <!--                                                <g clip-path="url(#clip0_78_8188)">-->
+        <!--                                                    <path d="M21 3C21.552 3 22 3.448 22 4V18C22 18.552 21.552 19 21 19H6.455L2 22.5V4C2 3.448 2.448 3 3 3H21ZM20 5H4V18.385L5.763 17H20V5ZM10.515 7.412L10.962 8.1C9.294 9.003 9.323 10.452 9.323 10.764C9.478 10.744 9.641 10.74 9.803 10.755C10.705 10.839 11.416 11.58 11.416 12.5C11.416 13.466 10.632 14.25 9.666 14.25C9.129 14.25 8.616 14.005 8.292 13.66C7.777 13.114 7.5 12.5 7.5 11.505C7.5 9.755 8.728 8.187 10.515 7.412ZM15.515 7.412L15.962 8.1C14.294 9.003 14.323 10.452 14.323 10.764C14.478 10.744 14.641 10.74 14.803 10.755C15.705 10.839 16.416 11.58 16.416 12.5C16.416 13.466 15.632 14.25 14.666 14.25C14.129 14.25 13.616 14.005 13.292 13.66C12.777 13.114 12.5 12.5 12.5 11.505C12.5 9.755 13.728 8.187 15.515 7.412Z"-->
+        <!--                                                          fill="#4bacff"/>-->
+        <!--                                                </g>-->
+        <!--                                                <defs>-->
+        <!--                                                    <clipPath id="clip0_78_8188">-->
+        <!--                                                        <rect fill="white" height="24" width="24"/>-->
+        <!--                                                    </clipPath>-->
+        <!--                                                </defs>-->
+        <!--                                            </svg>-->
+        <!--                                        </div>-->
+        <!--                                        <div class="home-testimonials_name-wrapper">-->
+        <!--                                            <div class="home-testimonials_name">Emily Brown</div>-->
+        <!--                                            <div class="home-testimonials_comma">,</div>-->
+        <!--                                            <div class="home-testimonials_job">Head of Customer Service</div>-->
+        <!--                                        </div>-->
+        <!--                                        <p class="home-testimonials_text">With Asimov AI, we&#x27;ve been able to-->
+        <!--                                            provide 24/7 support to our global customers. The multilingual capabilities-->
+        <!--                                            have truly enhanced our customer service, and we couldn&#x27;t be happier-->
+        <!--                                            with the results.</p></div>-->
+        <!--                                </div>-->
+        <!--                                <div class="swiper-slide is-testimonial swiper-slide-active w-dyn-item" role="listitem">-->
+        <!--                                    <div class="home-testimonials_wrapper">-->
+        <!--                                        <div class="icon-embed-xsmall w-embed">-->
+        <!--                                            <svg aria-hidden="true" fill="none" height="100%"-->
+        <!--                                                 preserveAspectRatio="xMidYMid meet" role="img" viewBox="0 0 24 24"-->
+        <!--                                                 width="100%" xmlns="http://www.w3.org/2000/svg">-->
+        <!--                                                <g clip-path="url(#clip0_78_8188)">-->
+        <!--                                                    <path d="M21 3C21.552 3 22 3.448 22 4V18C22 18.552 21.552 19 21 19H6.455L2 22.5V4C2 3.448 2.448 3 3 3H21ZM20 5H4V18.385L5.763 17H20V5ZM10.515 7.412L10.962 8.1C9.294 9.003 9.323 10.452 9.323 10.764C9.478 10.744 9.641 10.74 9.803 10.755C10.705 10.839 11.416 11.58 11.416 12.5C11.416 13.466 10.632 14.25 9.666 14.25C9.129 14.25 8.616 14.005 8.292 13.66C7.777 13.114 7.5 12.5 7.5 11.505C7.5 9.755 8.728 8.187 10.515 7.412ZM15.515 7.412L15.962 8.1C14.294 9.003 14.323 10.452 14.323 10.764C14.478 10.744 14.641 10.74 14.803 10.755C15.705 10.839 16.416 11.58 16.416 12.5C16.416 13.466 15.632 14.25 14.666 14.25C14.129 14.25 13.616 14.005 13.292 13.66C12.777 13.114 12.5 12.5 12.5 11.505C12.5 9.755 13.728 8.187 15.515 7.412Z"-->
+        <!--                                                          fill="#4bacff"/>-->
+        <!--                                                </g>-->
+        <!--                                                <defs>-->
+        <!--                                                    <clipPath id="clip0_78_8188">-->
+        <!--                                                        <rect fill="white" height="24" width="24"/>-->
+        <!--                                                    </clipPath>-->
+        <!--                                                </defs>-->
+        <!--                                            </svg>-->
+        <!--                                        </div>-->
+        <!--                                        <div class="home-testimonials_name-wrapper">-->
+        <!--                                            <div class="home-testimonials_name">John Smith</div>-->
+        <!--                                            <div class="home-testimonials_comma">,</div>-->
+        <!--                                            <div class="home-testimonials_job">Customer Support Lead</div>-->
+        <!--                                        </div>-->
+        <!--                                        <p class="home-testimonials_text">The seamless integration of Asimov AI with our-->
+        <!--                                            existing knowledge base made the transition a breeze. We&#x27;ve seen an-->
+        <!--                                            increase in customer satisfaction and a decrease in response times, all-->
+        <!--                                            thanks to this amazing platform!</p></div>-->
+        <!--                                </div>-->
+        <!--                                <div class="swiper-slide is-testimonial swiper-slide-active w-dyn-item" role="listitem">-->
+        <!--                                    <div class="home-testimonials_wrapper">-->
+        <!--                                        <div class="icon-embed-xsmall w-embed">-->
+        <!--                                            <svg aria-hidden="true" fill="none" height="100%"-->
+        <!--                                                 preserveAspectRatio="xMidYMid meet" role="img" viewBox="0 0 24 24"-->
+        <!--                                                 width="100%" xmlns="http://www.w3.org/2000/svg">-->
+        <!--                                                <g clip-path="url(#clip0_78_8188)">-->
+        <!--                                                    <path d="M21 3C21.552 3 22 3.448 22 4V18C22 18.552 21.552 19 21 19H6.455L2 22.5V4C2 3.448 2.448 3 3 3H21ZM20 5H4V18.385L5.763 17H20V5ZM10.515 7.412L10.962 8.1C9.294 9.003 9.323 10.452 9.323 10.764C9.478 10.744 9.641 10.74 9.803 10.755C10.705 10.839 11.416 11.58 11.416 12.5C11.416 13.466 10.632 14.25 9.666 14.25C9.129 14.25 8.616 14.005 8.292 13.66C7.777 13.114 7.5 12.5 7.5 11.505C7.5 9.755 8.728 8.187 10.515 7.412ZM15.515 7.412L15.962 8.1C14.294 9.003 14.323 10.452 14.323 10.764C14.478 10.744 14.641 10.74 14.803 10.755C15.705 10.839 16.416 11.58 16.416 12.5C16.416 13.466 15.632 14.25 14.666 14.25C14.129 14.25 13.616 14.005 13.292 13.66C12.777 13.114 12.5 12.5 12.5 11.505C12.5 9.755 13.728 8.187 15.515 7.412Z"-->
+        <!--                                                          fill="#4bacff"/>-->
+        <!--                                                </g>-->
+        <!--                                                <defs>-->
+        <!--                                                    <clipPath id="clip0_78_8188">-->
+        <!--                                                        <rect fill="white" height="24" width="24"/>-->
+        <!--                                                    </clipPath>-->
+        <!--                                                </defs>-->
+        <!--                                            </svg>-->
+        <!--                                        </div>-->
+        <!--                                        <div class="home-testimonials_name-wrapper">-->
+        <!--                                            <div class="home-testimonials_name">Jane Doe</div>-->
+        <!--                                            <div class="home-testimonials_comma">,</div>-->
+        <!--                                            <div class="home-testimonials_job">E-commerce Manager</div>-->
+        <!--                                        </div>-->
+        <!--                                        <p class="home-testimonials_text">Asimov AI has been a game-changer for our-->
+        <!--                                            business. The AI chatbot handles customer inquiries effortlessly, freeing up-->
+        <!--                                            our team to focus on more complex issues. Our customers love the quick and-->
+        <!--                                            accurate responses!</p></div>-->
+        <!--                                </div>-->
+        <!--                            </div>-->
+        <!--                        </div>-->
+        <!--                    </div>-->
+        <!--                    <div class="padding-bottom padding-large"></div>-->
+        <!--                    <div class="swiper-pagination"></div>-->
+        <!--                    <div class="testimonials-pagination-custom-css w-embed">-->
+        <!--                        <style>-->
+
+        <!--                            /* Customize the pagination bullets */-->
+        <!--                            .swiper-pagination-bullet {-->
+        <!--                                width: 50px;-->
+        <!--                                height: 4px;-->
+        <!--                                background-color: rgba(75, 183, 255, 0.17);-->
+        <!--                                opacity: 1;-->
+        <!--                                border-radius: inherit;-->
+        <!--                                margin-top: 2rem;-->
+
+        <!--                            }-->
+
+        <!--                            /* Customize the active pagination bullet */-->
+        <!--                            .swiper-pagination-bullet-active {-->
+        <!--                                background-color: #007BFF;-->
+        <!--                            }-->
+
+
+        <!--                        </style>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--        </section>-->
+        <section class="section_home-steps" data-w-id="ae8a36ba-bb0b-88a1-ad39-8e3c5d6e1038" id="Steps">
+            <div class="padding-vertical padding-huge">
+                <div class="padding-global">
+                    <div class="container-large">
+                        <div class="home-steps_order">
+                            <div class="align-center max-width-medium">
+                                <div class="text-align-center text-color-white"><h2 animate="true">Snellisci le tue
+                                    analisi legislative in 5 passi:</h2>
+                                    <div class="padding-bottom padding-small"></div>
+                                    <div class="text-weight-normal"><p animate="true" class="text-size-regular">
+                                        Implementa l'intelligenza artificiale senza sforzo</p></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="padding-bottom padding-xlarge"></div>
+                        <div class="home-steps_component">
+                            <div class="home-steps_item">
+                                <div class="home-steps_item-empty"
+                                     id="w-node-af98d3d0-d5a3-ba78-0e09-724eeba86f35-78e6dd3e"></div>
+                                <div class="home-steps_item-center"
+                                     id="w-node-_441987c1-d626-4b94-3cb6-c84d715c132e-78e6dd3e">
+                                    <div class="home-steps_progress is-start"></div>
+                                    <div class="home-steps_item-square">
+                                        <div class="home-steps_item-small-square" style="opacity:0"></div>
+                                    </div>
+                                </div>
+                                <div class="home-steps_item-right"
+                                     id="w-node-_3ea1de87-dd5d-3455-66ad-476aa1d69a8c-78e6dd3e">
+                                    <div class="home-steps_item-content-wrapper">
+                                        <div class="text-size-medium home-steps_order">Step 1</div>
+                                        <h3 class="text-size-medium text-color-white text-weight-medium">Registrati</h3>
+                                        <p class="text-size-medium text-color-white">Registrati nella piattaforma</p>
+                                        <div class="padding-bottom padding-small is-mobile-pading-large"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="home-steps_item is-right">
+                                <div class="home-steps_item-left"
+                                     id="w-node-_53534cae-ebd7-045e-bdfa-e7d785ad69eb-78e6dd3e">
+                                    <div class="home-steps_item-content-wrapper">
+                                        <div class="home-steps_order">Step 2</div>
+                                        <h3 class="text-size-medium text-color-white text-weight-medium">Carica</h3>
+                                        <p class="text-size-medium text-color-white"> Carica un fascicolo di
+                                            emendamenti</p>
+                                        <div class="padding-bottom padding-small is-mobile-pading-large"></div>
+                                    </div>
+                                </div>
+                                <div class="home-steps_item-center"
+                                     id="w-node-_53534cae-ebd7-045e-bdfa-e7d785ad69ec-78e6dd3e">
+                                    <div class="home-steps_item-square">
+                                        <div class="home-steps_item-small-square" style="opacity:0"></div>
+                                    </div>
+                                    <div class="home-steps_progress"></div>
+                                </div>
+                                <div class="home-steps_item-empty"
+                                     id="w-node-_53534cae-ebd7-045e-bdfa-e7d785ad69ef-78e6dd3e"></div>
+                            </div>
+                            <div class="home-steps_item">
+                                <div class="home-steps_item-empty"
+                                     id="w-node-_7afc9a80-ff85-9ff7-510e-04fea8b7ba8b-78e6dd3e"></div>
+                                <div class="home-steps_item-center"
+                                     id="w-node-_7afc9a80-ff85-9ff7-510e-04fea8b7ba8c-78e6dd3e">
+                                    <div class="home-steps_progress"></div>
+                                    <div class="home-steps_item-square">
+                                        <div class="home-steps_item-small-square" style="opacity:0"></div>
+                                    </div>
+                                </div>
+                                <div class="home-steps_item-right"
+                                     id="w-node-_7afc9a80-ff85-9ff7-510e-04fea8b7ba90-78e6dd3e">
+                                    <div class="home-steps_item-content-wrapper">
+                                        <div class="home-steps_order">Step 3</div>
+                                        <h3 class="text-size-medium text-color-white text-weight-medium">Avvia</h3>
+                                        <p class="text-size-medium text-color-white">Avvia l'analisi del fascicolo
+                                        <div class="padding-bottom padding-small is-mobile-pading-large"></div>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="home-steps_item is-right">
+                                <div class="home-steps_item-left"
+                                     id="w-node-f7a1234d-0937-432c-24c0-7cce4180eb7d-78e6dd3e">
+                                    <div class="home-steps_item-content-wrapper">
+                                        <div class="home-steps_order">Step 4</div>
+                                        <h3 class="text-size-medium text-color-white text-weight-medium">Verifica</h3>
+                                        <p class="text-size-medium text-color-white">Controlla il risultato
+                                            dell'analisi</p>
+                                        <div class="padding-bottom padding-small is-mobile-pading-large"></div>
+                                    </div>
+                                </div>
+                                <div class="home-steps_item-center"
+                                     id="w-node-f7a1234d-0937-432c-24c0-7cce4180eb86-78e6dd3e">
+                                    <div class="home-steps_item-square">
+                                        <div class="home-steps_item-small-square" style="opacity:0"></div>
+                                    </div>
+                                    <div class="home-steps_progress"></div>
+                                </div>
+                                <div class="home-steps_item-empty"
+                                     id="w-node-f7a1234d-0937-432c-24c0-7cce4180eb8a-78e6dd3e"></div>
+                            </div>
+                            <div class="home-steps_item">
+                                <div class="home-steps_item-empty"
+                                     id="w-node-_7205d43d-7ce7-04c1-22a1-f897d1834eaf-78e6dd3e"></div>
+                                <div class="home-steps_item-center"
+                                     id="w-node-_7205d43d-7ce7-04c1-22a1-f897d1834eb0-78e6dd3e">
+                                    <div class="home-steps_progress is-end"></div>
+                                    <div class="home-steps_item-square">
+                                        <div class="home-steps_item-small-square" style="opacity:0"></div>
+                                    </div>
+                                </div>
+                                <div class="home-steps_item-right"
+                                     id="w-node-_7205d43d-7ce7-04c1-22a1-f897d1834eb4-78e6dd3e">
+                                    <div class="home-steps_item-content-wrapper">
+                                        <div class="home-steps_order">Step 5</div>
+                                        <h3 class="text-size-medium text-color-white text-weight-medium">Scarica</h3>
+                                        <p class="text-size-medium text-color-white"> Scarica il rapporto in formato
+                                            Excel o Pdf</p>
+                                        <div class="padding-bottom padding-small"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="padding-bottom padding-medium"></div>
+                            <div class="button-group">
+                                <a class="button w-button" href="mailto:info@asimov.law">Contattaci</a>
+                                <!--                                <a class="button is-secondary w-button" href="#">Contattaci</a></div>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="home-steps_lottie" data-animation-type="lottie" data-autoplay="0" data-direction="1"
+                     data-duration="0" data-is-ix2-target="1" data-loop="0" data-renderer="svg"
+                     data-src="https://uploads-ssl.webflow.com/644a707754dba83fffe6dd3a/644c707cf697a88d7e8a45bf_steps.json"
+                     data-w-id="5c52708d-3154-1051-42b3-da35fd4462b3"></div>
+            </div>
+        </section>
+        <section class="section_home-questions" id="FAQ">
+            <div class="padding-global">
+                <div class="container-large">
+                    <div class="home-questions_component">
+                        <div class="home-questions_title"><h2>Domande frequenti</h2>
+                            <div>Ottieni risposta alle domande più comuni</div>
+                        </div>
+                        <div class="home-questions_faq" id="w-node-_336ce6d5-b17b-e1d9-a13c-4dee9b91e90f-78e6dd3e">
+                            <div class="home-questions-faq_component">
+                                <div class="home-questions-faq_top" data-w-id="bc3cba2b-b294-e105-8557-7a7915e09abc">
+                                    <div class="text-size-medium text-weight-medium is-text-mobile-regular">Che cosa fa
+                                        Asimov?
+                                    </div>
+                                    <div class="home-questions-faq_icon w-embed">
+                                        <svg fill="none" height="100%" viewBox="0 0 32 32" width="100%"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M25.3333 15.667V16.3336C25.3333 16.7018 25.0349 17.0003 24.6667 17.0003H17V24.667C17 25.0351 16.7015 25.3336 16.3333 25.3336H15.6667C15.2985 25.3336 15 25.0351 15 24.667V17.0003H7.3333C6.96511 17.0003 6.66663 16.7018 6.66663 16.3336V15.667C6.66663 15.2988 6.96511 15.0003 7.3333 15.0003H15V7.33365C15 6.96546 15.2985 6.66699 15.6667 6.66699H16.3333C16.7015 6.66699 17 6.96546 17 7.33365V15.0003H24.6667C25.0349 15.0003 25.3333 15.2988 25.3333 15.667Z"
+                                                  fill="currentColor"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="home-questions-faq_bottom" style="height:0px">
+                                    <div class="margin-bottom margin-small"><p class="is-mobile-text-small">Asimov
+                                        utilizza i più avanzati strumenti di intelligenza artificiale per comprendere
+                                        l'effetto giuridico delle proposte emendative, impiegando esclusivamente fonti
+                                        normative ufficiali.</p></div>
+                                </div>
+                            </div>
+                            <div class="home-questions-faq_component is-no-border-top">
+                                <div class="home-questions-faq_top" data-w-id="77ef555d-1e78-f094-95a8-cd12a761d691">
+                                    <div class="text-size-medium text-weight-medium is-text-mobile-regular">Quanto è
+                                        affidabile l'analisi di Asimov?
+                                    </div>
+                                    <div class="home-questions-faq_icon w-embed">
+                                        <svg fill="none" height="100%" viewBox="0 0 32 32" width="100%"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M25.3333 15.667V16.3336C25.3333 16.7018 25.0349 17.0003 24.6667 17.0003H17V24.667C17 25.0351 16.7015 25.3336 16.3333 25.3336H15.6667C15.2985 25.3336 15 25.0351 15 24.667V17.0003H7.3333C6.96511 17.0003 6.66663 16.7018 6.66663 16.3336V15.667C6.66663 15.2988 6.96511 15.0003 7.3333 15.0003H15V7.33365C15 6.96546 15.2985 6.66699 15.6667 6.66699H16.3333C16.7015 6.66699 17 6.96546 17 7.33365V15.0003H24.6667C25.0349 15.0003 25.3333 15.2988 25.3333 15.667Z"
+                                                  fill="currentColor"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="home-questions-faq_bottom" style="height:0px">
+                                    <div class="margin-bottom margin-small"><p class="is-mobile-text-small">Asimov
+                                        identifica la normativa necessaria alla comprensione del testo legislativo,
+                                        anche quella innestata dentro le citazioni, e riesce a recuperarne la quasi
+                                        totalità. Inoltre attraverso sofisticati sistemi di prompt engineering,
+                                        minimizza gli episodi di allucinazioni propri dello stato dell'arte dell'IA.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="home-questions-faq_component is-no-border-top">
+                                <div class="home-questions-faq_top" data-w-id="42cdfa62-f412-0332-4928-8405a88f5318">
+                                    <div class="text-size-medium text-weight-medium is-text-mobile-regular">Asimov
+                                        condivide i documenti caricati con altri clienti?
+                                    </div>
+                                    <div class="home-questions-faq_icon w-embed">
+                                        <svg fill="none" height="100%" viewBox="0 0 32 32" width="100%"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M25.3333 15.667V16.3336C25.3333 16.7018 25.0349 17.0003 24.6667 17.0003H17V24.667C17 25.0351 16.7015 25.3336 16.3333 25.3336H15.6667C15.2985 25.3336 15 25.0351 15 24.667V17.0003H7.3333C6.96511 17.0003 6.66663 16.7018 6.66663 16.3336V15.667C6.66663 15.2988 6.96511 15.0003 7.3333 15.0003H15V7.33365C15 6.96546 15.2985 6.66699 15.6667 6.66699H16.3333C16.7015 6.66699 17 6.96546 17 7.33365V15.0003H24.6667C25.0349 15.0003 25.3333 15.2988 25.3333 15.667Z"
+                                                  fill="currentColor"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="home-questions-faq_bottom" style="height:0px">
+                                    <div class="margin-bottom margin-small"><p class="is-mobile-text-small"> No, i
+                                        documenti caricati, anche se disponibili pubblicamente, non verranno mai
+                                        condivisi con altri clienti. Comprendiamo che l'accesso ai documenti è un
+                                        vantaggio strategico delle società di Public Affairs.
+                                        Inoltre, ad Asimov AI
+                                        valorizziamo la privacy dei dati e la sicurezza,
+                                        seguendo le pratiche standard del settore, come archiviazione sicura e
+                                        crittografata per proteggere le vostre informazioni.</p></div>
+                                </div>
+                            </div>
+                            <div class="home-questions-faq_component is-no-border-top">
+                                <div class="home-questions-faq_top" data-w-id="bc3cba2b-b294-e105-8557-7a7915e09abc">
+                                    <div class="text-size-medium text-weight-medium is-text-mobile-regular">Il servizio
+                                        è già acquistabile?
+                                    </div>
+                                    <div class="home-questions-faq_icon w-embed">
+                                        <svg fill="none" height="100%" viewBox="0 0 32 32" width="100%"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M25.3333 15.667V16.3336C25.3333 16.7018 25.0349 17.0003 24.6667 17.0003H17V24.667C17 25.0351 16.7015 25.3336 16.3333 25.3336H15.6667C15.2985 25.3336 15 25.0351 15 24.667V17.0003H7.3333C6.96511 17.0003 6.66663 16.7018 6.66663 16.3336V15.667C6.66663 15.2988 6.96511 15.0003 7.3333 15.0003H15V7.33365C15 6.96546 15.2985 6.66699 15.6667 6.66699H16.3333C16.7015 6.66699 17 6.96546 17 7.33365V15.0003H24.6667C25.0349 15.0003 25.3333 15.2988 25.3333 15.667Z"
+                                                  fill="currentColor"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="home-questions-faq_bottom" style="height:0px">
+                                    <div class="margin-bottom margin-small"><p class="is-mobile-text-small">Sì, il
+                                        servizio con funzionalità di base è già disponibile</p></div>
+                                </div>
+                            </div>
+
+                            <div class="home-questions-faq_component is-no-border-top">
+                                <div class="home-questions-faq_top" data-w-id="8b6a1a7b-04c2-c075-d3d7-057053396a3f">
+                                    <div class="text-size-medium text-weight-medium is-text-mobile-regular">Quanto costa
+                                        Asimov?
+                                    </div>
+                                    <div class="home-questions-faq_icon w-embed">
+                                        <svg fill="none" height="100%" viewBox="0 0 32 32" width="100%" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M25.3333 15.667V16.3336C25.3333 16.7018 25.0349 17.0003 24.6667 17.0003H17V24.667C17 25.0351 16.7015 25.3336 16.3333 25.3336H15.6667C15.2985 25.3336 15 25.0351 15 24.667V17.0003H7.3333C6.96511 17.0003 6.66663 16.7018 6.66663 16.3336V15.667C6.66663 15.2988 6.96511 15.0003 7.3333 15.0003H15V7.33365C15 6.96546 15.2985 6.66699 15.6667 6.66699H16.3333C16.7015 6.66699 17 6.96546 17 7.33365V15.0003H24.6667C25.0349 15.0003 25.3333 15.2988 25.3333 15.667Z" fill="currentColor"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="home-questions-faq_bottom" style="height: 0px;">
+                                    <div class="margin-bottom margin-small"><p class="is-mobile-text-small">Abbiamo
+
+                                        diversi piani che variano a 
+seconda delle funzionalità richieste, contattateci per maggiori 
+informazioni.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section_home-contact" id="Contact">
+            <div class="padding-global">
+                <div class="container-small">
+                    <div class="padding-vertical padding-huge">
+                        <div class="margin-bottom margin-large">
+                            <div class="text-align-center text-color-white">
+                                <div class="max-width-large align-center">
+                                    <div class="margin-bottom margin-small"><h2 animate="true">Prenota una demo</h2>
+                                    </div>
+                                <p animate="true" class="text-size-medium is-text-mobile-regular">Sperimenta
+                                        autonomamente la potenza di Asimov AI</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="max-width-medium">
+                            <div class="home-contact_component w-form">
+                                <form class="home-contact_form" data-name="Contact 1 Form"
+                                      data-wf-element-id="71aeebf7-e2e3-e7f1-3219-82e81dacd13f"
+                                      data-wf-page-id="644a707854dba82378e6dd3e" id="wf-form-Contact-1-Form"
+                                      name="wf-form-Contact-1-Form">
+                                    <input type="hidden" name="contact_number">
+                                    <div class="form_field-wrapper"><label class="form_label" for="contact_name">Nome
+                                        & Cognome</label>
+                                        <input class="form_input w-input" data-name="Contact 1 Name"
+                                                                id="contact_name" maxlength="256"
+                                                                name="contact_name"
+                                                                placeholder="" required="" type="text"/>
+                                    </div>
+                                    <div class="form_field-wrapper"><label class="form_label" for="contact_email">Email</label>
+                                        <input
+                                            class="form_input w-input" data-name="Contact 1 Email" id="contact_email"
+                                            maxlength="256" name="contact_email" placeholder="" required=""
+                                            type="email"/>
+                                    </div>
+                                    <div class="margin-bottom margin-xsmall"><label class="w-checkbox form_checkbox"
+                                                                                    id="Contact-2-Checkbox">
+                                        <div class="w-checkbox-input w-checkbox-input--inputType-custom form_checkbox-icon"></div>
+                                        <input data-name="Contact 1 Checkbox" id="Contact-1-Checkbox"
+                                               name="Contact-1-Checkbox" required=""
+                                               style="opacity:0;position:absolute;z-index:-1" type="checkbox"/>
+                                        <span class="form_checkbox-label text-size-small w-form-label"
+                                              for="Contact-1-Checkbox">
+                                            Accetto la <a
+                                                class="text-style-link"
+                                                href="privacy_policy.html">privacy policy.</a></span></label></div>
+                                    <input class="button w-button" data-wait="Please wait..."
+                                           id="w-node-_71aeebf7-e2e3-e7f1-3219-82e81dacd153-78e6dd3e" type="submit"
+                                           value="Invia"/>
+                                </form>
+
+
+                                <div class="success-message w-form-done">
+                                    <div class="success-text">Grazie! La tua richiesta è stata ricevuta e verrai
+                                        contattato il prima possibile.
+                                    </div>
+                                </div>
+                                <div class="error-message w-form-fail">
+                                    <div class="error-text">Oops! C'è stato un errore nell'invio del modulo.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+    <footer class="footer">
+        <div class="padding-global">
+            <div class="container-large">
+                <div class="padding-vertical padding-xlarge">
+                    <div class="padding-bottom padding-xlarge"></div>
+                    <div class="line-divider"></div>
+                    <div class="padding-top padding-medium"></div>
+                    <div class="footer_bottom-wrapper">
+                        <div class="text-size-small text-color-gray500">© 2023 Asimov AI. All rights reserved.</div>
+                        <div class="w-layout-grid footer_list"><a class="footer_link" href="#">Terms</a><a
+                                class="footer_link" href="privacy_policy.html">Privacy</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+<script crossorigin="anonymous" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+        src="jquery-3.5.1.js"
+        type="text/javascript"></script>
+<script src="webflow.js"
+        type="text/javascript"></script>
+<!--------------->
+<!-- Swiper JS -->
+<!--------------->
+
+
+<!-- Before </body> tag -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const swiper = new Swiper(".is-testimonial", {
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            slidesPerView: 'auto',
+            centeredSlides: true,
+            spaceBetween: 32,
+            speed: 400,
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            breakpoints: {
+                768: {
+                    spaceBetween: 32,
+                }
+            },
+            autoplay: {
+                delay: 3000, // Autoplay delay in milliseconds
+            },
+        });
+    });
+</script>
+
+
+<!--------------->
+<!-- GSAP Text Animation -->
+<!--------------->
+
+
+<script src="https://unpkg.com/split-type"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Use SplitType only on elements with the 'animate' attribute to optimize performance
+        const animateElements = document.querySelectorAll('[animate]');
+        let typeSplit = new SplitType(animateElements, {
+            types: 'lines, words, chars',
+            tagName: 'span'
+        });
+
+        // Register ScrollTrigger plugin
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Use a function to encapsulate the animation setup
+        function setupAnimation(element) {
+            gsap.from(element.querySelectorAll('.line'), {
+                y: '100%',
+                opacity: 0,
+                duration: 0.95,
+                ease: 'circ.out',
+                stagger: 0.1,
+                scrollTrigger: {
+                    trigger: element,
+                    start: 'top bottom', // Adjust this value according to your desired animation start point
+                    once: true, // Set to true if you want the animation to play only once when the element comes into view
+                }
+            });
+        }
+
+        // Loop through the elements and set up the animation
+        animateElements.forEach(setupAnimation);
+    });
+</script>
+
+</body></html>
