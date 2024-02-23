@@ -145,10 +145,10 @@
 
 
 			<tbody id="iters_table_body">
-
 			<tr id="templateRow" style="display: none;">
 				<td id="ramo" class="ramo">S</td>
-				<td id="numero_fase" class="numero_fase"><a href="https://www.senato.it/leg/19/BGT/Schede/Ddliter/00000.htm"
+				<td id="numero_fase" class="numero_fase">
+					<a href="https://www.senato.it/leg/19/BGT/Schede/Ddliter/00000.htm"
 																		  target="_blank">000</a></td>
 				<td id="titolo" class="titolo" title="">
 					Ratifica ed esecuzione dell'Accordo tra la Repubblica italiana e la Repubblica di San Marino
@@ -169,6 +169,28 @@
 					<a class="btn w-100 btn-icon" aria-label="minus" style="display: none">{% include ui/icon.html icon="x"%}</a>
 				</td>
 			</tr>
+			<tr id="placeholderRow" style="display: none;">
+				<td id="ramo" class="ramo"><div class="placeholder col-9 mb-3"></div></td>
+				<td id="numero_fase" class="numero_fase"><span>000</span></td>
+				<td id="titolo" class="titolo" title="">
+					<div class="placeholder placeholder-xs col-10" style="width: 25rem;"></div>
+				</td>
+				<td id="presentatore" class="presentatore" title="">
+					<div class="placeholder placeholder-xs col-10"></div>
+				</td>
+				<td id="nome_gruppo" class="nome_gruppo" title="">
+					<div class="placeholder placeholder-xs col-10"></div>
+				</td>
+				<td id="stato_ddl_semp" class="stato_ddl_semp" title="Esito positivo">
+					<div class="placeholder placeholder-xs col-10"></div>
+				</td>
+				<td id="data_stato_ddl" class="data_stato_ddl"> 
+					<div class="placeholder placeholder-xs col-10"></div>
+				</td>
+				<td id="seguito" class="seguito">
+					<div class="placeholder placeholder-xs col-10" style="width: 3rem;"></div>
+				</td>			
+			</tr>
 			</tbody>
 		</table>
 	</div>
@@ -181,7 +203,7 @@
 
 <script>
 
-
+	var placeholderRow = document.querySelector('#placeholderRow')
 	var searchInput= document.querySelector('#searchInput');
 	searchInput.onkeydown = function (event){ if (event.key === 'Enter') {fetch_table({field: 'data_stato_ddl', desc: true});}} 
 
@@ -288,12 +310,11 @@
 					element.title = status['title'];
 					break;
 				case 'data_stato_ddl':
-
 					element.textContent = formatDate(item[field]);
 					break
 				case 'seguito':
 					// var anchorElement = element.querySelector("a");
-					if(item['stato_ddl_semp'] != 'In corso'){
+					if(item['stato_ddl_semp'] == 'Esito positivo' || item['stato_ddl_semp'] == 'Esito negativo'){
 						element.querySelector('.seguito a[aria-label="plus"]').classList.add('disabled');
 						return
 					}
@@ -312,6 +333,7 @@
 								console.log(`success is ${success}`)
 								item[field] = !item[field];
 								switch_follow_button(this);
+								fetch_tiles()
 								fill_tiles();
 								console.log(`I switched ${this}`)
 							}
@@ -360,7 +382,7 @@
 		var tbody = document.getElementById('iters_table_body');
 		var templateRow = document.getElementById('templateRow');
 		// Remove all children using a loop
-		while (tbody.children.length > 1) {
+		while (tbody.children.length > 2) {
 			tbody.removeChild(tbody.lastChild);
 		}
 
@@ -384,6 +406,7 @@
 			});
 			tbody.appendChild(tr);
 		});
+
 
 		var tds = document.querySelectorAll('.table td'); // Select all td elements
 		for (var i = 0; i < tds.length; i++) {
@@ -411,17 +434,27 @@
 
 		// Fill tiles
 		followed_ongoing_iters.forEach(function (item) {
-				ddl = item.ddls[0]   // we assume they are orderd chronologically
-				var newTile = tileTemplate.cloneNode(true);
-				newTile.removeAttribute('style');
-				newTile.removeAttribute('id');
-				newTile.querySelector('.h1.mb-3').textContent = 'A' + ddl['ramo'] + ddl['numero_fase']
-				newTile.querySelector('[data-query-id="status"]').textContent = ddl['stato_ddl']
-				tcontainer.insertBefore(newTile, tcontainer.lastElementChild);
-				if(item.ddls.length>1){
-					previous_ddl = item.ddls[1]
-					newTile.querySelector('.subheader').textContent = 'Prec. A' + previous_ddl['ramo'] + previous_ddl['numero_fase']
-				}
+			ddl = item.ddls[0]   // we assume they are orderd chronologically
+			var newTile = tileTemplate.cloneNode(true);
+			newTile.removeAttribute('style');
+			newTile.removeAttribute('id');
+			newTile.setAttribute('data-id_iter', item['id_iter']);
+			newTile.querySelector('.h1.mb-3').textContent = 'A' + ddl['ramo'] + ddl['numero_fase']
+			newTile.querySelector('[data-query-id="status"]').textContent = ddl['stato_ddl']
+			tcontainer.insertBefore(newTile, tcontainer.lastElementChild);
+			if(item.ddls.length>1){
+				previous_ddl = item.ddls[1]
+				newTile.querySelector('.subheader').textContent = 'Prec. A' + previous_ddl['ramo'] + previous_ddl['numero_fase']
+			}
+			do_not_follow_button = newTile.querySelector('.dropdown-item')
+			do_not_follow_button.onclick = 	function() {
+				followIter(item['id_iter'], true).then(is_success => {
+					if (is_success) {
+						fetch_tiles();
+						fill_tiles();
+					}
+				});
+			}
 		});
 		
 	}
@@ -465,6 +498,10 @@
 
 		
 	function fetch_table(order_by) {
+
+		// Display placeholder row removing display: none
+		placeholderRow.removeAttribute('style')
+
 		// Function to get the selected options from the dropdowns
 		function getSelectedOptions(selector) {
 			var selectedOptions = [];
@@ -533,12 +570,14 @@
 					console.log(responseData);
 					ddls = responseData
 					fill_table(ddls)
+					
 
 				})
 				.catch(error => {
 					// Handle the error
 					console.log(error.message);
-				});
+				}).finally(() => placeholderRow.setAttribute('style', 'display: none;'))
+				;
 		}
 
 	}
