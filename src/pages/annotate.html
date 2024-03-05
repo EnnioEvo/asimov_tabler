@@ -8,26 +8,26 @@ layout-hide-topbar: true
 
 {% assign person = site.data.people[4] %}
 
-<div class="card">
+<div class="card" style="height: 90vh">
 	<div class="row g-0">
 		<div class="col-1 col-lg-1 col-xl-1 border-end">
 			<div class="card">
 				<div class="card-header" style="display: none;">
 				  <h3 class="card-title">Links and buttons</h3>
 				</div>
-				<div class="list-group list-group-flush scrollable overflow-auto" style="max-height: 35rem;" id="amendmentIdxs">
+				<div class="list-group list-group-flush scrollable overflow-auto" style="height: 90vh;" id="amendmentIdxs">
 				</div>
 			  </div>
 		</div>
 		<div class="col-5 col-lg-5 col-xl-5 d-flex flex-column">
-			<div class="card-body markdown scrollable" style="height: 18rem; white-space: pre-line;" id="amendmentContent"></div>
-			<div class="card-body markdown scrollable" style="height: 17rem; white-space: pre-line;" id="amendmentAnalysis">
+			<div class="card-body markdown scrollable" style="height: 40vh; white-space: pre-line;" id="amendmentContent"></div>
+			<div class="card-body markdown scrollable" style="height: 50vh; white-space: pre-line;" id="amendmentAnalysis">
 			<strong>Titolo</strong>
-			<textarea id="titolo" style="width: 22rem; resize: both;"></textarea>
+			<textarea id="titolo" style="width: 30vw; resize: both;"></textarea>
 			<strong>Sintesi</strong>
-			<textarea id="sintesi" style="width: 22rem; resize: both;"></textarea>
-			<button id="saveButton" class="btn btn-primary" style="width: 22rem">Salva</button>
-			<label id="esito" style="width: 22rem; display: flex; justify-content: center; align-items: center;"></label>
+			<textarea id="sintesi" style="width: 30vw; resize: both;"></textarea>
+			<button id="saveButton" class="btn btn-primary" style="width: 30vw">Salva</button>
+			<label id="esito" style="width: 30vw; display: flex; justify-content: center; align-items: center;"></label>
 			<label id="successLabel" style="display: none;">{% include ui/icon.html icon="circle-check" color="green" size="lg" class="mb-2" %}</label>
 			<label id="failureLabel" style="display: none;">{% include ui/icon.html icon="circle-x" color="red" size="lg" class="mb-2" %}</label>
 			</div>
@@ -39,22 +39,22 @@ layout-hide-topbar: true
 
 <div class="card" style="display: none;">
 	<div class="card-body">
-		<a class="btn" data-bs-toggle="offcanvas" href="#offcanvasEnd" role="button" aria-controls="offcanvasEnd">
-			Toggle end offcanvas
+		<a class="btn" data-bs-toggle="offcanvas" href="#offcanvasStart" role="button" aria-controls="offcanvasStart">
+			Toggle start offcanvas
 		</a>
 	</div>
 </div>
 
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasEnd" aria-labelledby="offcanvasEndLabel">
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasStart" aria-labelledby="offcanvasStartLabel">
 	<div class="offcanvas-header">
-		<h2 class="offcanvas-title" ><a id="offcanvasHeader" href="" target="_blank">End offcanvas</a></h2>
+		<h2 class="offcanvas-title" ><a id="offcanvasHeader" href="" target="_blank">Start offcanvas</a></h2>
 		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 	</div>
 	<div class="offcanvas-body">
 		<strong>Sintesi</strong>
 		<p id="quotationSummary"></p>
 		<strong>Testo</strong>
-		<p id="quotationText"></p>
+		<p id="quotationText" style="white-space: pre-line;"></p>
 		<!-- <div class="mt-3">
 			<button class="btn btn-primary" type="button" data-bs-dismiss="offcanvas">
 				Close offcanvas
@@ -101,8 +101,8 @@ layout-hide-topbar: true
 		endpoint += `?fase_ddl=${fase_ddl}`
 		data = {
 			am_idx : currentAm.dataset.amendmentKey,
-			titolo : titoloComponent.textContent,
-			sintesi : sintesiComponent.textContent
+			titolo : titoloComponent.value,
+			sintesi : sintesiComponent.value
 		}
 		fetch(endpoint, {
 			method: 'POST',
@@ -214,8 +214,8 @@ layout-hide-topbar: true
 
 			// Set the content for the amendmentContentDiv and amendmentAnalysisDiv
 			amendmentContentDiv.innerHTML = amendmentData.body;
-			titoloComponent.textContent = amendmentData.titolo;
-			sintesiComponent.textContent = amendmentData.sintesi;
+			titoloComponent.value = amendmentData.titolo;
+			sintesiComponent.value = amendmentData.sintesi;
 
 			//Adjust textarea heigth
 			titoloComponent.style.height = ""; // Reset the height to auto
@@ -256,7 +256,7 @@ layout-hide-topbar: true
             quotationText.textContent = quotationData.quotetext;
 
             // Show the offcanvas
-            new bootstrap.Offcanvas(document.getElementById('offcanvasEnd')).show();
+            new bootstrap.Offcanvas(document.getElementById('offcanvasStart')).show();
         }
     }
 
