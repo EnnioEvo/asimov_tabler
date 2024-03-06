@@ -9,40 +9,19 @@ layout-hide-topbar: true
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
 
-</script>
-<script>
-	// Function to get the value of a query parameter by name
-	function getParameterByName(name) {
-		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-			results = regex.exec(location.search);
-		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-	}
+<div class="col-lg-8">
+	<div class="card">
+		<div class="card-body">
+			<h3 class="card-title">Discussion Topics</h3>
+			<ul class="steps steps-vertical" id="discussion-steps">
+			<!-- Dynamic step items will be inserted here -->
+			</ul>
+	  </div>
+	</div>
+</div>
 
-	// Get the value of the 'parameter' query parameter from the URL
-	var num_fase = getParameterByName('num_fase');
-	var id_fase = getParameterByName('id_fase');
 
-	var url = ""
-	if (id_fase) {
-		url = `https://www.senato.it/leg/19/BGT/Schede/Ddliter/${id_fase}.htm #content`
-	}
-	else if (num_fase) {
-		url = `https://www.camera.it/leg19/126?tab=&leg=19&idDocumento=${num_fase} #liquid_content`
-	}
-
-	// // Update the content of an element with the id 'parameterValue' with the parameter value
-	// window.onload = function() {
-	// 	// document.getElementById('parameterValue').innerHTML = parameterValue;
-	// 	console.log(parameterValue)
-	// };
-	$(document).ready(function () {
-		// Load the content of the specific div from the external page
-		$('#embed').load(url);
-	});
-</script>
 
 <div id="liquid_content" class="liquid_content">
 
@@ -278,3 +257,98 @@ layout-hide-topbar: true
 	</div>
 
 </div>
+
+<script>
+	// Function to get the value of a query parameter by name
+	function getParameterByName(name) {
+		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+			results = regex.exec(location.search);
+		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+
+	// Get the value of the 'parameter' query parameter from the URL
+	var num_fase = getParameterByName('num_fase');
+	var id_fase = getParameterByName('id_fase');
+	var id_iter = getParameterByName('id_iter');
+
+	var discussions = []
+
+	function fill_discussions(){
+		const discussionSteps = document.getElementById('discussion-steps');
+		const options = { year: 'numeric', month: 'long', day: 'numeric' };
+
+		discussions.forEach((discussion, index) => {
+			var italianDate = discussion.data
+			try {
+				const date = new Date(discussion.data);
+				italianDate = new Intl.DateTimeFormat('it-IT', options).format(date);
+				
+			} catch (error) {
+				console.log(error)
+			}
+
+			try{
+				const stepClass = index === discussions.length - 1 ? 'step-item active' : 'step-item';
+				const stepElement = document.createElement('li');
+				stepElement.classList = stepClass;
+				stepElement.innerHTML = `
+					<div class="h4 m-0">${italianDate}</div>
+					<div class="h4 m-0">${discussion.numero_fase}</div>
+					<div class="h4 m-0">${discussion.argomento}</div>
+					<div class="text-secondary">${discussion.sede}</div>
+					<div class="text">${discussion.trattazione}</div>
+					<div> Relatore: ${discussion.relatore}</div>
+					<div>
+					<a href="${discussion.seduta_url}" class="btn btn-sm btn-primary mt-2" target="_blank">Consulta la seduta</a>
+					</div>
+				`;
+
+				discussionSteps.appendChild(stepElement);
+			}
+			catch (error) {
+				console.log(error)
+			}
+		});
+		
+	}
+
+	function fetch_discussions(){
+		var endpoint = `{{ site.data.endpoint[0].host }}/users/me/get_iter_discussions/?iter_id=${id_iter}`
+		return 	fetch(endpoint, {
+				method: 'GET',
+				headers: {
+					'Accept': 'application/json',
+					// Assuming the token is stored in a meta tag
+					'Authorization': 'Bearer ' + sessionStorage.getItem('access_token'),
+					'Content-Type': 'application/json'
+				},
+			})
+				.then(response => {
+					// Check if the request was successful
+					if (!response.ok) {
+						// Check if the error is related to authentication (401 Unauthorized)
+						if (response.status === 401) {
+							window.location.href = '/sign-in.html';
+							throw new Error('Authentication error: Unauthorized');
+						}
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
+					return response.json();
+				})
+				.then(responseData => {
+					// Handle the response
+					console.log(responseData);
+					discussions = responseData
+					fill_discussions()
+
+				})
+				.catch(error => {
+					// Handle the error
+					console.log(error.message);
+				});
+	}
+
+	fetch_discussions()
+
+</script>
