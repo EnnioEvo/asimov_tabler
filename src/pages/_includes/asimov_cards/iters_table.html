@@ -441,6 +441,7 @@
 			newTile.setAttribute('data-id_iter', item['id_iter']);
 			newTile.querySelector('.h1.mb-3').textContent = 'A' + ddl['ramo'] + ddl['numero_fase']
 			newTile.querySelector('[data-query-id="status"]').textContent = ddl['stato_ddl']
+			newTile.querySelector('[aria-label="iter_link"]').href = `/iter.html?id_iter=${item['id_iter']}`
 			tcontainer.insertBefore(newTile, tcontainer.lastElementChild);
 			if(item.ddls.length>1){
 				previous_ddl = item.ddls[1]
