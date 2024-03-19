@@ -8,11 +8,13 @@ layout-hide-topbar: true
 page-header-actions: buttons
 ---
 
+<!-- src/pages/_includes/parts/modals/report.html -->
+
 <div class="row row-cards">
 
 		<div class="row row-cards">
 			<div class="col-12">
-				{% include cards/users-list.html hoverable=true  %}
+				{% include asimov_cards/projects-list.html offset=8 checkbox=true hoverable=true title="Progetti"   %}
 			</div>
 		</div>
 </div>
@@ -51,32 +53,33 @@ page-header-actions: buttons
 	// Function to update items on the page
 	function updateItems(data) {
 		// Select the container where you want to add the items
-		const col12Container = document.querySelector('.col-12');
-
-		// Query for .list-group within the scope of .col-12
-		const container = col12Container.querySelector('.list-group');
+		var listContainer = document.getElementById('projects_list');
 
 		// Clear the container
-		container.innerHTML = '';
+		while (listContainer.children.length > 1) {  // Header
+			listContainer.removeChild(listContainer.lastChild);
+		}
+
+		// Check if data is empty and handle accordingly
+		if (data.length === 0) {
+			data = ['Nessun progetto presente']
+		}
 
 		// Loop through the data and create new items
 		data.forEach(item => {
-			const newItem = document.createElement('div');
-			newItem.classList.add('list-group-item');
-			newItem.innerHTML = `
-      <div class="row align-items-center">
-        <div class="col-auto"><span class="badge red"></span></div>
+			// Assuming `item` has properties: name, detail, badgeColor, and actionLink
+			var rowTemplate = document.getElementById('item_template').cloneNode(true);
+			rowTemplate.style.display = ''; // Make it visible
+			rowTemplate.id = ''; // Remove the ID to avoid duplicate IDs
+            rowTemplate.href = `/annotate.html?=${item}`;
 
-        <div class="col text-truncate">
-          <a href="#" class="text-reset d-block">${item.name}</a>
-          <div class="d-block text-secondary text-truncate mt-n1">${item.user}</div>
-        </div>
-        <div class="col-auto">
-          <a href="#" class="list-group-item-actions"><!-- Add your star SVG icon here --></a>
-        </div>
-      </div>
-    `;
-			container.appendChild(newItem);
+            // Update project name and link
+            var projectNameLink = rowTemplate.querySelector('.text-reset');
+            projectNameLink.textContent = item; // Set the project name
+            
+            // Append the newly created row to the list container
+            listContainer.appendChild(rowTemplate);
+
 		});
 	}
 

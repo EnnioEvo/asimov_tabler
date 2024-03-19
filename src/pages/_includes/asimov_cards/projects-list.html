@@ -1,0 +1,22 @@
+{% assign limit = include.limit | default: 8 %}
+{% assign offset = include.offset | default: 0 %}
+{% assign hoverable = include.hoverable | default: false %}
+
+<div class="card{% if include.class %} {{ include.class }}{% endif %}" style="width: 70vw;">
+	<div class="card-header">
+		<h3 class="card-title">{{ include.title | default: 'Progetti' }}</h3>
+	</div>
+	<div id="projects_list" class="list-group list-group-flush{% if hoverable %} list-group-hoverable{% endif %}">
+        <a id="item_template" style="display: none;" href="/app.html">
+        <div class="list-group-item{% if checked-ids contains forloop.index %} active{% endif %}">
+            <div class="row align-items-center">
+                <div class="col text-truncate">
+                    <div class="text-reset d-block">Nessun progetto presente, creane uno!</div>
+                    <!-- <div class="d-block text-secondary text-truncate mt-n1"></div> -->
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+</div>
+
