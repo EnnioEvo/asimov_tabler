@@ -92,8 +92,8 @@ layout-hide-topbar: true
     
 	
 	var visualizationData;
+	var partialVisualizationData;
 
-	var visualizationData;
 	function annotate(){
 		// Perform the API request
 		var endpoint = '{{ site.data.endpoint[0].host }}/users/me/annotate/'
@@ -142,8 +142,8 @@ layout-hide-topbar: true
 
 	function fetch_visualization_data(){
 		// Perform the API request
-		var endpoint = '{{ site.data.endpoint[0].host }}/users/me/visualization/'
-		endpoint += `?fase_ddl=${fase_ddl}`
+		var endpoint = '{{ site.data.endpoint[0].host }}/users/me/projects/visualization/'
+		endpoint += `?project_name=${fase_ddl}`
 		
 		fetch(endpoint, {
 			method: 'POST',
@@ -179,9 +179,8 @@ layout-hide-topbar: true
 
 
 	function fill_visualization(){
-
 		// Fill the first column with the ids of the amendments
-		function populateAmendmentList() {
+		function populateAmendmentsList() {
 			let amendmentsData = visualizationData.amendments_data;
 			for (let emKey in amendmentsData) {
 				if (amendmentsData.hasOwnProperty(emKey)) {
@@ -274,8 +273,54 @@ layout-hide-topbar: true
 		}
 
 
-		populateAmendmentList();
+		populateAmendmentsList();
 	};
+
+	function fetch_parsed_only(){
+		// Perform the API request
+		var endpoint = `{{ site.data.endpoint[0].host }}/users/me/projects/parsed/`
+		endpoint += `?project_name=${fase_ddl}`
+		
+		fetch(endpoint, {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				// Assuming the token is stored in a meta tag
+				'Authorization': 'Bearer ' + sessionStorage.getItem('access_token'),
+				'Content-Type': 'application/json'
+			},
+		})
+		.then(response => {
+			// Check if the request was successful
+			if (!response.ok) {
+				// Check if the error is related to authentication (401 Unauthorized)
+				if (response.status === 401) {
+					window.location.href = '/sign-in.html';
+					throw new Error('Authentication error: Unauthorized');
+				}
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			return response.json();
+		}).then(data => {
+			// Handle the fetched data
+			partialVisualizationData = data;
+			fill_parsed_only()
+			// Call any function that relies on visualisationData here
+		})
+		.catch(error => {
+			// Handle the error
+			console.log(error.message);
+		});
+	}
+
+	function fill_parsed_only(){
+		// If analysis not done yet, just show parsed amendments and articles
+		var parsedProvision = partialVisualizationData[0]
+		var parsedAmendments = partialVisualizationData[1]
+
+
+
+	}
 
 	fetch_visualization_data()
 	

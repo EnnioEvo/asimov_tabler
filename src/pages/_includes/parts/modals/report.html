@@ -2,7 +2,7 @@
 {% assign reports = "Senato: ,Camera: " | split: "," %}
 
 <div class="modal-body">
-	<div class="mb-3">
+	<div class="mb-3" id="project_name_input">
 		<label class="form-label">Nome</label>
 		<input type="text" class="form-control" name="example-text-input" placeholder="Il nome del tuo progetto">
 	</div>
@@ -32,7 +32,7 @@
 	<div class="row" id="provision-upload">
 		<div class="col-lg-12">
 			<div class="mb-3">
-				<div class="form-label">Carica PDF (atto ufficiale nel formato PDF del Senato)</div>
+				<div class="form-label">Carica provvedimento (atto nel formato PDF ufficiale del Senato)</div>
 				<input type="file" class="form-control">
 			</div>
 		</div>
@@ -41,7 +41,7 @@
 	<div class="row" id="amends-upload">
 		<div class="col-lg-12">
 			<div class="mb-3">
-				<div class="form-label">Carica PDF (fascicolo degli emendamenti nel formato PDF del Senato)</div>
+				<div class="form-label">Carica emendamenti (fascicolo nel formato PDF ufficiale del Senato)</div>
 				<input type="file" class="form-control">
 			</div>
 		</div>
@@ -58,23 +58,61 @@
 </div>
 
 <script>
-	document.addEventListener("DOMContentLoaded", function () {
-		// Add an event listener to radio buttons
-		var radioButtons = document.querySelectorAll('input[name="report-type"]');
-		radioButtons.forEach(function (radio) {
-			radio.addEventListener("change", function () {
-				// Hide both components by default
-				document.getElementById("pdf-upload").style.display = "none";
-				document.getElementById("url-input").style.display = "none";
+	// document.addEventListener("DOMContentLoaded", function () {
+	// 	// Add an event listener to radio buttons
+	// 	var radioButtons = document.querySelectorAll('input[name="report-type"]');
+	// 	radioButtons.forEach(function (radio) {
+	// 		radio.addEventListener("change", function () {
+	// 			// Hide both components by default
+	// 			document.getElementById("pdf-upload").style.display = "none";
+	// 			document.getElementById("url-input").style.display = "none";
 
-				// Show the selected component based on the radio button value
-				var selectedValue = this.value;
-				if (selectedValue === "1") {
-					document.getElementById("pdf-upload").style.display = "block";
-				} else if (selectedValue === "2") {
-					document.getElementById("url-input").style.display = "block";
-				}
-			});
-		});
-	});
+	// 			// Show the selected component based on the radio button value
+	// 			var selectedValue = this.value;
+	// 			if (selectedValue === "1") {
+	// 				document.getElementById("pdf-upload").style.display = "block";
+	// 			} else if (selectedValue === "2") {
+	// 				document.getElementById("url-input").style.display = "block";
+	// 			}
+	// 		});
+	// 	});
+	// });
+	const provisionInput = document.getElementById('provision-upload').querySelector('input')
+	const amendmentsInput = document.getElementById('amends-upload').querySelector('input')
+	const projectNameInput = document.getElementById('project_name_input').querySelector('input')
+	var newProjectButton = document.getElementsByClassName('btn ms-auto')[0]
+	
+
+    newProjectButton.addEventListener('click', async function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        var formData = new FormData();
+        formData.append('provision_file', provisionInput.files[0], provisionInput.files[0].name);
+        formData.append('amendments_file', amendmentsInput.files[0], amendmentsInput.files[0].name);
+
+        try {
+            const response = await fetch(`{{ site.data.endpoint[0].host }}/users/me/projects/?project_name=${projectNameInput.value}`, {
+                method: 'POST',
+                body: formData, // Send the form data
+				headers: {
+					'Accept': 'application/json',
+					// 'Content-Type': 'application/x-www-form-urlencoded',
+					'Authorization': `Bearer ${accessToken}`,
+				},
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log(result); // Handle success, maybe redirect or display a success message
+        } catch (error) {
+            console.error('Error during the API call', error);
+        }
+    });
+
+
+
+
 </script>
