@@ -4,36 +4,64 @@ page-header: Emendamenti
 layout-sidebar: true
 layout-navbar-transparent: true
 layout-hide-topbar: true
+page-header-actions: visualization-header
 ---
-
-{% assign person = site.data.people[4] %}
-
-<div class="card" style="height: 90vh">
+<script>
+	document.documentElement.style.setProperty('--target-width', `84vw`);
+</script>
+<style>
+	\\ TODO make these two like these everywhere
+	.page-wrapper {
+		margin-left: 19vw;
+	}
+	.container-xl{
+		margin-left: 1vw;
+		margin-right: 1vw;
+	}
+	\\ Dynamical half columns
+	:root {
+    --target-width: 84vw; /* Initial value, will be updated by JS */
+	}
+	.half-column{
+		width: calc((var(--target-width) - 6vw)/ 2);
+		/* width: 39vw */
+	}
+	.offcanvas-start{
+		width: 10vw;
+	}
+	.offcanvas-backdrop{
+		display: none;
+	}
+</style>
+<div class="card" style="width: 84.2vw; height: 85vh">
 	<div class="row g-0">
-		<div class="col-1 col-lg-1 col-xl-1 border-end">
+		<div class="col-1 col-lg-1 col-xl-1 border-end" style="width: 6vw; ">
 			<div class="card">
 				<div class="card-header" style="display: none;">
-				  <h3 class="card-title">Links and buttons</h3>
+				  <h3 class="card-title">Emendamenti</h3>
 				</div>
-				<div class="list-group list-group-flush scrollable overflow-auto" style="height: 90vh;" id="amendmentIdxs">
+				<div class="list-group list-group-flush scrollable overflow-auto" style="height: 85vh;" id="amendmentIdxs">
 				</div>
 			  </div>
 		</div>
-		<div class="col-5 col-lg-5 col-xl-5 d-flex flex-column">
-			<div class="card-body markdown scrollable" style="height: 40vh; white-space: pre-line;" id="amendmentContent"></div>
-			<div class="card-body markdown scrollable" style="height: 50vh; white-space: pre-line;" id="amendmentAnalysis">
+		<div class="d-flex flex-column half-column">
+			<div class="card-body markdown scrollable" style="height: 38vh; white-space: pre-line;" id="amendmentContent"></div>
+			<div class="card-body markdown scrollable" style="height: 47vh; white-space: pre-line;" id="amendmentAnalysis">
 			<strong>Titolo</strong>
-			<textarea id="titolo" style="width: 30vw; resize: both;"></textarea>
+			<textarea id="titolo" style="width:35vw; resize: both;"></textarea>
 			<strong>Sintesi</strong>
-			<textarea id="sintesi" style="width: 30vw; resize: both;"></textarea>
-			<button id="saveButton" class="btn btn-primary" style="width: 30vw">Salva</button>
-			<label id="esito" style="width: 30vw; display: flex; justify-content: center; align-items: center;"></label>
+			<textarea id="sintesi" style="width:35vw; resize: both;"></textarea>
+			<div id="saveButton">
+				{% include ui/button.html icon="device-floppy" icon-only=true class="btn-outline-primary"%}
+			</div>
+			<label id="esito" class="half-column" style="display: flex; justify-content: center; align-items: center;"></label>
 			<label id="successLabel" style="display: none;">{% include ui/icon.html icon="circle-check" color="green" size="lg" class="mb-2" %}</label>
 			<label id="failureLabel" style="display: none;">{% include ui/icon.html icon="circle-x" color="red" size="lg" class="mb-2" %}</label>
 			</div>
 		</div>
-		<div class="col-6 col-lg-6 col-xl-6 d-flex flex-column">
-			<div class="card-body markdown scrollable" style="height: 35rem; white-space: pre-line;" id="articleContent"></div>
+		<div class="col-6 col-lg-6 col-xl-6 d-flex flex-column half-column" style="white-space: pre-line;">
+			<div class="card-body markdown scrollable" style="height: 85vh; white-space: pre-line;" id="articleContent"></div>
+		</div>
 	</div>
 </div>
 
@@ -45,10 +73,10 @@ layout-hide-topbar: true
 	</div>
 </div>
 
-<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasStart" aria-labelledby="offcanvasStartLabel">
+<div class="offcanvas offcanvas-start" style="width: 20vw;" tabindex="-1" id="offcanvasStart" aria-labelledby="offcanvasStartLabel">
 	<div class="offcanvas-header">
 		<h2 class="offcanvas-title" ><a id="offcanvasHeader" href="" target="_blank">Start offcanvas</a></h2>
-		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+		<button id="closeOffcanvasButton" type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 	</div>
 	<div class="offcanvas-body">
 		<strong>Sintesi</strong>
@@ -94,27 +122,26 @@ layout-hide-topbar: true
 	var visualizationData;
 	var partialVisualizationData;
 
-	function annotate(){
-		// Perform the API request
-		var endpoint = '{{ site.data.endpoint[0].host }}/users/me/annotate/'
-		
-		endpoint += `?fase_ddl=${fase_ddl}`
-		data = {
-			am_idx : currentAm.dataset.amendmentKey,
-			titolo : titoloComponent.value,
-			sintesi : sintesiComponent.value
-		}
-		fetch(endpoint, {
-			method: 'POST',
-			headers: {
-				'Accept': 'application/json',
-				// Assuming the token is stored in a meta tag
-				'Authorization': 'Bearer ' + sessionStorage.getItem('access_token'),
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(data)
-		})
-		.then(response => {
+	async function annotate() {
+		try {
+			var endpoint = '{{ site.data.endpoint[0].host }}/users/me/annotate/';
+			endpoint += `?fase_ddl=${fase_ddl}`;
+			const data = {
+				am_idx: currentAm.dataset.amendmentKey,
+				titolo: titoloComponent.value,
+				sintesi: sintesiComponent.value
+			};
+
+			const response = await fetch(endpoint, {
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'Authorization': 'Bearer ' + sessionStorage.getItem('access_token'),
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			});
+
 			// Check if the request was successful
 			if (!response.ok) {
 				// Check if the error is related to authentication (401 Unauthorized)
@@ -124,37 +151,36 @@ layout-hide-topbar: true
 				}
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-			return response.json();
-		}).then(is_successful => {
-        if (is_successful) {
-            document.getElementById('esito').innerHTML = document.getElementById('successLabel').innerHTML;
-        } else {
-            document.getElementById('esito').innerHTML = document.getElementById('failureLabel').innerHTML;
-        }
-    })
-		.catch(error => {
+
+			const is_successful = await response.json();
+			if (is_successful) {
+				document.getElementById('esito').innerHTML = document.getElementById('successLabel').innerHTML;
+			} else {
+				document.getElementById('esito').innerHTML = document.getElementById('failureLabel').innerHTML;
+			}
+		} catch (error) {
 			// Handle the error
 			console.log(error.message);
-		});
-	
+		}
 	}
-	document.getElementById('saveButton').addEventListener('click', annotate);
 
-	function fetch_visualization_data(){
-		// Perform the API request
-		var endpoint = '{{ site.data.endpoint[0].host }}/users/me/projects/visualization/'
-		endpoint += `?project_name=${fase_ddl}`
-		
-		fetch(endpoint, {
-			method: 'POST',
-			headers: {
-				'Accept': 'application/json',
-				// Assuming the token is stored in a meta tag
-				'Authorization': 'Bearer ' + sessionStorage.getItem('access_token'),
-				'Content-Type': 'application/json'
-			},
-		})
-		.then(response => {
+	document.getElementById('saveButton').querySelector('.btn').addEventListener('click', annotate);
+
+
+	async function fetch_visualization_data() {
+		try {
+			var endpoint = '{{ site.data.endpoint[0].host }}/users/me/projects/visualization/';
+			endpoint += `?project_name=${fase_ddl}`;
+
+			const response = await fetch(endpoint, {
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'Authorization': 'Bearer ' + sessionStorage.getItem('access_token'),
+					'Content-Type': 'application/json'
+				},
+			});
+
 			// Check if the request was successful
 			if (!response.ok) {
 				// Check if the error is related to authentication (401 Unauthorized)
@@ -164,17 +190,16 @@ layout-hide-topbar: true
 				}
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-			return response.json();
-		}).then(data => {
+
+			const data = await response.json();
 			// Handle the fetched data
 			visualizationData = data;
-			fill_visualization()
-			// Call any function that relies on visualisationData here
-		})
-		.catch(error => {
+			fill_visualization();
+			// Call any function that relies on visualizationData here
+		} catch (error) {
 			// Handle the error
 			console.log(error.message);
-		});
+		}
 	}
 
 
@@ -210,6 +235,9 @@ layout-hide-topbar: true
 			let amendmentData = visualizationData.amendments_data[amendmentKey];
 			let articleKey = amendmentData.art_idx;
 			let articleContent = visualizationData.articles_data[articleKey];
+			if(articleContent==null){
+				articleContent='Articolo di riferimento non trovato.'
+			}
 
 			// Set the content for the amendmentContentDiv and amendmentAnalysisDiv
 			amendmentContentDiv.innerHTML = amendmentData.body;
@@ -242,22 +270,27 @@ layout-hide-topbar: true
 		}
 
 		function showQuotation(quote_id) {
-        const quotationData = visualizationData.quotations_data[quote_id-1];
-        if (quotationData) {
-            const offcanvasTitle = document.getElementById('offcanvasHeader');
-            const quotationSummary = document.getElementById('quotationSummary');
-            const quotationText = document.getElementById('quotationText');
+			const quotationData = visualizationData.quotations_data[quote_id-1];
+			if (quotationData) {
+				const offcanvasTitle = document.getElementById('offcanvasHeader');
+				const quotationSummary = document.getElementById('quotationSummary');
+				const quotationText = document.getElementById('quotationText');
 
-            // Populate the offcanvas elements with quotation data
-            offcanvasTitle.textContent = quotationData.standardquote;
-            offcanvasTitle.href = quotationData.url;
-            quotationSummary.textContent = quotationData.note;
-            quotationText.textContent = quotationData.quotetext;
+				// Populate the offcanvas elements with quotation data
+				offcanvasTitle.textContent = quotationData.standardquote;
+				offcanvasTitle.href = quotationData.url;
+				quotationSummary.textContent = quotationData.note;
+				quotationText.textContent = quotationData.quotetext.replace(/\W*il\W+presidente\W+della\W+repubblica.+emana\W+il\W+seguente\W+decreto\W*legge\W*/gsi, '');;
 
-            // Show the offcanvas
-            new bootstrap.Offcanvas(document.getElementById('offcanvasStart')).show();
-        }
-    }
+				// Show the offcanvas
+				new bootstrap.Offcanvas(document.getElementById('offcanvasStart')).show();
+
+				// following is to prevent offcanvas adding 'focusing' event
+				// bad practice since it disable adding new events to document
+				document.addEventListener = function(type, listener, options) {
+				console.warn(`Prevented adding event listener of type "${type}"`);};
+			}
+    	}
 
 		function addEventToQuotations(){
 			// Add event listeners to all span elements with data-quoteid
@@ -276,54 +309,12 @@ layout-hide-topbar: true
 		populateAmendmentsList();
 	};
 
-	function fetch_parsed_only(){
-		// Perform the API request
-		var endpoint = `{{ site.data.endpoint[0].host }}/users/me/projects/parsed/`
-		endpoint += `?project_name=${fase_ddl}`
-		
-		fetch(endpoint, {
-			method: 'POST',
-			headers: {
-				'Accept': 'application/json',
-				// Assuming the token is stored in a meta tag
-				'Authorization': 'Bearer ' + sessionStorage.getItem('access_token'),
-				'Content-Type': 'application/json'
-			},
-		})
-		.then(response => {
-			// Check if the request was successful
-			if (!response.ok) {
-				// Check if the error is related to authentication (401 Unauthorized)
-				if (response.status === 401) {
-					window.location.href = '/sign-in.html';
-					throw new Error('Authentication error: Unauthorized');
-				}
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-			return response.json();
-		}).then(data => {
-			// Handle the fetched data
-			partialVisualizationData = data;
-			fill_parsed_only()
-			// Call any function that relies on visualisationData here
-		})
-		.catch(error => {
-			// Handle the error
-			console.log(error.message);
-		});
-	}
-
-	function fill_parsed_only(){
-		// If analysis not done yet, just show parsed amendments and articles
-		var parsedProvision = partialVisualizationData[0]
-		var parsedAmendments = partialVisualizationData[1]
-
-
-
-	}
 
 	fetch_visualization_data()
-	
+
+
+
+
 
 
 </script>
