@@ -1,0 +1,118 @@
+<div class="btn-list">
+    <div id="progress" class="d-none" >
+        <div>
+            Analisi in corso
+        </div>
+        <div class="progress">
+            <div class="progress-bar progress-bar-indeterminate bg-green"></div>
+        </div>
+		<div id="stop" style="display: none;">
+			{% include ui/button.html icon="x" icon-only=true color="red" class="bg-red"%}
+		</div>
+    </div>
+    <div id="pdf">
+        {% include ui/button.html icon="download" text="PDF" class="btn-outline-pink disabled"%}
+    </div>
+    <div id="xlsx">
+        {% include ui/button.html icon="download" text="Excel" class="btn-outline-teal disabled"%}
+    </div>
+</div>
+
+<!-- <div class="spinner-border spinner-border-sm text-secondary" role="status"></div> -->
+
+<script>
+	var parameters_search = new URLSearchParams(window.location.href)
+	var projectName = parameters_search.entries().next().value[1]
+
+    var progressContainer = document.getElementById('progress')
+	var pdfButton =  document.getElementById('pdf').querySelector('.btn')
+	var xlsxButton =  document.getElementById('xlsx').querySelector('.btn')
+
+    async function check_job_is_ongoing(){
+		try {
+			// Perform the API request
+			var endpoint = '{{ site.data.endpoint[0].host }}/users/me/projects/jobs/is_pending'
+			endpoint += `?project_name=${projectName}`
+			
+			const response = await fetch(endpoint, {
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					// Assuming the token is stored in a meta tag
+					'Authorization': 'Bearer ' + sessionStorage.getItem('access_token'),
+					'Content-Type': 'application/json'
+				},
+			})
+			
+				if (!response.ok) {
+					// Check if the error is related to authentication (401 Unauthorized)
+					if (response.status === 401) {
+						window.location.href = '/sign-in.html';
+						throw new Error('Authentication error: Unauthorized');
+					}
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+			const is_pending = await response.json();
+			console.log(is_pending)
+			if(is_pending){
+				progressContainer.classList.remove('d-none')
+			}
+		} catch (error) {
+			// Handle the error
+			console.log(error.message);
+		}
+	}
+
+
+    async function is_file_available(ext){
+		try {
+			// Perform the API request
+            
+			var endpoint = `{{ site.data.endpoint[0].host }}/users/me/projects/${ext}/is_available/`
+			endpoint += `?project_name=${projectName}`
+			
+			const response = await fetch(endpoint, {
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					// Assuming the token is stored in a meta tag
+					'Authorization': 'Bearer ' + sessionStorage.getItem('access_token'),
+					'Content-Type': 'application/json'
+				},
+			})
+			
+				if (!response.ok) {
+					// Check if the error is related to authentication (401 Unauthorized)
+					if (response.status === 401) {
+						window.location.href = '/sign-in.html';
+						throw new Error('Authentication error: Unauthorized');
+					}
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+			const is_available = await response.json();
+			
+			if(is_available){
+                if(ext=='pdf'){
+					var button = pdfButton
+				}
+				else if(ext='xlsx'){
+					var button = xlsxButton
+				}
+				else {
+					throw new Error(`Unsupported extension ${ext}`)
+				}
+				button.classList.remove('disabled')
+				progressContainer.classList.add('d-none')
+			}
+		} catch (error) {
+			// Handle the error
+			console.log(error.message);
+		}
+	}
+
+	check_job_is_ongoing()
+	is_file_available('pdf')
+	is_file_available('xlsx')
+	
+
+</script>

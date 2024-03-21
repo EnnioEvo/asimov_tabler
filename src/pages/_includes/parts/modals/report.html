@@ -109,8 +109,34 @@
             console.log(result); // Handle success, maybe redirect or display a success message
         } catch (error) {
             console.error('Error during the API call', error);
-        }
+        } finally {
+			await start_analysis()
+		}
     });
+
+	async function start_analysis(){
+		try {
+            const response = await fetch(`{{ site.data.endpoint[0].host }}/users/me/projects/dossier_analysis/?project_name=${projectNameInput.value}&mock=true`, {
+                method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					// 'Content-Type': 'application/x-www-form-urlencoded',
+					'Authorization': `Bearer ${accessToken}`,
+				},
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log(result); // Handle success, maybe redirect or display a success message
+        } catch (error) {
+            console.error('Error during the API call', error);
+        } finally {
+
+		}
+	}
 
 
 
