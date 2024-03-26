@@ -6,6 +6,8 @@ layout-navbar-transparent: true
 layout-hide-topbar: true
 page-header-actions: visualization-header
 ---
+
+
 <script>
 	document.documentElement.style.setProperty('--target-width', `84vw`);
 </script>
@@ -27,7 +29,7 @@ page-header-actions: visualization-header
 		/* width: 39vw */
 	}
 	.offcanvas-start{
-		width: 10vw;
+		width: 8vw;
 	}
 	.offcanvas-backdrop{
 		display: none;
@@ -73,7 +75,7 @@ page-header-actions: visualization-header
 	</div>
 </div>
 
-<div class="offcanvas offcanvas-start" style="width: 20vw;" tabindex="-1" id="offcanvasStart" aria-labelledby="offcanvasStartLabel">
+<div class="offcanvas offcanvas-start" style="width: 18vw; resize: horizontal;" tabindex="-1" id="offcanvasStart" aria-labelledby="offcanvasStartLabel">
 	<div class="offcanvas-header">
 		<h2 class="offcanvas-title" ><a id="offcanvasHeader" href="" target="_blank">Start offcanvas</a></h2>
 		<button id="closeOffcanvasButton" type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -83,11 +85,7 @@ page-header-actions: visualization-header
 		<p id="quotationSummary"></p>
 		<strong>Testo</strong>
 		<p id="quotationText" style="white-space: pre-line;"></p>
-		<!-- <div class="mt-3">
-			<button class="btn btn-primary" type="button" data-bs-dismiss="offcanvas">
-				Close offcanvas
-			</button>
-		</div> -->
+		<div class="resize-handle" style="width: 5px; height: 100%; position: absolute; top: 0; right: 0; cursor: ew-resize;"></div>
 	</div>
 </div>
 <style>
@@ -104,6 +102,8 @@ page-header-actions: visualization-header
 <script>
 	var parameters_search = new URLSearchParams(window.location.href)
 	var fase_ddl = parameters_search.entries().next().value[1]
+	document.querySelector('title').text = fase_ddl
+	document.querySelector('.page-title').innerHTML = `${fase_ddl} - Emendamenti`
 
 	const amendmentDiv = document.getElementById('amendmentIdxs');
 	const amendmentContentDiv = document.getElementById('amendmentContent');
@@ -115,6 +115,7 @@ page-header-actions: visualization-header
 		// Initialize the amendment content as needed here
 	});
 
+	let offcanvas = document.getElementById('offcanvasStart')
 	let offCanvasBody = document.querySelector('.offcanvas-body');
 	let offcanvasToggleBtn = document.querySelector('a[data-bs-toggle="offcanvas"]');
     
@@ -283,7 +284,7 @@ page-header-actions: visualization-header
 				quotationText.textContent = quotationData.quotetext.replace(/\W*il\W+presidente\W+della\W+repubblica.+emana\W+il\W+seguente\W+decreto\W*legge\W*/gsi, '');;
 
 				// Show the offcanvas
-				new bootstrap.Offcanvas(document.getElementById('offcanvasStart')).show();
+				new bootstrap.Offcanvas(offcanvas).show();
 
 				// following is to prevent offcanvas adding 'focusing' event
 				// bad practice since it disable adding new events to document
@@ -309,6 +310,14 @@ page-header-actions: visualization-header
 		populateAmendmentsList();
 	};
 
+	document.addEventListener('DOMContentLoaded', function () {
+		function adjustOffcanvasWidth() {
+				const rect = amendmentContentDiv.getBoundingClientRect();
+				offcanvas.style.width = `${rect.left}px`; // Set the width
+			}
+    	adjustOffcanvasWidth();
+		window.addEventListener('resize', adjustOffcanvasWidth);
+	});
 
 	fetch_visualization_data()
 

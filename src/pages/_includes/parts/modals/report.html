@@ -105,18 +105,19 @@
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const result = await response.json();
-            console.log(result); // Handle success, maybe redirect or display a success message
+            const sanitizedProjectName = await response.json();
+            console.log(sanitizedProjectName); // Handle success, maybe redirect or display a success message
+			start_analysis(sanitizedProjectName)
         } catch (error) {
             console.error('Error during the API call', error);
-        } finally {
-			await start_analysis()
-		}
+        }
     });
 
-	async function start_analysis(){
+	async function start_analysis(projectName){
 		try {
-            const response = await fetch(`{{ site.data.endpoint[0].host }}/users/me/projects/dossier_analysis/?project_name=${projectNameInput.value}&mock=true`, {
+			var endpoint = `{{ site.data.endpoint[0].host }}/users/me/projects/dossier_analysis/?project_name=${projectName}`
+			// endpoint += `&mock=true`
+            const response = await fetch(endpoint, {
                 method: 'POST',
 				headers: {
 					'Accept': 'application/json',

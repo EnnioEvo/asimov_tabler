@@ -7,16 +7,17 @@
 		<h3 class="card-title">{{ include.title | default: 'Progetti' }}</h3>
 	</div>
 	<div id="projects_list" class="list-group list-group-flush{% if hoverable %} list-group-hoverable{% endif %}">
-        <a id="item_template" style="display: none;" href="/app.html">
-        <div class="list-group-item{% if checked-ids contains forloop.index %} active{% endif %}">
+        <div id="item_template" style="display: none;" class="list-group-item{% if checked-ids contains forloop.index %} active{% endif %}">
             <div class="row align-items-center">
-                <div class="col text-truncate">
+                <a data-id="projectButton" class="col text-truncate" href="/app.html">
                     <div class="text-reset d-block">Nessun progetto presente, creane uno!</div>
                     <!-- <div class="d-block text-secondary text-truncate mt-n1"></div> -->
-                </div>
+                </a>
+                <a data-id="deleteButton" class="col-auto">
+                    <span class="list-group-item-actions show text-secondary">{% include ui/icon.html icon="trash" %}</button>
+                </a>
             </div>
         </div>
-        </a>
     </div>
 </div>
 

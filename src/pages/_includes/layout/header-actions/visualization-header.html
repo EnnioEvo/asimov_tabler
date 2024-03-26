@@ -23,7 +23,7 @@
 <script>
 	var parameters_search = new URLSearchParams(window.location.href)
 	var projectName = parameters_search.entries().next().value[1]
-
+	const filename = `${projectName}_asimov`
     var progressContainer = document.getElementById('progress')
 	var pdfButton =  document.getElementById('pdf').querySelector('.btn')
 	var xlsxButton =  document.getElementById('xlsx').querySelector('.btn')
@@ -35,7 +35,7 @@
 			endpoint += `?project_name=${projectName}`
 			
 			const response = await fetch(endpoint, {
-				method: 'POST',
+				method: 'GET',
 				headers: {
 					'Accept': 'application/json',
 					// Assuming the token is stored in a meta tag
@@ -72,7 +72,7 @@
 			endpoint += `?project_name=${projectName}`
 			
 			const response = await fetch(endpoint, {
-				method: 'POST',
+				method: 'GET',
 				headers: {
 					'Accept': 'application/json',
 					// Assuming the token is stored in a meta tag
@@ -110,9 +110,50 @@
 		}
 	}
 
+
+	async function downloadFile(ext) {
+    try {
+        // Define the API endpoint based on the ext
+        const endpoint = `{{site.data.endpoint[0].host}}/users/me/projects/${ext}/?project_name=${projectName}`;
+        
+        // Make the API request
+        const response = await fetch(endpoint, {
+            method: 'GET',
+            headers: {
+                'Accept': ext === 'pdf' ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
+            }
+        });
+
+        if (!response.ok) {
+            // Handle responses that are not 2xx
+            throw new Error(`Failed to download file. Status: ${response.status}`);
+        }
+
+        // Retrieve the filename from the Content-Disposition header
+
+
+        // Create a blob from the response data
+        const blob = await response.blob();
+
+        // Create a temporary link element and trigger the download
+		var button = document.getElementById(ext).querySelector('.btn')
+        button.href = window.URL.createObjectURL(blob);
+		button.target = "_blank"
+        button.download = `${filename}.${ext}`;
+
+    } catch (error) {
+        console.error('Download error:', error);
+    }
+}
+
+	// Attach the event listeners to the buttons
+	downloadFile('pdf');
+	downloadFile('xlsx');
+
+
 	check_job_is_ongoing()
 	is_file_available('pdf')
 	is_file_available('xlsx')
-	
 
 </script>

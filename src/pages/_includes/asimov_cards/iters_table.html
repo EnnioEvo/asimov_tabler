@@ -460,45 +460,43 @@
 		
 	}
 
-	function fetch_tiles(){
-		var endpoint = '{{ site.data.endpoint[0].host }}/users/me/fetch_ongoing_followed_iters/'
-		return 	fetch(endpoint, {
-				method: 'GET',
-				headers: {
-					'Accept': 'application/json',
-					// Assuming the token is stored in a meta tag
-					'Authorization': 'Bearer ' + sessionStorage.getItem('access_token'),
-					'Content-Type': 'application/json'
-				},
-			})
-				.then(response => {
-					// Check if the request was successful
-					if (!response.ok) {
-						// Check if the error is related to authentication (401 Unauthorized)
-						if (response.status === 401) {
-							window.location.href = '/sign-in.html';
-							throw new Error('Authentication error: Unauthorized');
-						}
-						throw new Error(`HTTP error! status: ${response.status}`);
-					}
-					return response.json();
-				})
-				.then(responseData => {
-					// Handle the response
-					console.log(responseData);
-					followed_ongoing_iters = responseData
-					fill_tiles()
+	async function fetch_tiles() {
+    var endpoint = '{{ site.data.endpoint[0].host }}/users/me/fetch_ongoing_followed_iters/';
+    try {
+        const response = await fetch(endpoint, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                // Assuming the token is stored in a meta tag
+                'Authorization': 'Bearer ' + sessionStorage.getItem('access_token'),
+                'Content-Type': 'application/json'
+            },
+        });
 
-				})
-				.catch(error => {
-					// Handle the error
-					console.log(error.message);
-				});
-	}
+        // Check if the request was successful
+        if (!response.ok) {
+            // Check if the error is related to authentication (401 Unauthorized)
+            if (response.status === 401) {
+                window.location.href = '/sign-in.html';
+                throw new Error('Authentication error: Unauthorized');
+            }
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const responseData = await response.json();
+        // Handle the response
+        console.log(responseData);
+        followed_ongoing_iters = responseData;
+        fill_tiles();
+    } catch (error) {
+        // Handle the error
+        console.log(error.message);
+    }
+}
 
 
 		
-	function fetch_table(order_by) {
+	async function fetch_table(order_by) {
 
 		// Display placeholder row removing display: none
 		placeholderRow.removeAttribute('style')
@@ -544,7 +542,8 @@
 			if (keyword) {
 				endpoint += '?keyword=' + keyword
 			}
-			fetch(endpoint, {
+			try {
+				const response = await fetch(endpoint, {
 				method: 'POST',
 				headers: {
 					'Accept': 'application/json',
@@ -554,31 +553,27 @@
 				},
 				body: JSON.stringify(data)
 			})
-				.then(response => {
-					// Check if the request was successful
-					if (!response.ok) {
-						// Check if the error is related to authentication (401 Unauthorized)
-						if (response.status === 401) {
-							window.location.href = '/sign-in.html';
-							throw new Error('Authentication error: Unauthorized');
-						}
-						throw new Error(`HTTP error! status: ${response.status}`);
-					}
-					return response.json();
-				})
-				.then(responseData => {
-					// Handle the response
-					console.log(responseData);
-					ddls = responseData
-					fill_table(ddls)
-					
 
-				})
-				.catch(error => {
-					// Handle the error
-					console.log(error.message);
-				}).finally(() => placeholderRow.setAttribute('style', 'display: none;'))
-				;
+			// Check if the request was successful
+			if (!response.ok) {
+				// Check if the error is related to authentication (401 Unauthorized)
+				if (response.status === 401) {
+					window.location.href = '/sign-in.html';
+					throw new Error('Authentication error: Unauthorized');
+				}
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			var responseData = await response.json();
+			// console.log(responseData);
+			ddls = responseData
+			fill_table(ddls)
+			} catch (error) {
+				console.log(error.message);
+				
+			}
+			finally{
+				placeholderRow.setAttribute('style', 'display: none;');
+			}
 		}
 
 	}

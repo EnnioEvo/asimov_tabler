@@ -21,34 +21,69 @@ page-header-actions: buttons
 
 <script>
 	const accessToken = sessionStorage.getItem('access_token');
-	// Fetch data from your API
-	fetch('{{ site.data.endpoint[0].host }}/users/me/projects/', {
-		method: 'GET',
-		headers: {
-			'Accept': 'application/json',
-			// 'Content-Type': 'application/x-www-form-urlencoded',
-			'Authorization': `Bearer ${accessToken}`,
-		},
-	})
-		.then(response => {
-			// Check if the request was successful
-			if (!response.ok) {
-				// Check if the error is related to authentication (401 Unauthorized)
-				if (response.status === 401) {
-					window.location.href = '/sign-in.html';
-					throw new Error('Authentication error: Unauthorized');
-				}
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-			return response.json();
-		})
-		.then(data => {
-			// If successful, update your items
-			updateItems(data);
-		})
-		.catch(error => {
-			console.error('Error:', error.message);
-		});
+
+		
+	async function deleteProject(projectName){
+		try {
+            const response = await fetch(`{{ site.data.endpoint[0].host }}/users/me/projects/?project_name=${projectName}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    // 'Content-Type': 'application/x-www-form-urlencoded', // Commented out as it seems not needed for a GET request
+                    'Authorization': `Bearer ${accessToken}`,
+                },
+            });
+
+            // Check if the request was successful
+            if (!response.ok) {
+                // Check if the error is related to authentication (401 Unauthorized)
+                if (response.status === 401) {
+                    window.location.href = '/sign-in.html';
+                    throw new Error('Authentication error: Unauthorized');
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const outcome = await response.json();
+            // If successful, update your items
+            console.log(`Successfully deleted item ${projectName}`)
+        } catch (error) {
+            console.error('Error:', error.message);
+        }
+    }
+
+    async function fetchData() {
+        try {
+            const response = await fetch('{{ site.data.endpoint[0].host }}/users/me/projects/', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    // 'Content-Type': 'application/x-www-form-urlencoded', // Commented out as it seems not needed for a GET request
+                    'Authorization': `Bearer ${accessToken}`,
+                },
+            });
+
+            // Check if the request was successful
+            if (!response.ok) {
+                // Check if the error is related to authentication (401 Unauthorized)
+                if (response.status === 401) {
+                    window.location.href = '/sign-in.html';
+                    throw new Error('Authentication error: Unauthorized');
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            // If successful, update your items
+            updateItems(data);
+        } catch (error) {
+            console.error('Error:', error.message);
+        }
+    }
+
+    fetchData();
+
+
 
 	// Function to update items on the page
 	function updateItems(data) {
@@ -70,17 +105,26 @@ page-header-actions: buttons
 			// Assuming `item` has properties: name, detail, badgeColor, and actionLink
 			var rowTemplate = document.getElementById('item_template').cloneNode(true);
 			rowTemplate.style.display = ''; // Make it visible
-			rowTemplate.id = ''; // Remove the ID to avoid duplicate IDs
-            rowTemplate.href = `/annotate.html?=${item}`;
+			rowTemplate.removeAttribute('id');; // Remove the ID to avoid duplicate IDs
 
-            // Update project name and link
-            var projectNameLink = rowTemplate.querySelector('.text-reset');
-            projectNameLink.textContent = item; // Set the project name
+            // Update project name
+            var projectName = rowTemplate.querySelector('.text-reset');
+            projectName.textContent = item; // Set the project name
+
+			// Update project link
+			var projectLink = rowTemplate.querySelector('[data-id="projectButton"]');
+            projectLink.href = `/annotate.html?projectName=${item}`;
             
+			// Update functional buttons
+			var deleteButton = rowTemplate.querySelector('[data-id="deleteButton"]');
+            deleteButton.addEventListener('click', function() {deleteProject(item)});
+			
+
             // Append the newly created row to the list container
             listContainer.appendChild(rowTemplate);
 
 		});
 	}
+
 
 </script>
