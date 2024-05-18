@@ -1,11 +1,11 @@
 ---
 menu: base.lists
-title: Progetti
+title: Provvedimenti
 page-header: Pannello
 layout-sidebar: true
 layout-navbar-transparent: true
 layout-hide-topbar: true
-page-header-actions: buttons
+page-header-actions: load-provisions-header
 ---
 
 <!-- src/pages/_includes/parts/modals/report.html -->
@@ -14,7 +14,7 @@ page-header-actions: buttons
 
 		<div class="row row-cards">
 			<div class="col-12">
-				{% include asimov_cards/projects-list.html offset=8 checkbox=true hoverable=true title="Progetti"   %}
+				{% include asimov_cards/projects-list.html offset=8 checkbox=true hoverable=true title="Provvedimenti"   %}
 			</div>
 		</div>
 </div>
@@ -25,7 +25,7 @@ page-header-actions: buttons
 		
 	async function deleteProject(projectName){
 		try {
-            const response = await fetch(`{{ site.data.endpoint[0].host }}/users/me/projects/?project_name=${projectName}`, {
+            const response = await fetch(`{{ site.data.endpoint[0].host }}/users/me/provisions/?project_name=${projectName}`, {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
@@ -55,7 +55,7 @@ page-header-actions: buttons
 
     async function fetchData() {
         try {
-            const response = await fetch('{{ site.data.endpoint[0].host }}/users/me/projects/', {
+            const response = await fetch('{{ site.data.endpoint[0].host }}/users/me/provisions/', {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
@@ -110,7 +110,7 @@ page-header-actions: buttons
 
 			// Update project link
 			var projectLink = rowTemplate.querySelector('[data-id="projectButton"]');
-            projectLink.href = `/annotate.html?projectName=${item}`;
+            projectLink.href = `/provision-analysis.html?projectName=${item}`;
             
 			// Update functional buttons
 			var deleteButton = rowTemplate.querySelector('[data-id="deleteButton"]');

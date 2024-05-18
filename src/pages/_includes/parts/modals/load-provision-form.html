@@ -32,20 +32,12 @@
 	<div class="row" id="provision-upload">
 		<div class="col-lg-12">
 			<div class="mb-3">
-				<div class="form-label">Carica provvedimento (atto nel formato PDF ufficiale del Senato)</div>
+				<div class="form-label">Carica provvedimento</div>
 				<input type="file" class="form-control">
 			</div>
 		</div>
 	</div>
 
-	<div class="row" id="amends-upload">
-		<div class="col-lg-12">
-			<div class="mb-3">
-				<div class="form-label">Carica emendamenti (fascicolo nel formato PDF ufficiale del Senato)</div>
-				<input type="file" class="form-control">
-			</div>
-		</div>
-	</div>
 	<div class="row" id="submit_error" style="display: none;">
 		{% include ui/alert.html type="danger" show-icon=true title="Compila tutti i campi correttamente"%}
 	</div>
@@ -104,7 +96,7 @@
         formData.append('amendments_file', amendmentsInput.files[0], amendmentsInput.files[0].name);
 		addLoadingProject(projectNameInput.value)
         try {
-            const response = await fetch(`{{ site.data.endpoint[0].host }}/users/me/projects/?project_name=${projectNameInput.value}`, {
+            const response = await fetch(`{{ site.data.endpoint[0].host }}/users/me/provisions/?project_name=${projectNameInput.value}`, {
                 method: 'POST',
                 body: formData, // Send the form data
 				headers: {
@@ -129,7 +121,7 @@
 
 	async function start_analysis(projectName){
 		try {
-			var endpoint = `{{ site.data.endpoint[0].host }}/users/me/projects/dossier_analysis/?project_name=${projectName}`
+			var endpoint = `{{ site.data.endpoint[0].host }}/users/me/projects/provision_analysis/?project_name=${projectName}`
 			// endpoint += `&mock=true`
             const response = await fetch(endpoint, {
                 method: 'POST',

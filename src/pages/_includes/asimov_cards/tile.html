@@ -26,3 +26,35 @@
 		{% include ui/progress.html value=75 color="primary" size="sm" %}
 	</div>
 </div>
+
+<script>
+	function progressFromStatus(stato_ddl) {
+		if (/da assegn/i.test(stato_ddl)) {
+			return 0;
+		} 
+		else if (/assegnato/i.test(stato_ddl)) {
+			return 20;
+		} else if (/esame.*comm/i.test(stato_ddl)) {
+			return 40;
+		} else if (/esame.*assembl/i.test(stato_ddl)) {
+			return 70;
+		} else if (/appr/i.test(stato_ddl)) {
+			return 100;
+		} else if (/resp|decad|concl/i.test(stato_ddl)) {
+			return 100;
+		} else {
+			return 70; // Default case if none of the conditions are met
+		}
+	}
+
+	function colorFromStatus(stato_ddl_semp) {
+		if (/positivo|trasmesso/i.test(stato_ddl_semp)) {
+			return 'teal';
+		} else if (/negativo/i.test(stato_ddl_semp)) {
+			return 'red';
+		} else {
+			return 'primary'; // For all other conditions where progress is not 100%
+		}
+	}
+
+</script>

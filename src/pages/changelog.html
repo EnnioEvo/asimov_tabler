@@ -1,0 +1,28 @@
+---
+title: Changelog
+menu: changelog
+page-header: Pannello
+layout-sidebar: true
+layout-navbar-transparent: true
+layout-hide-topbar: true
+layout: markdown
+---
+
+
+<h1>Changelog</h1>
+
+{% for version in site.data.changelog reversed %}
+<div class="mb-4">
+	<h2 class="mb-2">
+		<span>{{ version.version }}</span>
+	</h2>
+
+	{% if version.changes %}
+	<ul>
+		{% for change in version.changes %}
+		<li>{{ change | markdownify | replace_regex: '</p>\s+$', '' | replace_regex: '^<p>', ''  | replace_regex: '#([0-9]+)', '' }}</li>
+		{% endfor %}
+	</ul>
+	{% endif %}
+</div>
+{% endfor %}

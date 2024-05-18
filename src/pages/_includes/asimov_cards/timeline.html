@@ -1,0 +1,26 @@
+<ul class="timeline{% if include.simple %} timeline-simple{% endif %}">
+{% for person in site.data.people limit: 5 offset: 20 %}
+<tr>
+	<li class="timeline-event">
+		<div class="timeline-event-icon bg-twitter-lt">{% include ui/icon.html icon="brand-twitter" %}</div>
+		<div class="card timeline-event-card">
+			<div class="card-body">
+				<div class="text-secondary float-end">10 hrs ago</div>
+				<h4>{{ person.department }}</h4>
+				<p class="text-secondary">You’re getting more and more followers, keep it up!</p>
+			</div>
+		</div>
+	</li>
+	<td class="w-1">{% include ui/avatar.html src=person.photo %}</td>
+	<td><a href="#" class="text-reset">{{ person.full_name }}</a></td>
+	<td></td>
+	<td class="w-1 pe-0">{{ forloop.index | random_number: 30, 90 }}%</td>
+	<td>
+		<div class="progress progress-xs">
+			<div class="progress-bar bg-{{ forloop.index | random_number: 30, 90 | number_color }}" role="progressbar" style="width: {{ forloop.index | random_number: 30, 90 }}%"></div>
+		</div>
+	</td>
+	<td><a href="{{ site.base }}" class="text-secondary">{% include ui/icon.html icon="dots" %}</a></td>
+</tr>
+{% endfor %}
+</ul>

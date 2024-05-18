@@ -1,0 +1,13 @@
+<div class="btn-list">
+<!--	<span class="d-none d-sm-inline">-->
+<!--		{% if page.layout-navbar-overlap and page.layout-navbar-dark %}-->
+<!--		{% include ui/button.html text="New view" color="dark" %}-->
+<!--		{% else %}-->
+<!--		{% include ui/button.html text="New view"  %}-->
+<!--		{% endif %}-->
+<!--	</span>-->
+	{% include ui/button.html icon="plus" text="Crea nuovo progetto" color="primary" class="d-none d-sm-inline-block" modal-id="load-provision-form" %}
+	{% include ui/button.html icon="plus" icon-only=true color="primary" class="d-sm-none" text="Carica provvedimento" modal-id="load-provision-form" %}
+</div>
+
+{% include ui/modal.html modal-id="load-provision-form" size="lg" top=true %}

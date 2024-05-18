@@ -441,7 +441,11 @@
 			newTile.setAttribute('data-id_iter', item['id_iter']);
 			newTile.querySelector('.h1.mb-3').textContent = 'A' + ddl['ramo'] + ddl['numero_fase']
 			newTile.querySelector('[data-query-id="status"]').textContent = ddl['stato_ddl']
+			var color = colorFromStatus(ddl['stato_ddl_semp'])
 			newTile.querySelector('[aria-label="iter_link"]').href = `/iter.html?id_iter=${item['id_iter']}`
+			newTile.querySelector('[aria-label="iter_link"]').classList.add(`text-${color}`)
+			newTile.querySelector('.progress-bar').style.width = `${progressFromStatus(ddl['stato_ddl'])}%`
+			newTile.querySelector('.progress-bar').classList.add(`bg-${color}`)
 			tcontainer.insertBefore(newTile, tcontainer.lastElementChild);
 			if(item.ddls.length>1){
 				previous_ddl = item.ddls[1]

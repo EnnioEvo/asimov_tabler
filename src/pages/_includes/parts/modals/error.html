@@ -1,0 +1,17 @@
+{% include ui/modal/close.html %}
+<div class="modal-status bg-danger"></div>
+<div class="modal-body text-center py-4">
+
+	{% include ui/icon.html icon="alert-triangle" color="danger" size="lg" class="mb-2" %}
+
+	<h3>Errore</h3>
+	<div class="text-secondary">Compila tutti i campi del modulo</div>
+</div>
+
+<div class="modal-footer">
+	<div class="w-100">
+		<div class="row">
+			<div class="col">{% include ui/button.html dismiss=true text="Chiudi" block=true %}</div>
+		</div>
+	</div>
+</div>
