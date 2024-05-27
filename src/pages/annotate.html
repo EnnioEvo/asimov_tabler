@@ -84,8 +84,7 @@ page-header-actions: visualization-header
 				</div>
 			</div>
 			<div class="tab-pane" id="tabs-chat">
-				<h4>Chatta con il fascicolo</h4>
-				<div>Il chatbot intelligente per dialogare con il documento sarà presto disponibile</div>
+				{% include asimov_cards/chat.html %}
 			</div>
 		</div>
 	</div>
@@ -128,9 +127,9 @@ page-header-actions: visualization-header
 
 <script>
 	var parameters_search = new URLSearchParams(window.location.href)
-	var fase_ddl = parameters_search.entries().next().value[1]
-	document.querySelector('title').text = fase_ddl
-	document.querySelector('.page-title').innerHTML = `${fase_ddl} - Emendamenti`
+	var project_name = parameters_search.entries().next().value[1]
+	document.querySelector('title').text = project_name
+	document.querySelector('.page-title').innerHTML = `${project_name} - Emendamenti`
 
 	const amendmentDiv = document.getElementById('amendmentIdxs');
 	const amendmentContentDiv = document.getElementById('amendmentContent');
@@ -153,7 +152,7 @@ page-header-actions: visualization-header
 	async function annotate() {
 		try {
 			var endpoint = '{{ site.data.endpoint[0].host }}/users/me/annotate/';
-			endpoint += `?fase_ddl=${fase_ddl}`;
+			endpoint += `?project_name=${project_name}`;
 			const data = {
 				am_idx: currentAm.dataset.amendmentKey,
 				titolo: titoloComponent.value,
@@ -183,6 +182,8 @@ page-header-actions: visualization-header
 			const is_successful = await response.json();
 			if (is_successful) {
 				document.getElementById('esito').innerHTML = document.getElementById('successLabel').innerHTML;
+				visualizationData.amendments_data[idx]['titolo'] = titoloComponent.value;
+				visualizationData.amendments_data[idx]['sintesi'] = sintesiComponent.value;
 			} else {
 				document.getElementById('esito').innerHTML = document.getElementById('failureLabel').innerHTML;
 			}
@@ -194,11 +195,43 @@ page-header-actions: visualization-header
 
 	document.getElementById('saveButton').querySelector('.btn').addEventListener('click', annotate);
 
+	async function fetch_annotation_data() {
+		try {
+			// Construct the endpoint URL with the project_name query parameter
+			const endpoint = `https://asimov.law:8443/users/me/annotations/?project_name=${project_name}`;
+
+			// Perform the GET request
+			const response = await fetch(endpoint, {
+				method: 'GET',
+				headers: {
+					'Accept': 'application/json',
+					'Authorization': 'Bearer ' + sessionStorage.getItem('access_token'), // Retrieve the access token from session storage
+				},
+			});
+
+			// Check if the request was successful
+			if (!response.ok) {
+				// Check if the error is related to authentication (401 Unauthorized)
+				if (response.status === 401) {
+					window.location.href = '/sign-in.html'; // Redirect to sign-in page
+					throw new Error('Authentication error: Unauthorized');
+				}
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			// Parse the JSON response
+			const annotations = await response.json();
+			return annotations
+		} catch (error) {
+			// Handle the error
+			console.error('Failed to fetch annotation data:', error.message);
+		}
+	}
 
 	async function fetch_visualization_data() {
 		try {
 			var endpoint = '{{ site.data.endpoint[0].host }}/users/me/projects/visualization/';
-			endpoint += `?project_name=${fase_ddl}`;
+			endpoint += `?project_name=${project_name}`;
 
 			const response = await fetch(endpoint, {
 				method: 'POST',
@@ -221,8 +254,7 @@ page-header-actions: visualization-header
 
 			const data = await response.json();
 			// Handle the fetched data
-			visualizationData = data;
-			fill_visualization();
+			return data;
 			// Call any function that relies on visualizationData here
 		} catch (error) {
 			// Handle the error
@@ -346,8 +378,33 @@ page-header-actions: visualization-header
 		window.addEventListener('resize', adjustOffcanvasWidth);
 	});
 
-	fetch_visualization_data()
+	// Call both functions and store their promises
+	const visualizationPromise = fetch_visualization_data();
+	const annotationsPromise = fetch_annotation_data();
 
+	Promise.all([fetch_visualization_data(), fetch_annotation_data()]).then((results) => {
+		// results[0] will be the data returned from fetch_visualization_data
+		// results[1] will be the data returned from fetch_annotation_data
+		
+		// Assuming visualizationData is your global variable to hold the visualization data
+		visualizationData = results[0]; // or however you wish to integrate this data
+
+		// Process annotations and update visualizationData accordingly
+		const annotations = results[1];
+		annotations.forEach(item => {
+			const { idx, title, summary } = item;
+			if (!visualizationData.amendments_data[idx]) {
+				visualizationData.amendments_data[idx] = {};
+			}
+			visualizationData.amendments_data[idx]['titolo'] = title;
+			visualizationData.amendments_data[idx]['sintesi'] = summary;
+		});
+
+		// Now that both data sets are integrated, call fill_visualization
+		fill_visualization();
+	}).catch(error => {
+		console.error("An error occurred:", error);
+	});
 
 
 
