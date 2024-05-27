@@ -1,0 +1,50 @@
+<div class="card" style="width: 40vw;">
+	<div class="row g-0" style="width: 40vw;">
+		<div class="col-12 col-lg-7 col-xl-9 d-flex flex-column">
+			<div class="card-body scrollable" style="height: 76vh;">
+				<div class="chat">
+					<div class="chat-bubbles">
+						<div class="chat-item">
+							<div class="row align-items-end{% if message.person-id == 0 %} justify-content-end{% endif %}" style="width: 40vw;">
+								<div class="col-auto">
+									<div class="avatar text-indigo bg-transparent" data-demo-color="">as</div>
+								</div>
+								
+								<div class="col-lg-6">
+									<div class="chat-bubble{% if message.person-id == 0 %} chat-bubble-me{% endif %}">
+										{% unless message.loading %}
+										<div class="chat-bubble-title">
+											<div class="row">
+												<div class="col chat-bubble-author">{{ person.full_name }}</div>
+												<div class="col-auto chat-bubble-date">{{ message.timestamp }}</div>
+											</div>
+										</div>
+										{% endunless %}
+										<div class="chat-bubble-body">
+											{% if message.loading %}
+											<p class="text-secondary text-italic">typing<span class="animated-dots"></span></p>
+											{% else %}
+											<p>Ciao, come posso aiutarti?</p>
+											{% endif %}
+						
+											{% if message.gif %}
+											<div class="mt-2">
+												<img src="{{ message.gif }}" alt="" class="rounded img-fluid" />
+											</div>
+											{% endif %}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-footer" style="width: 39.9vw;">
+				<div class="input-group input-group-flat">
+					<input type="text" class="form-control" autocomplete="off" placeholder="Scrivi un messaggio" />
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
