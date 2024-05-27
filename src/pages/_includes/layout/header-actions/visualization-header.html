@@ -16,6 +16,9 @@
     <div id="xlsx">
         {% include ui/button.html icon="download" text="Excel" class="btn-outline-teal disabled"%}
     </div>
+	<div style="display: none;">
+		<div class="spinner-border spinner-border-sm text-secondary" style="margin-right: 8px;" role="status"></div>
+	</div>
 </div>
 
 <!-- <div class="spinner-border spinner-border-sm text-secondary" role="status"></div> -->
@@ -112,45 +115,67 @@
 
 
 	async function downloadFile(ext) {
-    try {
-        // Define the API endpoint based on the ext
-        const endpoint = `{{site.data.endpoint[0].host}}/users/me/projects/${ext}/?project_name=${projectName}`;
-        
-        // Make the API request
-        const response = await fetch(endpoint, {
-            method: 'GET',
-            headers: {
-                'Accept': ext === 'pdf' ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
-            }
-        });
+		try {
+			var button = document.getElementById(ext).querySelector('.btn')
 
-        if (!response.ok) {
-            // Handle responses that are not 2xx
-            throw new Error(`Failed to download file. Status: ${response.status}`);
-        }
+			// Define the API endpoint based on the ext
+			const endpoint = `{{site.data.endpoint[0].host}}/users/me/projects/${ext}/?project_name=${projectName}`;
+			
+			var downloadIcon = button.querySelector('svg');
+			downloadIcon.style.display = 'none';
+			var spinner = document.querySelector('.spinner-border');
+			var spinnerClone = spinner.cloneNode(true);
+			button.insertBefore(spinnerClone, button.firstChild);
 
-        // Retrieve the filename from the Content-Disposition header
+			// Make the API request
+			const response = await fetch(endpoint, {
+				method: 'GET',
+				headers: {
+					'Accept': ext === 'pdf' ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+					'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
+				}
+			});
+			
+			button.removeChild(spinnerClone)
+			downloadIcon.style.display = 'block';
 
 
-        // Create a blob from the response data
-        const blob = await response.blob();
+			if (!response.ok) {
+				// Handle responses that are not 2xx
+				throw new Error(`Failed to download file. Status: ${response.status}`);
+			}
 
-        // Create a temporary link element and trigger the download
-		var button = document.getElementById(ext).querySelector('.btn')
-        button.href = window.URL.createObjectURL(blob);
-		button.target = "_blank"
-        button.download = `${filename}.${ext}`;
+			// Retrieve the filename from the Content-Disposition header
 
-    } catch (error) {
-        console.error('Download error:', error);
-    }
-}
+
+			// Create a blob from the response data
+			const blob = await response.blob();
+
+			// Create a temporary link element and trigger the download
+			const url = window.URL.createObjectURL(blob);
+			const a = document.createElement('a');
+			a.href = url;
+			a.download = filename;
+			document.body.appendChild(a); // Append the element to the body
+			a.click(); // Simulate click to trigger download
+
+			window.URL.revokeObjectURL(url); // Clean up the URL object
+			a.remove(); // Remove the element from the DOM
+
+
+		} catch (error) {
+			console.error('Download error:', error);
+		}
+	}
 
 	// Attach the event listeners to the buttons
-	downloadFile('pdf');
-	downloadFile('xlsx');
+	pdfButton.addEventListener('click', () => {
+        downloadFile('pdf');
+      });
 
+	xlsxButton.addEventListener('click', () => {
+        downloadFile('xlsx');
+      });
 
 	check_job_is_ongoing()
 	is_file_available('pdf')
