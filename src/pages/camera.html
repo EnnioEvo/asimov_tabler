@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analizza emendamento</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2em;
+            width: 50%;
+            background-color: #f1f1f1;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px 5px rgba(0,0,0,0.1);
+        }
+        label, input, textarea {
+            margin: 0.5em;
+            width: 100%;
+            font-size: 18px;
+        }
+        input, textarea {
+            padding: 0.5em;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.1);
+            font-size: 18px;
+        }
+        #logo {
+            width: 150px;
+            height: auto;
+            margin-top: 300px;
+        }
+        #result {
+            width: 50%;
+            text-align: left;
+            background-color: #f1f1f1;
+            color: #1a1a1a;
+            padding: 1em;
+            border-radius: 5px;
+            box-shadow: 0px 0px 15px 5px rgba(0,0,0,0.1);
+            white-space: pre-wrap;       /* CSS3 */
+            word-wrap: break-word;       /* IE */
+            font-size: 18px;
+}
+
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    
+</head>
+<body>
+    <img id="logo" src="https://upload.wikimedia.org/wikipedia/it/4/4d/Logo_della_Camera_dei_deputati.svg" alt="Logo">
+    <h1>Analizza emendamento</h1>
+    <form id="analyzeForm">
+        <label for="api_key">API Key:</label>
+        <input type="password" id="api_key" name="api_key">
+        <label for="amendment_text">Testo dell'emendamento</label>
+        <textarea id="amendment_text" name="amendment_text" rows="4" cols="50"></textarea>
+        <label for="article_text">Testo dell'articolo</label>
+        <textarea id="article_text" name="article_text" rows="4" cols="50"></textarea>
+        <input type="submit" value="Analizza">
+    </form>
+    <h2>Risultato</h2>
+    <p></p>
+    <pre id="result"></pre>
+
+    <p style="width: 50%" id="placeholder">
+        Analisi tramite intelligenza artificiale, può contenere errori o allucinazioni.
+        Le analisi sono realizzate anche mediante la consultazione del portale "Normattiva", le cui informazioni sono disponibili gratuitamente online. I testi presenti nella banca dati "Normattiva" non hanno carattere di ufficialità. L'unico testo ufficiale e definitivo è quello pubblicato sulla Gazzetta Ufficiale Italiana a mezzo stampa, che prevale in casi di discordanza.
+
+    </p>
+
+    <script>
+$(document).ready(function() {
+    $('#analyzeForm').on('submit', function(e) {
+        e.preventDefault();
+        var api_key = $('#api_key').val();
+        var amendment_text = $('#amendment_text').val();
+        var article_text = $('#article_text').val();
+        $.ajax({
+            url: 'https://asimov.law:8443/analyze_amendments/',
+            type: 'post',
+            headers: {
+                'Authorization': 'Bearer ' + api_key,
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify({
+                'amendments_texts': [amendment_text],
+                'article_text': article_text
+            }),
+            success: function(data) {
+                $('#result').text(JSON.stringify(data, null, 2));
+            },
+            error: function(xhr, status, error) {
+                $('#result').text('Error: ' + error);
+            }
+        });
+    });
+});
+    </script>
+</body>
+</html>
