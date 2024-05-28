@@ -1,8 +1,13 @@
 <p id="bubbles" style="display: none;" class="text-secondary text-italic"><span class="animated-dots"></span></p>
 
-<div data-component="stop-icon-template" style="display: none;">
+<div data-component="stop-icon-template-parent" style="display: none;">
 	{% include ui/icon.html icon="player-stop" %}
 </div>
+<svg data-component="send-icon-template" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-send-2">
+	<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+	<path d="M4.698 4.034l16.302 7.966l-16.302 7.966a.503 .503 0 0 1 -.546 -.124a.555 .555 0 0 1 -.12 -.568l2.468 -7.274l-2.468 -7.274a.555 .555 0 0 1 .12 -.568a.503 .503 0 0 1 .546 -.124z" />
+	<path d="M6.5 12h14.5" />
+</svg>
 
 <div style="display: none;" data-component="asimov-message-template" class="chat-item">
 	<div class="row align-items-end{% if message.person-id == 0 %} justify-content-end{% endif %}" style="width: 38vw;">
@@ -68,13 +73,9 @@
 			</div>
 			<div class="card-footer" style="width: 39.9vw;">
 				<div class="input-group input-group-flat">
-					<input type="text" class="form-control" autocomplete="off" placeholder="Scrivi un messaggio" />
+					<input id="message-input" type="text" class="form-control" autocomplete="off" placeholder="Scrivi un messaggio" />
 					<a data-component="sendButton" href="javascript:void(0);" onclick="" style="width: 1vw;" class="btn btn-icon" aria-label="send">
-						<svg data-component="sendIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-send-2">
-							<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-							<path d="M4.698 4.034l16.302 7.966l-16.302 7.966a.503 .503 0 0 1 -.546 -.124a.555 .555 0 0 1 -.12 -.568l2.468 -7.274l-2.468 -7.274a.555 .555 0 0 1 .12 -.568a.503 .503 0 0 1 .546 -.124z" />
-							<path d="M6.5 12h14.5" />
-						</svg>
+
 					</a>
 				</div>
 			</div>
@@ -83,9 +84,22 @@
 </div>
 
 <script>
+	const accessToken = sessionStorage.getItem('access_token');
+
 	// components
 	const chatBubblesContainer = document.querySelector('.chat-bubbles');
+	const sendButton = document.querySelector('[data-component="sendButton"]')
+	const bubblesTemplate = document.querySelector('#bubbles');
+	const sendIconTemplate = document.querySelector('[data-component="send-icon-template"]');
+	const stopIconTemplate = document.querySelector('[data-component="stop-icon-template-parent"]').querySelector('svg');
+	const sendIcon = sendIconTemplate.cloneNode(true)
+	const stopIcon = stopIconTemplate.cloneNode(true)
+	const bubbles = bubblesTemplate.cloneNode(true)
 
+	sendButton.appendChild(sendIcon)
+	sendButton.appendChild(stopIcon)
+	sendIcon.style.display = ''
+	stopIcon.style.display = 'none'
 
 	function insertMessage(text, me) {
 		// Define the templates
@@ -93,21 +107,23 @@
 		const asimovMessageTemplate = document.querySelector('[data-component="asimov-message-template"]').cloneNode(true);
 
 		// Choose the correct template based on the 'me' parameter
-		const template = me ? myMessageTemplate : asimovMessageTemplate;
-		template.style.display = '';
+		const message = me ? myMessageTemplate : asimovMessageTemplate;
+		message.style.display = '';
 
 		// Find the elements within the template that need to be filled
-		const messageTextElement = template.querySelector('[data-component="message-text"]');
+		const messageTextElement = message.querySelector('[data-component="message-text"]');
 
 		// Set the text of the message
 		messageTextElement.textContent = text;
 
 		// Append the message to the chat
-		chatBubblesContainer.appendChild(template);
+		chatBubblesContainer.appendChild(message);
 
-		// // Scroll to the bottom of the chat container
-		// const chatContainer = document.querySelector('.card-body.scrollable');
-		// chatContainer.scrollTop = chatContainer.scrollHeight;
+		// Scroll to the bottom of the chat container
+		const chatContainer = document.querySelector('.card-body.scrollable');
+		chatContainer.scrollTop = chatContainer.scrollHeight;
+		
+		return message
 	}
 
 	insertMessage('Ciao, come posso aiutarti?', false)
@@ -115,34 +131,41 @@
 
     async function clickSendButton() {
         // 1. Swap the icons
-        const sendIcon = document.querySelector('[data-component="sendIcon"]');
-        const stopIconTemplate = document.querySelector('[data-component="stop-icon-template"]').cloneNode(true);
+
         sendIcon.style.display = 'none'; // Hide the send icon
-        stopIconTemplate.style.display = ''; // Show the stop icon
-        sendIcon.parentNode.replaceChild(stopIconTemplate, sendIcon); // Replace send icon with stop icon in the DOM
+        stopIcon.style.display = ''; // Show the stop icon
 
         // 2. Insert the message from the input
-        const input = document.querySelector('.form-control');
+        const input = document.querySelector('#message-input');
         const messageText = input.value;
         if (messageText) { // Ensure there's a message to send
             insertMessage(messageText, true);
+			// Clear the input field
+			input.value = '';
         }
+		else {
+			stopIcon.style.display = 'none'; // Hide the stop icon
+			sendIcon.style.display = ''; // Show the send icon again
+			return
+		}
 
-        // 3. Show the message with the bubble dots from the interlocutor
-        insertMessage('', false); // Insert an empty message to show the loading state
-        const bubbles = document.querySelector('#bubbles');
-        bubbles.style.display = ''; // Show the bubble dots
-
-        // 4. Make a post request to the chat endpoint
-        const messages = Array.from(document.querySelectorAll('.chat-bubble-body p[data-component="message-text"]'))
+        // 3. Build messages from chat
+        const messages = Array.from(document.querySelectorAll('.chat-bubbles p[data-component="message-text"]'))
                               .map((p, index) => ({
                                   role: index % 2 === 0 ? 'assistant' : 'user',
                                   content: p.textContent
                               }))
-                              .slice(1); // Exclude the first message as per the instructions
+                              .slice(1); // Exclude the first message
 
+		// 5. Show the message with the bubble dots from the interlocutor
+		const AnswerMessage = insertMessage('', false); // Insert an empty message to show the loading state
+		const AnswerMessageText = AnswerMessage.querySelector('[data-component="message-text"]')
+		AnswerMessageText.appendChild(bubbles)
+        bubbles.style.display = ''; // Show the bubble dots
+
+		// 6. Post chat request
         try {
-            const response = await fetch(`{{ site.data.endpoint[0].host }}/users/me/projects/?project_name=${projectName}`, {
+            const response = await fetch(`{{ site.data.endpoint[0].host }}/users/me/projects/chatbot?project_name=${projectName}`, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -152,30 +175,29 @@
                 body: JSON.stringify(messages),
             });
 
+			bubbles.style.display = 'none'; // Hide the bubble dots
+			AnswerMessageText.removeChild(bubbles)
+
             if (response.ok) {
                 const data = await response.json();
                 // Assuming 'data' contains the response message in a property named 'message'
-                
-                // 5. Swap the icons back, remove the bubble dots, and show the answer
-                stopIconTemplate.style.display = 'none'; // Hide the stop icon
-                sendIcon.style.display = ''; // Show the send icon again
-                stopIconTemplate.parentNode.replaceChild(sendIcon, stopIconTemplate); // Replace stop icon with send icon in the DOM
-
-                bubbles.style.display = 'none'; // Hide the bubble dots
-                insertMessage(data.message, false); // Insert the received message into the chat
+				AnswerMessageText.innerText = data['response']
             } else {
                 console.error('Failed to fetch:', response.statusText);
+				AnswerMessageText.innerText = 'Scusa, l\'invio del messaggio è fallito'
             }
         } catch (error) {
             console.error('Error during fetch:', error);
         }
+		// 5. Swap the icons back, remove the bubble dots, and show the answer
+		stopIcon.style.display = 'none'; // Hide the stop icon
+		sendIcon.style.display = ''; // Show the send icon again
 
-        // Clear the input field
-        input.value = '';
+
     }
 
     // Remember to attach this function to your send button's onclick event
-    document.querySelector('[data-component="sendButton"]').onclick = clickSendButton;
+    sendButton.onclick = clickSendButton;
 
 
 	
