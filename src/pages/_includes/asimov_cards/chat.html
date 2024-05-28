@@ -1,37 +1,83 @@
+<p id="bubbles" style="display: none;" class="text-secondary text-italic"><span class="animated-dots"></span></p>
+
+<div style="display: none;" data-component="asimov-message-template" class="chat-item">
+	<div class="row align-items-end{% if message.person-id == 0 %} justify-content-end{% endif %}" style="width: 38vw;">
+		<div class="col-auto">
+			<div class="avatar text-indigo bg-transparent" data-demo-color="">as</div>
+		</div>
+		
+		<div class="col-lg-6">
+			<div class="chat-bubble{% if message.person-id == 0 %} chat-bubble-me{% endif %}" style="width: 32vw;">
+				
+				<div class="chat-bubble-title">
+					<div class="row">
+						<div class="col chat-bubble-author">{{ person.full_name }}</div>
+						<div class="col-auto chat-bubble-date">{{ message.timestamp }}</div>
+					</div>
+				</div>
+				
+				<div class="chat-bubble-body">
+					
+					<p data-component="message-text">Ciao, come posso aiutarti? testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div style="display: none;" data-component="my-message-template" class="chat-item">
+	<div class="row align-items-end justify-content-end" style="width: 37vw;">
+		<div class="col-lg-6" style="width: 31vw;">
+			<div class="chat-bubble chat-bubble-me" style="width: 30vw;">
+				
+				<div class="chat-bubble-title">
+					<div class="row">
+						<div class="col chat-bubble-author">{{ person.full_name }}</div>
+						<div class="col-auto chat-bubble-date">{{ message.timestamp }}</div>
+					</div>
+				</div>
+				
+				<div class="chat-bubble-body">
+					
+					<p data-component="message-text">Ciao, come posso aiutarti? testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p>
+					
+				</div>
+			</div>
+		</div>
+
+		<div class="col-auto">
+			<div class="avatar text-indigo bg-transparent" data-demo-color="">me</div>
+		</div>
+	</div>
+</div>
+
 <div class="card" style="width: 40vw;">
 	<div class="row g-0" style="width: 40vw;">
 		<div class="col-12 col-lg-7 col-xl-9 d-flex flex-column">
-			<div class="card-body scrollable" style="height: 76vh;">
-				<div class="chat">
-					<div class="chat-bubbles">
-						<div class="chat-item">
-							<div class="row align-items-end{% if message.person-id == 0 %} justify-content-end{% endif %}" style="width: 40vw;">
+			<div class="card-body scrollable" style="height: 76vh; width: 38vw;">
+				<div class="chat" style="width: 38vw;">
+					<div class="chat-bubbles" style="width: 38vw;">
+						<div class="chat-item" style="width: 38vw;">
+							<div class="row align-items-end" style="width: 38vw;">
 								<div class="col-auto">
 									<div class="avatar text-indigo bg-transparent" data-demo-color="">as</div>
 								</div>
 								
 								<div class="col-lg-6">
-									<div class="chat-bubble{% if message.person-id == 0 %} chat-bubble-me{% endif %}">
-										{% unless message.loading %}
+									<div class="chat-bubble{% if message.person-id == 0 %} chat-bubble-me{% endif %}" style="width: 32vw;">
+										
 										<div class="chat-bubble-title">
 											<div class="row">
 												<div class="col chat-bubble-author">{{ person.full_name }}</div>
 												<div class="col-auto chat-bubble-date">{{ message.timestamp }}</div>
 											</div>
 										</div>
-										{% endunless %}
+										
 										<div class="chat-bubble-body">
-											{% if message.loading %}
-											<p class="text-secondary text-italic">typing<span class="animated-dots"></span></p>
-											{% else %}
-											<p>Ciao, come posso aiutarti?</p>
-											{% endif %}
-						
-											{% if message.gif %}
-											<div class="mt-2">
-												<img src="{{ message.gif }}" alt="" class="rounded img-fluid" />
-											</div>
-											{% endif %}
+											
+											<p>Ciao, come posso aiutarti? testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p>
+											
 										</div>
 									</div>
 								</div>
@@ -48,3 +94,36 @@
 		</div>
 	</div>
 </div>
+
+<script>
+	// components
+	const chatBubblesContainer = document.querySelector('.chat-bubbles');
+
+
+	function insertMessage(text, me) {
+		// Define the templates
+		const myMessageTemplate = document.querySelector('[data-component="my-message-template"]').cloneNode(true);
+		const asimovMessageTemplate = document.querySelector('[data-component="asimov-message-template"]').cloneNode(true);
+
+		// Choose the correct template based on the 'me' parameter
+		const template = me ? myMessageTemplate : asimovMessageTemplate;
+		template.style.display = '';
+
+		// Find the elements within the template that need to be filled
+		const messageTextElement = template.querySelector('[data-component="message-text"]');
+
+		// Set the text of the message
+		messageTextElement.textContent = text;
+
+		// Append the message to the chat
+		chatBubblesContainer.appendChild(template);
+
+		// // Scroll to the bottom of the chat container
+		// const chatContainer = document.querySelector('.card-body.scrollable');
+		// chatContainer.scrollTop = chatContainer.scrollHeight;
+	}
+
+	insertMessage(':D', true)
+	insertMessage('D:', false)
+	
+</script>
