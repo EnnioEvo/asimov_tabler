@@ -327,6 +327,29 @@ page-header-actions: visualization-header
 			currentAm.ariaCurrent="true"
 		}
 
+	function showQuotation(quote_id) {
+		const quotationData = visualizationData.quotations_data[quote_id-1];
+		if (quotationData) {
+			const offcanvasTitle = document.getElementById('offcanvasHeader');
+			const quotationSummary = document.getElementById('quotationSummary');
+			const quotationText = document.getElementById('quotationText');
+
+			// Populate the offcanvas elements with quotation data
+			offcanvasTitle.textContent = quotationData.standardquote;
+			offcanvasTitle.href = quotationData.url;
+			quotationSummary.textContent = quotationData.note;
+			quotationText.textContent = quotationData.quotetext.replace(/\W*il\W+presidente\W+della\W+repubblica.+emana\W+il\W+seguente\W+decreto\W*legge\W*/gsi, '');;
+
+			// Show the offcanvas
+			new bootstrap.Offcanvas(offcanvas).show();
+
+			// following is to prevent offcanvas adding 'focusing' event
+			// bad practice since it disable adding new events to document
+			document.addEventListener = function(type, listener, options) {
+			console.warn(`Prevented adding event listener of type "${type}"`);};
+		}
+	}
+
 	function addEventToQuotations(){
 		// Add event listeners to all span elements with data-quoteid
 		spans = document.querySelectorAll('span[data-quoteid]')
@@ -365,29 +388,6 @@ page-header-actions: visualization-header
 
 			amendmentDiv.firstElementChild.click();
 		}
-
-		function showQuotation(quote_id) {
-			const quotationData = visualizationData.quotations_data[quote_id-1];
-			if (quotationData) {
-				const offcanvasTitle = document.getElementById('offcanvasHeader');
-				const quotationSummary = document.getElementById('quotationSummary');
-				const quotationText = document.getElementById('quotationText');
-
-				// Populate the offcanvas elements with quotation data
-				offcanvasTitle.textContent = quotationData.standardquote;
-				offcanvasTitle.href = quotationData.url;
-				quotationSummary.textContent = quotationData.note;
-				quotationText.textContent = quotationData.quotetext.replace(/\W*il\W+presidente\W+della\W+repubblica.+emana\W+il\W+seguente\W+decreto\W*legge\W*/gsi, '');;
-
-				// Show the offcanvas
-				new bootstrap.Offcanvas(offcanvas).show();
-
-				// following is to prevent offcanvas adding 'focusing' event
-				// bad practice since it disable adding new events to document
-				document.addEventListener = function(type, listener, options) {
-				console.warn(`Prevented adding event listener of type "${type}"`);};
-			}
-    	}
 
 
 		populateAmendmentsList();
