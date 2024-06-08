@@ -45,6 +45,9 @@ page-header-actions: visualization-header
         color: red;
         text-decoration: line-through;
     }
+	.pad{
+		margin: 5px;
+	}
 </style>
 
 
@@ -63,9 +66,9 @@ page-header-actions: visualization-header
 		<div class="tab-content">
 			<div class="tab-pane active show" id="tabs-analysis">
 				<div class="row g-0">
-					<label class="form-check form-switch" style="float: right;">
-						<input id="parallel-switch" class="form-check-input" type="checkbox" checked="true" style="float: right;">
-						{% include ui/icon.html icon="wand" class=icon-class%}
+					<label class="form-check form-switch" style="float: right; display: none;">
+						<input id="parallel-switch" class="form-check-input" type="checkbox" style="float: right;">
+						{% include ui/icon.html icon="letter-case-toggle" class=icon-class%}
 					</label>
 				</div>
 				<div class="card">
@@ -80,7 +83,8 @@ page-header-actions: visualization-header
 							  </div>
 						</div>
 						<div class="d-flex flex-column half-column">
-							<div class="card-body markdown scrollable" style="height: 38vh; white-space: pre-line;" id="amendmentContent"></div>
+							<div class="card-body markdown scrollable" style="height: 38vh; white-space: pre-line;" id="amendmentContent">
+							</div>
 							<div class="card-body markdown scrollable" style="height: 47vh; white-space: pre-line;" id="amendmentAnalysis">
 							<strong>Titolo</strong>
 							<textarea id="titolo" style="width:36vw; resize: both;"></textarea>
@@ -253,7 +257,7 @@ page-header-actions: visualization-header
 			endpoint += `?project_name=${project_name}`;
 
 			const response = await fetch(endpoint, {
-				method: 'POST',
+				method: 'GET',
 				headers: {
 					'Accept': 'application/json',
 					'Authorization': 'Bearer ' + sessionStorage.getItem('access_token'),
@@ -292,8 +296,21 @@ page-header-actions: visualization-header
 				articleContent='Articolo di riferimento non trovato.'
 			}
 
+			let content = ''
+			if(amendmentData.first_author){
+				let modifiedBody = amendmentData.body.replace(/^<strong>Emendamento.*?\n/, '');
+        
+				content = `<b>${amendmentKey}</b>` +
+							`<span class='pad'>\t\t${amendmentData.first_author}, ${amendmentData.group}<span><br>` +
+							`${modifiedBody}`;
+			}
+			else{
+				content = amendmentData.body
+			}
+
+
 			// Set the content for the amendmentContentDiv and amendmentAnalysisDiv
-			amendmentContentDiv.innerHTML = amendmentData.body;
+			amendmentContentDiv.innerHTML = content;
 			titoloComponent.value = amendmentData.titolo;
 			sintesiComponent.value = amendmentData.sintesi;
 
