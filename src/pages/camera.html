@@ -25,7 +25,7 @@
             flex-direction: column;
             align-items: center;
             margin-bottom: 2em;
-            width: 50%;
+            width: 50vw;
             background-color: #f1f1f1;
             padding: 20px;
             border-radius: 10px;
@@ -102,7 +102,33 @@
         #sidebar ul li:hover {
             background-color: #0056b3;
         }
+        
+        .loading-spinner {
+            display: none;
+            position: fixed;
+            left: 80%;
+            top: 80%;
+            transform: translate(-50%, -50%);
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 80px;
+            height: 80px;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+        }
+    
+        @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+    
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
+    
 </head>
 <body>
     <div id="sidebar">
@@ -124,7 +150,9 @@
             <input type="submit" value="Analizza">
         </form>
         <h2>Risultato</h2>
-        <p></p>
+        <p>
+            <div class="loading-spinner" id="loadingSpinner"></div>
+        </p>
         <pre id="result"></pre>
 
         <p style="width: 50%" id="placeholder">
@@ -154,6 +182,9 @@
                 var api_key = $('#api_key').val();
                 var amendment_text = $('#amendment_text').val();
                 var article_text = $('#article_text').val();
+
+                $('#loadingSpinner').show();
+
                 $.ajax({
                     url: 'https://asimov.law:8443/analyze_amendments/',
                     type: 'post',
@@ -170,6 +201,10 @@
                     },
                     error: function(xhr, status, error) {
                         $('#result').text('Error: ' + error);
+                    },
+                    complete: function() {
+                        // Hide the loading spinner
+                        $('#loadingSpinner').hide();
                     }
                 });
             });
@@ -188,7 +223,7 @@
 <ul id="dataEmendamenti" style="display: none;">
     <li>
         <div class="name">
-            4.2 di A.C. 1633 (milleproroghe)
+            4.2 di A.C. 1633 (Milleproroghe)
         </div>
         <div class="amendment">
             Emendamento 4.2
@@ -231,7 +266,7 @@ All’articolo 29, comma 1, secondo periodo, del decreto-legge 25 maggio 2021, n
     </li>
     <li>
         <div class="name">
-            8.63 di A.C. 1633 (milleproroghe)
+            8.63 di A.C. 1633 (Milleproroghe)
         </div>
         <div class="amendment">
             Emendamento 8.63
@@ -284,5 +319,216 @@ All’articolo 29, comma 1, secondo periodo, del decreto-legge 25 maggio 2021, n
             All’articolo 35, comma 1-ter, del decreto-legge 30 dicembre 2019, n. 162, convertito, con modificazioni, dalla legge 28 febbraio 2020, n. 8, dopo il secondo periodo è aggiunto il seguente: «In ogni caso la scadenza del rapporto concessorio inerente alla gestione delle tratte autostradali da parte della Società Autostrada Tirrenica S.p.a. è fissata, indipendentemente dalla revisione della convenzione unica di cui al secondo periodo, alla data del 31 ottobre 2028.».
         </div>
     </li>
+
+
+  <li>
+        <div class="name">
+            1.9 di A.C. 889 (Cessione di crediti)
+        </div>
+        <div class="amendment">
+            Emendamento 1.9
+ Al comma 1, lettera a), capoverso 1-quinquies, aggiungere, in fine, i seguenti periodi: Le banche e Poste Spa possono compensare le somme relative agli F24 della clientela con crediti di imposta originatisi a seguito del sostenimento, nelle annualità 2021 e 2022, delle spese per gli interventi agevolati con bonus edilizi, non ancora ceduti da imprese e contribuenti. A tutela dei contratti in corso, il meccanismo di compensazione indicato nel precedente periodo è previsto anche per i crediti d'imposta relativi agli interventi già avviati alla data di entrata in vigore del presente decreto.
+        </div>
+        <div class="article">
+            Articolo 1
+
+comma 1
+All’articolo 121 del decreto-legge 19 maggio 2020, n. 34, convertito, con modificazioni, dalla legge 17 luglio 2020, n. 77, sono apportate le seguenti modificazioni:
+a) dopo il comma 1-quater, è aggiunto il seguente:
+« 1-quinquies. Ai fini del coordinamento della finanza pubblica, le
+pubbliche amministrazioni di cui all’articolo 1, comma 2, della legge 31
+dicembre 2009, n. 196, non possono essere cessionari dei crediti di
+imposta derivanti dall’esercizio delle opzioni di cui al comma 1, lettere
+a) e b). »;
+b) dopo il comma 6, sono aggiunti i seguenti:
+« 6-bis. Ferme le ipotesi di dolo di cui al comma 6 il concorso nella
+violazione che, ai sensi del medesimo comma 6, determina la responsabilità
+in solido del fornitore che ha applicato lo sconto e dei
+cessionari, è in ogni caso escluso con riguardo ai cessionari che
+dimostrano di aver acquisito il credito di imposta e che siano in
+possesso della seguente documentazione, relativa alle opere che hanno
+originato il credito di imposta, le cui spese detraibili sono oggetto delle
+opzioni di cui al comma 1:
+a) titolo edilizio abilitativo degli interventi, oppure, nel caso di
+interventi in regime di edilizia libera, dichiarazione sostitutiva dell’atto
+di notorietà, resa ai sensi dell’articolo 47 del decreto del Presidente
+della Repubblica 28 dicembre 2000, n. 445, in cui sia indicata la data
+di inizio dei lavori ed attestata la circostanza che gli interventi di
+ristrutturazione edilizia posti in essere rientrano tra quelli agevolabili,
+pure se i medesimi non necessitano di alcun titolo abilitativo, ai sensi
+della normativa vigente;
+b) notifica preliminare dell’avvio dei lavori all’azienda sanitaria
+locale, oppure, nel caso di interventi per i quali tale notifica non è
+dovuta in base alla normativa vigente, dichiarazione sostitutiva dell’atto
+di notorietà, resa ai sensi dell’articolo 47 del decreto del Presidente
+della Repubblica 28 dicembre 2000, n. 445, che attesti tale circostanza;
+c) visura catastale ante operam dell’immobile oggetto degli interventi,
+oppure, nel caso di immobili non ancora censiti, domanda di
+accatastamento;
+d) fatture, ricevute o altri documenti comprovanti le spese sostenute,
+nonché documenti attestanti l’avvenuto pagamento delle spese
+medesime;
+e) asseverazioni, quando obbligatorie per legge, dei requisiti tecnici
+degli interventi e di congruità delle relative spese, corredate da tutti
+gli allegati previsti dalla legge, rilasciate dai tecnici abilitati, con relative
+ricevute di presentazione e deposito presso i competenti uffici;
+f) nel caso di interventi su parti comuni di edifici condominiali,
+delibera condominiale di approvazione dei lavori e relativa tabella di
+ripartizione delle spese tra i condomini;
+g) nel caso di interventi di efficienza energetica, la documentazione
+prevista dall’articolo 6, comma 1, lettere a), c) e d), del decreto
+del Ministro dello sviluppo economico, di concerto con i Ministri
+dell’economia e delle finanze, dell’ambiente e della tutela del territorio
+e del mare e delle infrastrutture e dei trasporti, del 6 agosto 2020,
+recante “Requisiti tecnici per l’accesso alle detrazioni fiscali per la
+riqualificazione energetica degli edifici – cd. Ecobonus”, pubblicato
+nella Gazzetta ufficiale della Repubblica italiana n. 246 del 5 ottobre
+2020, oppure, nel caso di interventi per i quali uno o più dei predetti
+documenti non risultino dovuti in base alla normativa vigente, dichiarazione
+sostitutiva dell’atto di notorietà, resa ai sensi dell’articolo 47 del decreto del Presidente della Repubblica 28 dicembre 2000, n. 445, che
+attesti tale circostanza;
+h) visto di conformità dei dati relativi alla documentazione che
+attesti la sussistenza dei presupposti che danno diritto alla detrazione
+sulle spese sostenute per le opere, rilasciato ai sensi dell’articolo 35 del
+decreto legislativo 9 luglio 1997, n. 241, dai soggetti indicati all’articolo
+3, comma 3, lettere a) e b), del regolamento di cui al decreto del
+Presidente della Repubblica 22 luglio 1998, n. 322, e dai responsabili
+dell’assistenza fiscale dei centri costituiti dai soggetti di cui all’articolo
+32 del citato decreto legislativo n. 241 del 1997;
+i) un’attestazione rilasciata dai soggetti obbligati di cui all’articolo
+3 del decreto legislativo 21 novembre 2007, n. 231, che intervengono
+nelle cessioni comunicate ai sensi del presente articolo, di avvenuta
+osservanza degli obblighi di cui agli articoli 35 e 42 del decreto
+legislativo n. 231 del 2007.
+6-ter. L’esclusione di cui al comma 6-bis opera anche con riguardo
+ai soggetti, diversi dai consumatori o utenti, come definiti dall’articolo
+3, comma 1, lettera a), del codice del consumo, di cui al decreto
+legislativo 6 settembre 2005, n. 206, che acquistano i crediti di imposta
+da una banca, o da altra società appartenente al gruppo bancario della
+medesima banca, con la quale abbiano stipulato un contratto di conto
+corrente, facendosi rilasciare una attestazione di possesso, da parte
+della banca o della diversa società del gruppo cedente, di tutta la
+documentazione di cui al comma 6-bis, lettere da a) a i).
+6-quater. Il mancato possesso di parte della documentazione di cui
+al comma 6-bis non costituisce, da solo, causa di responsabilità solidale
+per dolo o colpa grave del cessionario, il quale può fornire, con ogni
+mezzo, prova della propria diligenza o non gravità della negligenza.
+Sull’ente impositore grava l’onere della prova della sussistenza dell’elemento
+soggettivo del dolo o della colpa grave del cessionario, ai fini
+della contestazione del concorso del cessionario nella violazione e della
+sua responsabilità solidale ai sensi del comma 6. Rimane ferma
+l’applicazione dell’articolo 14, comma 1.bis.1, del decreto-legge 17
+maggio 2022, n. 50, convertito, con modificazioni, dalla legge 15 luglio
+2022, n. 91. ».
+
+        </div>
+    </li>
+
+  <li>
+        <div class="name">
+            10.2 di A.C. 1555 (Concorrenza)
+        </div>
+        <div class="amendment">
+            Emendamento 10.2
+Al comma 2, sostituire le parole da: in via provvisoria fino alla fine del comma, con le seguenti: confermati ai livelli fissati nelle predette Tabelle dell'allegato B del decreto del Presidente del Consiglio dei ministri 8 luglio 2003.
+
+        </div>
+        <div class="article">
+            Articolo 10
+
+comma 1
+Al fine di potenziare la rete mobile e
+garantire a utenti e imprese l’offerta di
+servizi di connettività di elevata qualità,
+senza pregiudizio per la salute pubblica,
+entro centoventi giorni dalla data di entrata
+in vigore della presente legge, i limiti
+di esposizione, i valori di attenzione e gli
+obiettivi di qualità di cui all’articolo 4,
+comma 2, della legge 22 febbraio 2001,
+n. 36, sono adeguati, secondo il procedimento
+ivi previsto, alla luce delle più recenti
+e accreditate evidenze scientifiche,
+nel rispetto delle regole, delle raccomandazioni
+e delle linee guida dell’Unione europea.
+Si applica il comma 3 dell’articolo 4
+della legge 22 febbraio 2001, n. 36.
+
+comma 2
+Scaduto il termine di cui al comma 1,
+in assenza di specifiche previsioni regolamentari
+di adeguamento e sino a quando le stesse non sono definitivamente adottate, i
+valori di attenzione e gli obiettivi di qualità
+di cui alle tabelle 2 e 3 dell’allegato B al
+decreto del Presidente del Consiglio dei
+ministri 8 luglio 2003, pubblicato nella Gazzetta
+Ufficiale n. 199 del 28 agosto del 2003,
+sono in via provvisoria e cautelativa fissati
+a un valore pari a 15 V/m, per quanto
+attiene all’intensità di campo elettrico E, a
+un valore pari a 0,039 A/m, per quanto
+attiene all’intensità di campo magnetico H,
+e a un valore pari a 0,59 W/m2, per quanto
+attiene alla densità di potenza D.
+
+coomma 3
+All’articolo 4, comma 1, lettera b),
+della legge 22 febbraio 2001, n. 36, sono
+apportate le seguenti modificazioni:
+a) le parole: « in particolare il Ministro
+della sanità » sono sostituite dalle seguenti:
+« in particolare il Ministro della
+salute »;
+b) dopo le parole: « alta frequenza »
+sono aggiunte le seguenti: « , e il Ministro
+delle imprese e del made in Italy effettua la
+raccolta e l’elaborazione dei dati relativi a
+sorgenti connesse ad impianti, apparecchiature
+e sistemi radioelettrici per usi civili di
+telecomunicazioni, da trasmettere al Ministero
+dell’ambiente e della sicurezza energetica,
+al Ministero della salute e al Comitato
+di cui all’articolo 6 al fine di implementare
+e sostenere le attività di monitoraggio
+ambientale e consentire una più
+efficiente e razionale gestione dello spettro
+elettromagnetico ».
+
+comma 4
+Le amministrazioni interessate provvedono
+all’attuazione delle disposizioni del
+presente articolo con le risorse umane,
+finanziarie e strumentali disponibili a legislazione
+vigente, senza nuovi o maggiori
+oneri per la finanza pubblica.
+
+        </div>
+    </li>
+
+  <li>
+        <div class="name">
+            13.2 di A.C. 1606 (Energia)
+        </div>
+        <div class="amendment">
+            Emendamento 13.2
+  Al comma 1, primo periodo, sostituire le parole: 200 milioni con le seguenti: 280 milioni.
+
+  Conseguentemente, al medesimo comma 1, primo periodo, aggiungere, in fine, le seguenti parole: e in misura pari a 280 milioni di euro per ciascuno degli anni 2025 e 2026.
+        </div>
+        <div class="article">
+            Articolo 13
+
+comma 1
+Il fondo di cui all’articolo 1, comma 488, della legge 30 dicembre
+2021, n. 234, è rifinanziato in misura pari a 200 milioni di euro per
+l’anno 2024 per gli interventi di cui all’articolo 1, comma 489, della
+legge 30 dicembre 2021, n. 234. All’onere di cui al primo periodo si
+provvede mediante corrispondente riduzione dell’autorizzazione di
+spesa di cui all’articolo 27, comma 17, del decreto-legge 19 maggio
+2020, n. 34, convertito, con modificazioni, dalla legge 17 luglio 2020,
+n. 77.
+        </div>
+    </li>
+
 </ul>
 </html>
