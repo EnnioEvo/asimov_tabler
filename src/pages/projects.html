@@ -99,23 +99,31 @@ page-header-actions: buttons
 
 		// Loop through the data and create new items
 		projects.forEach(item => {
+            var projectName = item[0]
+            var projectDate = item[1]
 			// Assuming `item` has properties: name, detail, badgeColor, and actionLink
 			var rowTemplate = document.getElementById('item_template').cloneNode(true);
 			rowTemplate.style.display = ''; // Make it visible
-			rowTemplate.removeAttribute('id');; // Remove the ID to avoid duplicate IDs
+			rowTemplate.removeAttribute('id'); // Remove the ID to avoid duplicate IDs
 
             // Update project name
-            var projectName = rowTemplate.querySelector('.text-reset');
-            projectName.textContent = item; // Set the project name
+            var projectNameElement = rowTemplate.querySelector('.text-reset');
+            projectNameElement.textContent = projectName; // Set the project name
 
 			// Update project link
 			var projectLink = rowTemplate.querySelector('[data-id="projectButton"]');
-            projectLink.href = `/annotate.html?projectName=${item}`;
+            projectLink.href = `/annotate.html?projectName=${projectName}`;
             
+            // Update project date
+			var projectDateElement = rowTemplate.querySelector('[data-id="dateLabel"]');
+			projectDateElement.removeAttribute('id'); // Remove the ID to avoid duplicate IDs
+            projectDateElement.textContent = projectDate
+
+
 			// Update functional buttons
 			var deleteButton = rowTemplate.querySelector('[data-id="deleteButton"]');
             deleteButton.addEventListener('click', function() {
-                var success = deleteProject(item)
+                var success = deleteProject(projectName)
                 if (success){
                     rowTemplate.remove();
                 }

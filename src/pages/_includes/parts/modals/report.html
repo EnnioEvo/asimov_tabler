@@ -28,11 +28,21 @@
 <!--		{% endfor %}-->
 <!--	</div>-->
 
+<div>
+	<label class="form-check form-check-inline">
+	  <input id="radio-senato" class="form-check-input" data-institution="senato" type="radio" name="radios-inline">
+	  <span class="form-check-label">Senato</span>
+	</label>
+	<label class="form-check form-check-inline">
+	  <input id="radio-camera" class="form-check-input" data-institution="camera" type="radio" name="radios-inline">
+	  <span class="form-check-label">Camera</span>
+	</label>
+  </div>
 
 	<div class="row" id="provision-upload">
 		<div class="col-lg-12">
 			<div class="mb-3">
-				<div class="form-label">Carica provvedimento (atto nel formato PDF ufficiale del Senato)</div>
+				<div class="form-label">Carica provvedimento (atto nel formato PDF ufficiale)</div>
 				<input type="file" class="form-control">
 			</div>
 		</div>
@@ -41,7 +51,7 @@
 	<div class="row" id="amends-upload">
 		<div class="col-lg-12">
 			<div class="mb-3">
-				<div class="form-label">Carica emendamenti (fascicolo nel formato PDF ufficiale del Senato)</div>
+				<div class="form-label">Carica emendamenti (fascicolo nel formato PDF ufficiale)</div>
 				<input type="file" class="form-control">
 			</div>
 		</div>
@@ -80,31 +90,56 @@
 	// 		});
 	// 	});
 	// });
+	const projectNameInput = document.getElementById('project_name_input').querySelector('input')
+	const radioSenato = document.getElementById('radio-senato')
+	const radioCamera = document.getElementById('radio-camera')
 	const provisionInput = document.getElementById('provision-upload').querySelector('input')
 	const amendmentsInput = document.getElementById('amends-upload').querySelector('input')
-	const projectNameInput = document.getElementById('project_name_input').querySelector('input')
 	const submitErrorLabel = document.getElementById('submit_error')
 	var newProjectButton = document.getElementsByClassName('btn ms-auto')[0]
 	
+	if(!radioSenato.checked && !radioCamera.checked){
+		radioSenato.click()
+	}
+
 	function displayErrorLabel(){
 		submitErrorLabel.style.display = 'block'
 	}
 
+	function hideErrorLabel(){
+		submitErrorLabel.style.display = 'none'
+	}
+
+	function getSelectedInstitution(){
+		var checkedButton = null
+		if(radioSenato.checked){
+			checkedButton = radioSenato;
+		}
+		else if(radioCamera.checked){
+			checkedButton = radioCamera;
+		}
+		else{
+			throw('Select at least one between Senato or Camera')
+		}
+		return checkedButton.dataset['institution']
+	}
 
     newProjectButton.addEventListener('click', async function(event) {
         event.preventDefault(); // Prevent the default form submission
-		var isFormUncomplete = !projectNameInput.value | provisionInput.files.length==0 | amendmentsInput.files.length == 0;
+		var selectedInstitution = getSelectedInstitution();
+		var isFormUncomplete = !projectNameInput.value | !selectedInstitution | provisionInput.files.length==0 | amendmentsInput.files.length == 0;
 		if(isFormUncomplete){
 			event.stopPropagation();
 			displayErrorLabel();
 			return 
 		}
+		hideErrorLabel()
         var formData = new FormData();
         formData.append('provision_file', provisionInput.files[0], provisionInput.files[0].name);
         formData.append('amendments_file', amendmentsInput.files[0], amendmentsInput.files[0].name);
 		addLoadingProject(projectNameInput.value)
         try {
-            const response = await fetch(`{{ site.data.endpoint[0].host }}/users/me/projects/?project_name=${projectNameInput.value}`, {
+            const response = await fetch(`{{ site.data.endpoint[0].host }}/users/me/projects/?project_name=${projectNameInput.value}&institution=${selectedInstitution}`, {
                 method: 'POST',
                 body: formData, // Send the form data
 				headers: {
@@ -128,8 +163,10 @@
     });
 
 	async function start_analysis(projectName){
+
+		var selectedInstitution = getSelectedInstitution();
 		try {
-			var endpoint = `{{ site.data.endpoint[0].host }}/users/me/projects/dossier_analysis/?project_name=${projectName}`
+			var endpoint = `{{ site.data.endpoint[0].host }}/users/me/projects/dossier_analysis/?project_name=${projectName}&institution=${selectedInstitution}`;
 			// endpoint += `&mock=true`
             const response = await fetch(endpoint, {
                 method: 'POST',

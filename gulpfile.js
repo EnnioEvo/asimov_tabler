@@ -423,7 +423,7 @@ gulp.task('watch', (cb) => {
  */
 gulp.task('browser-sync', () => {
 	browserSync({
-		watch: true,
+		watch: false,
 		server: {
 			baseDir: demoDir,
 			routes: {
@@ -438,9 +438,9 @@ gulp.task('browser-sync', () => {
 			key: "/etc/letsencrypt/live/asimov.law/privkey.pem",
 			cert: "/etc/letsencrypt/live/asimov.law/fullchain.pem"
 		},
-		port: 3000,
+		port: 443,
 		open: false,
-		host: 'localhost',
+		host: '0.0.0.0',
 		notify: false,
 		reloadOnRestart: true
 	})

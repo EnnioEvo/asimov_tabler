@@ -147,6 +147,7 @@ page-header-actions: visualization-header
 </style>
 
 <script>
+
 	var parameters_search = new URLSearchParams(window.location.href)
 	var project_name = parameters_search.entries().next().value[1]
 	document.querySelector('title').text = project_name
@@ -163,6 +164,8 @@ page-header-actions: visualization-header
 	document.addEventListener('DOMContentLoaded', function () {
 		// Initialize the amendment content as needed here
 	});
+
+	const chatEndpoint = `{{ site.data.endpoint[0].host }}/users/me/projects/chatbot?project_name=${project_name}`
 
 	let offcanvas = document.getElementById('offcanvasStart')
 	let offCanvasBody = document.querySelector('.offcanvas-body');
@@ -285,6 +288,24 @@ page-header-actions: visualization-header
 		}
 	}
 
+
+	function replaceUnwantedTags(text) {
+		// Replace <span...> and </span> with placeholders br
+		text = text.replace(/<(\/?span.*?|\/?strong|\/?b|\/?br)>/g, '@$1@');
+		
+		// Replace remaining < and > with temporary placeholders
+		text = text.replace(/<+/g, '«');
+		text = text.replace(/>+/g, '»');
+		
+		// Replace placeholders back to original tags
+		text = text.replace(/@(\/?span.*?|\/?strong|\/?b|\/?br)@/g, '<$1>');
+		
+		return text;
+	}
+
+
+
+
 	// Update the two columns with the corresponding data of the amendment
 	function updateColumns(amendmentKey) {
 			let amendmentData = visualizationData.amendments_data[amendmentKey];
@@ -299,7 +320,7 @@ page-header-actions: visualization-header
 			let content = ''
 			if(amendmentData.first_author){
 				let modifiedBody = amendmentData.body.replace(/^<strong>Emendamento.*?\n/, '');
-        
+				
 				content = `<b>${amendmentKey}</b>` +
 							`<span class='pad'>\t\t${amendmentData.first_author}, ${amendmentData.group}<span><br>` +
 							`${modifiedBody}`;
@@ -307,6 +328,8 @@ page-header-actions: visualization-header
 			else{
 				content = amendmentData.body
 			}
+
+			content = replaceUnwantedTags(content);
 
 
 			// Set the content for the amendmentContentDiv and amendmentAnalysisDiv
@@ -422,6 +445,42 @@ page-header-actions: visualization-header
 	document.getElementById('parallel-switch').addEventListener('change', function(event) {
 		updateColumns(selectedKey);
 		addEventToQuotations()
+	});
+
+
+	function findAdjacentAmendment(direction) {
+		const currentActive = document.querySelector('.list-group-item.active');
+		if (!currentActive) return null;
+
+		const allAmendments = Array.from(document.querySelectorAll('.list-group-item'));
+		const currentIndex = allAmendments.indexOf(currentActive);
+
+		if (direction === 'next') {
+			return allAmendments[currentIndex + 1] || allAmendments[0];
+		} else if (direction === 'prev') {
+			return allAmendments[currentIndex - 1] || allAmendments[allAmendments.length - 1];
+		}
+	}
+
+	function navigateToAmendment(direction) {
+		const targetAmendment = findAdjacentAmendment(direction);
+		if (targetAmendment) {
+			targetAmendment.click(); // Simulate a click on the target amendment
+			targetAmendment.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+		}
+	}
+
+	document.addEventListener('keydown', function(event) {
+		if (event.altKey) {
+			let targetAmendment;
+			if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+				event.preventDefault();
+				navigateToAmendment('next');
+			} else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+				event.preventDefault();
+				navigateToAmendment('prev');
+			}
+		}
 	});
 
 	// Call both functions and store their promises

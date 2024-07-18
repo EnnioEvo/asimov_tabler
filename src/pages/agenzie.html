@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agenzie</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        body {
+            display: flex;
+            flex-direction: row;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            margin: 0;
+        }
+        #main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 80%;
+            padding: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2em;
+            width: 50vw;
+            background-color: #f1f1f1;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px 5px rgba(0,0,0,0.1);
+        }
+        label, input, textarea {
+            margin: 0.5em;
+            width: 100%;
+            font-size: 18px;
+        }
+        input, textarea {
+            padding: 0.5em;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.1);
+            font-size: 18px;
+        }
+        #logo {
+            width: 150px;
+            height: auto;
+            margin-top: 20px;
+        }
+        #result {
+            width: 50%;
+            text-align: left;
+            background-color: #f1f1f1;
+            color: #1a1a1a;
+            padding: 1em;
+            border-radius: 5px;
+            box-shadow: 0px 0px 15px 5px rgba(0,0,0,0.1);
+            white-space: pre-wrap;  /* Aggiungi questa riga */
+            word-wrap: break-word;  /* Assicurati che ci sia questa riga */
+            font-size: 18px;
+        }
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        #sidebar {
+            width: 20%;
+            background-color: #f1f1f1;
+            padding: 20px;
+            box-shadow: 0px 0px 15px 5px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #sidebar h2 {
+            font-size: 22px;
+            margin-bottom: 1em;
+        }
+        #sidebar ul {
+            list-style-type: none;
+            padding: 0;
+            width: 100%;
+        }
+        #sidebar ul li {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #sidebar ul li:hover {
+            background-color: #0056b3;
+        }
+        
+        .loading-spinner {
+            display: none;
+            position: fixed;
+            left: 80%;
+            top: 80%;
+            transform: translate(-50%, -50%);
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 80px;
+            height: 80px;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+        }
+    
+        @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+    
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    
+</head>
+<body>
+    <div id="sidebar" style="display: none;">
+        <h2>Esempi</h2>
+        <ul id="listaEmendamenti">
+        </ul>
+    </div>
+    <div id="main-content">
+        <img id="logo_pp" style="height: 10vh;" src="https://www.publicpolicy.it/wp-content/uploads/2018/05/public-policy-logo.svg" alt="Logo">
+        <img id="logo_asimov" style="height: 15vh;" src="https://i.postimg.cc/FzHBCPZZ/asimov.jpg" alt="Logo">
+        <h1>Agenzie</h1>
+        <form id="analyzeForm">
+            <label for="api_key">API Key:</label>
+            <input type="password" id="api_key" name="api_key">
+            <label for="keyword">Parola chiave</label>
+            <textarea id="keyword" name="keyword" rows="1" cols="50"></textarea>
+            <label for="query" style="display: none;">Domanda</label>
+            <textarea id="query" style="display: none;" name="Domanda" rows="30" cols="50"></textarea>
+            <input type="submit" value="Vai">
+        </form>
+        <h2>Risultato</h2>
+        <p>
+            <div class="loading-spinner" id="loadingSpinner"></div>
+        </p>
+        <pre id="result"></pre>
+
+        <p style="width: 50%" id="placeholder">
+            L’elaborazione dell’emendamento avviene tramite sistemi di Intelligenza Artificiale che possono dar luogo a errori o imprecisioni. I dati utilizzati nell’elaborazione provengono dal portale “Normattiva” e, pertanto, non rappresentano la versione ufficiale dei testi legislativi in esso contenuti. L’utilizzo del logo della Camera dei Deputati avviene in conformità all’Art. 70(1-bis) della Legge 22 aprile 1941 n. 633 (Legge sul Diritto d’Autore).
+        </p>
+    </div>
+    <script>
+        $(document).ready(function() {
+            // Function to build the list from dataEmendamenti
+            function buildList() {
+                $('#dataEmendamenti li').each(function() {
+                    var name = $(this).find('.name').text().trim();
+                    var amendment = $(this).find('.amendment').text().trim();
+                    var article = $(this).find('.article').text().trim();
+                    
+                    var listItem = $('<li></li>').text(name).data('amendment', amendment).data('article', article);
+                    $('#listaEmendamenti').append(listItem);
+                });
+            }
+
+            // Build the list on page load
+            buildList();
+
+            // Handle form submission
+            $('#analyzeForm').on('submit', function(e) {
+            e.preventDefault();
+            var api_key = $('#api_key').val();
+            var keyword = $('#keyword').val();
+            // var article_text = $('#article_text').val();
+
+            $('#loadingSpinner').show();
+
+            $.ajax({
+                url: 'https://asimov.law:8443/agencies/',
+                type: 'get',
+                headers: {
+                    'Authorization': 'Bearer ' + api_key,
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    'keyword': keyword
+                    // 'article_text': article_text
+                },
+                success: function(data) {
+                    // Convert newline characters to <br>
+                    var formattedData = JSON.stringify(data, null, 2).replace(/\\n/g, '<br>').replace(/\\r/g, '');
+                    $('#result').html(formattedData);  // Use .html() to render HTML tags
+                },
+                error: function(xhr, status, error) {
+                    $('#result').text('Error: ' + error);
+                },
+                complete: function() {
+                    // Hide the loading spinner
+                    $('#loadingSpinner').hide();
+                }
+            });
+        });
+
+
+            // // Handle example click
+            // $('#sidebar ul').on('click', 'li', function() {
+            //     var amendmentText = $(this).data('amendment');
+            //     var articleText = $(this).data('article');
+            //     $('#amendment_text').val(amendmentText);
+            //     $('#article_text').val(articleText);
+            // });
+        });
+    </script>
+</body>
+
+<ul id="dataEmendamenti" style="display: none;">
+    <li>
+        <div class="name">
+            4.2 di A.C. 1633 (Milleproroghe)
+        </div>
+        <div class="amendment">
+            Emendamento 4.2
+            Al comma 2, sostituire le parole: 31 dicembre 2024 con le seguenti: 31 dicembre 2025.
+Conseguentemente:
+al comma 4, sostituire le parole: anche per gli anni 2022, 2023 e 2024 con le seguenti: anche per gli anni 2022, 2023, 2024 e 2025 e le parole: 31 dicembre 2024 con le seguenti: 31 dicembre 2025;
+           al comma 5, sostituire le parole: 31 dicembre 2024 con le seguenti: 31 dicembre 2025.
+        </div>
+        <div class="article">
+            Articolo 4
+
+comma 1
+Il termine di approvazione del bilancio preventivo dell’anno 2024 degli Ordini delle professioni sanitarie di cui al decreto legislativo del Capo provvisorio dello Stato 13 settembre 1946, n. 233, è prorogato fino alla data di presentazione del conto consuntivo dell’anno 2023
+
+comma 2
+All’articolo 4, comma 2, del decreto-legge 30 dicembre 2021, n. 228, convertito, con modificazioni, dalla legge 25 febbraio 2022, n. 15, relativo alla proroga della possibilità per i laureati in medicina e chirurgia abilitati di assumere incarichi provvisori o di sostituzione di medici di medicina generale, nonché alla possibilità per i medici iscritti al corso di specializzazione in pediatria, durante il percorso formativo, di assumere incarichi provvisori o di sostituzione di pediatri di libera scelta convenzionati con il servizio sanitario nazionale, le parole: «31 dicembre 2023» sono sostituite dalle seguenti: «31 dicembre 2024»
+
+comma 3
+Il termine di validità dell’iscrizione nell’elenco nazionale dei soggetti idonei alla nomina di direttore generale delle aziende sanitarie locali, delle aziende ospedaliere e degli altri enti del Servizio sanitario nazionale di cui all’articolo 1, comma 2, del decreto legislativo 4 agosto 2016, n. 171, per i soggetti iscritti nell’elenco pubblicato sul sito internet del Ministero della salute in data 1° aprile 2020, è prorogato fino alla pubblicazione dell’elenco nazionale aggiornato e, comunque, non oltre il 31 dicembre 2024
+
+comma 4
+All’articolo 1, comma 268, lettera a), della legge 30 dicembre 2021, n. 234, relativo all’applicazione delle misure straordinarie per il conferimento di incarichi semestrali di lavoro autonomo ai medici specializzandi e di incarichi a tempo determinato al personale delle professioni sanitarie, agli operatori socio-sanitari e ai medici specializzandi iscritti regolarmente all’ultimo e al penultimo anno di corso della scuola di specializzazione, le parole: «anche per gli anni 2022 e 2023», sono sostituite dalle seguenti: «anche per gli anni 2022, 2023 e 2024» e le parole: «31 dicembre 2023» sono sostituite dalle seguenti:
+«31 dicembre 2024»
+
+comma 5
+All’articolo 4, comma 3, del decreto-legge 29 dicembre 2022, n. 198, convertito, con modificazioni, dalla legge 24 febbraio 2023, n. 14, relativo al conferimento di incarichi di lavoro autonomo ai laureati in medicina e chirurgia, abilitati e iscritti agli ordini professionali anche se privi della specializzazione, le parole: «31 dicembre 2023 nei limiti delle risorse disponibili autorizzate a legislazione vigente» sono sostituite dalle seguenti: «31 dicembre 2024 nel rispetto delle disposizioni di cui dall’articolo 11, comma 1, del decreto-legge 30 aprile 2019, n. 35, convertito, con modificazioni, dalla legge 25 giugno 2019, n. 60»
+
+comma 6
+All’articolo 36, comma 4-bis, del decreto-legge 21 giugno 2022, n. 73, convertito, con modificazioni, dalla legge 4 agosto 2022, n. 122, relativo alla proroga degli incarichi semestrali di lavoro autonomo per i dirigenti medici, veterinari e sanitari, nonché per il personale del ruolo sanitario del comparto sanità, collocati in quiescenza, anche ove non iscritti al competente albo professionale in conseguenza dal collocamento a riposo, nonché per gli operatori socio-sanitari collocati in quiescenza, , le parole: «31 dicembre 2023» sono sostituite dalle seguenti: «31 dicembre 2024», nel rispetto delle disposizioni di cui dall’articolo 11, comma 1, del decreto-legge 30 aprile 2019, n. 35, convertito, con modificazioni, dalla legge 25 giugno 2019, n. 60. Resta fermo quanto previsto dagli articoli 14, comma 3, e 14.1, comma 3, del decreto-legge 28 gennaio 2019, n. 4, convertito, con modificazioni, dalla legge 28 marzo 2019, n. 26.»
+
+comma 7
+All’articolo 1 della legge 27 dicembre 2017, n. 205, sono apportate le seguenti modificazioni:
+a) al comma 406-bis, relativo alla sperimentazione per la remunerazione delle prestazioni e delle funzioni assistenziali erogate dalle farmacie con oneri a carico del Servizio sanitario nazionale, dopo il primo periodo, è aggiunto il seguente: «La sperimentazione di cui al primo periodo è effettuata anche nell’anno 2024. Alla fine del medesimo anno si provvede alla valutazione degli esiti della sperimentazione.»;
+b) al comma 406-ter, relativo alla proroga e all’estensione della sperimentazione delle prestazioni e delle funzioni assistenziali svolte dalle farmacie, le parole: «2021 e 2022» sono sostituite dalle seguenti:
+«2021, 2022 e 2024»
+
+comma 8
+All’articolo 29, comma 1, secondo periodo, del decreto-legge 25 maggio 2021, n. 73, convertito, con modificazioni, dalla legge 23 luglio 2021, n. 106, in materia di incentivi al processo di riorganizzazione della rete dei laboratori del Servizio sanitario nazionale, le parole: «31 dicembre 2023» sono sostitute dalle seguenti: «31 dicembre 2024».
+        </div>
+    </li>
+    <li>
+        <div class="name">
+            8.63 di A.C. 1633 (Milleproroghe)
+        </div>
+        <div class="amendment">
+            Emendamento 8.63
+            Al comma 9, capoverso comma 3, sopprimere il terzo e il quarto periodo.
+        </div>
+        <div class="article">
+            Articolo 8
+
+            comma 1
+            Il termine di cui all’articolo 3, comma 3-bis, del decreto-legge 12 settembre 2014, n. 133, convertito, con modificazioni, dalla legge 11 novembre 2014, n. 164, relativo agli adempimenti previsti dal decreto di finanziamento di alcuni interventi, è prorogato al 31 dicembre 2024 con riferimento agli adempimenti previsti per l’aeroporto di Firenze
+            
+            comma 2
+            All’articolo 4 del decreto-legge 29 dicembre 2016, n. 243, convertito, con modificazioni, dalla legge 27 febbraio 2017, n. 18, relativo all’operatività dell’Agenzia per la somministrazione del lavoro in porto e per la riqualificazione professionale, sono apportate le seguenti modificazioni:
+            a) al comma 1, le parole: «a settantotto mesi» sono sostituite dalle seguenti: «a ottantuno mesi»;
+            b)al comma 7, le parole: «e 8.800.000 euro per ciascuno degli anni 2022 e 2023» sono sostituite dalle seguenti: «, 8.800.000 euro per ciascuno degli anni 2022 e 2023 e 2.200.000 euro per l’anno 2024»
+            
+            comma 3
+            Agli oneri di cui dal comma 2, pari a 2.200.000 euro per l’anno 2024 si provvede mediante corrispondente riduzione del Fondo di cui all’articolo 1, comma 471 della legge 29 dicembre 2022, n. 197
+            
+            comma 4
+            All’articolo 13, comma 17-bis, terzo periodo, del decreto-legge 31 dicembre 2020, n. 183, convertito, con modificazioni, dalla legge 26 febbraio 2021, n. 21, relativo a disposizioni in materia di trasporto ferroviario le parole: «31 dicembre 2023» sono sostituite dalle seguenti: «31 dicembre 2024»
+            
+            comma 5
+            All’articolo 14, comma 4, del decreto-legge 24 febbraio 2023, n. 13, convertito, con modificazioni, dalla legge 21 aprile 2023, n. 41, relativo alla realizzazione, mediante procedure di affidamento semplificate, degli interventi finanziati con risorse del Piano nazionale di ripresa e resilienza e dal Piano nazionale complementare, le parole: «31 dicembre 2023» sono sostituite dalle seguenti: «30 giugno 2024»
+            
+            comma 6
+            All’articolo 4, comma 3-bis, del decreto-legge 10 settembre 2021, n. 121, convertito, con modificazioni, dalla legge 9 novembre 2021, n. 156, relativo al divieto di circolazione di veicoli a motore delle categorie M2 e M3 adibiti a servizi di trasporto pubblico locale, sono apportate le seguenti modificazioni:
+            a) al primo periodo, dopo le parole: «Euro 2» sono inserite le seguenti: «a decorrere dal 31 gennaio 2024»;
+            b) dopo il terzo periodo è inserito il seguente: «Le regioni e le province autonome di Trento e di Bolzano, entro il 15 gennaio 2024, comunicano al Ministero delle infrastrutture e dei trasporti l’elenco dei veicoli con caratteristiche antinquinamento Euro 2 adibiti al trasporto pubblico locale per i quali, al fine di consentire la continuità e la regolarità del servizio di trasporto pubblico locale, è richiesto l’esonero dal divieto di cui al primo periodo esclusivamente per l’anno 2024.»;
+            c)al quarto periodo, dopo le parole: «dei veicoli con caratteristiche antinquinamento» sono inserite le seguenti: «Euro 2 e»;
+            d) al quinto periodo, dopo le parole: «l’esonero dei veicoli» sono inserite le seguenti: «Euro 3» e le parole: «delle risorse di cui al quarto periodo» sono sostituite dalle seguenti: «delle risorse di cui al quinto periodo»;
+            e) dopo il quinto periodo è inserito il seguente: «Il Ministero delle infrastrutture e dei trasporti, con apposito decreto da adottare entro il 31 gennaio 2024 dispone, l’esonero dei veicoli Euro 2 di cui al quarto periodo e definisce le modalità di verifica e monitoraggio dell’utilizzo delle risorse di cui al quinto periodo.»
+            
+            comma 7
+            All’articolo 10, comma 8, del decreto-legge 29 dicembre 2022, n. 198, convertito, con modificazioni, dalla legge 24 febbraio 2023, n. 14, relativo alle procedure semplificate di affidamento dei lavori, le parole: «31 dicembre 2023» sono sostituite dalle seguenti: «30 giugno 2024»
+            
+            comma 8
+            All’articolo 36 del decreto-legge6 luglio 2011, n. 98, convertito, con modificazioni, dalla legge 15 luglio 2011, n. 111, relativo alle attività dell’ANAS, sono apportate le seguenti modificazioni:
+            a) al comma 3-bis:
+            1) al primo periodo, dopo le parole: «a), b) e c)» sono inserite le seguenti: «, a titolo di onere di investimento»;
+            2) al secondo periodo, le parole: «a decorrere» sono soppresse e dopo le parole: «dal 1° gennaio 2022» sono inserite le seguenti: «al 31 dicembre 2023»;
+            b) dopo il comma 3-bis è inserito il seguente:
+            «3-ter. A decorrere dal 1° gennaio 2024, gli oneri di investimento di cui al primo periodo del comma 3-bis, comprensivi delle spese di progettazione degli interventi, sono riconosciuti all’ANAS S.p.A. nella misura non superiore al 12,5 per cento del totale dello stanziamento destinato alla realizzazione dell’intervento con esclusione delle spese previste da altre disposizioni di legge o regolamentari o inserite nel quadro economico di progetto approvato. Entro il predetto limite percentuale, le eventuali risorse che residuano rispetto alle spese effettivamente sostenute da parte dell’ANAS s.p.a. e verificate dal Ministero delle infrastrutture e dei trasporti sulla base delle risultanze della contabilità analitica, rimangono a disposizione della società
+            
+            comma 9
+            All’articolo 13 del decreto-legge 30 dicembre 2019, n. 162, convertito, con modificazioni, dalla legge 28 febbraio 2020, n. 8, relativo all’aggiornamento dei piani economico finanziari dei concessionari, il comma 3 è sostituito dal seguente:
+            «3. Entro il 30 marzo 2024 le società concessionarie per le quali è intervenuta la scadenza del periodo regolatorio quinquennale presentano le proposte di aggiornamento dei piani economico-finanziari predisposti in conformità alle delibere adottate ai sensi dell’articolo 16, comma 1, del decreto-legge 28 settembre 2018, n. 109, convertito, con modificazioni, dalla legge 16 novembre 2018, n. 130, dall’Autorità di regolazione dei trasporti di cui all’articolo 37 del decreto-legge 6 dicembre 2011, n. 201, convertito, con modificazioni, dalla legge 22 dicembre 2011, n. 214, nonché alle disposizioni emanate dal concedente. L’aggiornamento dei Piani economici finanziari, presentati entro il termine del 30 marzo 2024 conformemente alle modalità stabilite, è perfezionato entro e non oltre il 31 dicembre 2024. Nelle more degli aggiornamenti convenzionali, le tariffe autostradali relative alle concessioni di cui al primo periodo sono incrementate nella misura del 2,3 per cento, corrispondente all’indice di inflazione (NADEF) per l’anno 2024. Gli adeguamenti, in eccesso o in difetto, rispetto ai predetti incrementi tariffari sono definiti in sede di aggiornamento dei Piani economico finanziari.»
+            
+            comma 10
+            All’articolo 35, comma 1-ter, del decreto-legge 30 dicembre 2019, n. 162, convertito, con modificazioni, dalla legge 28 febbraio 2020, n. 8, dopo il secondo periodo è aggiunto il seguente: «In ogni caso la scadenza del rapporto concessorio inerente alla gestione delle tratte autostradali da parte della Società Autostrada Tirrenica S.p.a. è fissata, indipendentemente dalla revisione della convenzione unica di cui al secondo periodo, alla data del 31 ottobre 2028.».
+        </div>
+    </li>
+
+
+  <li>
+        <div class="name">
+            1.9 di A.C. 889 (Cessione di crediti)
+        </div>
+        <div class="amendment">
+            Emendamento 1.9
+ Al comma 1, lettera a), capoverso 1-quinquies, aggiungere, in fine, i seguenti periodi: Le banche e Poste Spa possono compensare le somme relative agli F24 della clientela con crediti di imposta originatisi a seguito del sostenimento, nelle annualità 2021 e 2022, delle spese per gli interventi agevolati con bonus edilizi, non ancora ceduti da imprese e contribuenti. A tutela dei contratti in corso, il meccanismo di compensazione indicato nel precedente periodo è previsto anche per i crediti d'imposta relativi agli interventi già avviati alla data di entrata in vigore del presente decreto.
+        </div>
+        <div class="article">
+            Articolo 1
+
+comma 1
+All’articolo 121 del decreto-legge 19 maggio 2020, n. 34, convertito, con modificazioni, dalla legge 17 luglio 2020, n. 77, sono apportate le seguenti modificazioni:
+a) dopo il comma 1-quater, è aggiunto il seguente:
+« 1-quinquies. Ai fini del coordinamento della finanza pubblica, le
+pubbliche amministrazioni di cui all’articolo 1, comma 2, della legge 31
+dicembre 2009, n. 196, non possono essere cessionari dei crediti di
+imposta derivanti dall’esercizio delle opzioni di cui al comma 1, lettere
+a) e b). »;
+b) dopo il comma 6, sono aggiunti i seguenti:
+« 6-bis. Ferme le ipotesi di dolo di cui al comma 6 il concorso nella
+violazione che, ai sensi del medesimo comma 6, determina la responsabilità
+in solido del fornitore che ha applicato lo sconto e dei
+cessionari, è in ogni caso escluso con riguardo ai cessionari che
+dimostrano di aver acquisito il credito di imposta e che siano in
+possesso della seguente documentazione, relativa alle opere che hanno
+originato il credito di imposta, le cui spese detraibili sono oggetto delle
+opzioni di cui al comma 1:
+a) titolo edilizio abilitativo degli interventi, oppure, nel caso di
+interventi in regime di edilizia libera, dichiarazione sostitutiva dell’atto
+di notorietà, resa ai sensi dell’articolo 47 del decreto del Presidente
+della Repubblica 28 dicembre 2000, n. 445, in cui sia indicata la data
+di inizio dei lavori ed attestata la circostanza che gli interventi di
+ristrutturazione edilizia posti in essere rientrano tra quelli agevolabili,
+pure se i medesimi non necessitano di alcun titolo abilitativo, ai sensi
+della normativa vigente;
+b) notifica preliminare dell’avvio dei lavori all’azienda sanitaria
+locale, oppure, nel caso di interventi per i quali tale notifica non è
+dovuta in base alla normativa vigente, dichiarazione sostitutiva dell’atto
+di notorietà, resa ai sensi dell’articolo 47 del decreto del Presidente
+della Repubblica 28 dicembre 2000, n. 445, che attesti tale circostanza;
+c) visura catastale ante operam dell’immobile oggetto degli interventi,
+oppure, nel caso di immobili non ancora censiti, domanda di
+accatastamento;
+d) fatture, ricevute o altri documenti comprovanti le spese sostenute,
+nonché documenti attestanti l’avvenuto pagamento delle spese
+medesime;
+e) asseverazioni, quando obbligatorie per legge, dei requisiti tecnici
+degli interventi e di congruità delle relative spese, corredate da tutti
+gli allegati previsti dalla legge, rilasciate dai tecnici abilitati, con relative
+ricevute di presentazione e deposito presso i competenti uffici;
+f) nel caso di interventi su parti comuni di edifici condominiali,
+delibera condominiale di approvazione dei lavori e relativa tabella di
+ripartizione delle spese tra i condomini;
+g) nel caso di interventi di efficienza energetica, la documentazione
+prevista dall’articolo 6, comma 1, lettere a), c) e d), del decreto
+del Ministro dello sviluppo economico, di concerto con i Ministri
+dell’economia e delle finanze, dell’ambiente e della tutela del territorio
+e del mare e delle infrastrutture e dei trasporti, del 6 agosto 2020,
+recante “Requisiti tecnici per l’accesso alle detrazioni fiscali per la
+riqualificazione energetica degli edifici – cd. Ecobonus”, pubblicato
+nella Gazzetta ufficiale della Repubblica italiana n. 246 del 5 ottobre
+2020, oppure, nel caso di interventi per i quali uno o più dei predetti
+documenti non risultino dovuti in base alla normativa vigente, dichiarazione
+sostitutiva dell’atto di notorietà, resa ai sensi dell’articolo 47 del decreto del Presidente della Repubblica 28 dicembre 2000, n. 445, che
+attesti tale circostanza;
+h) visto di conformità dei dati relativi alla documentazione che
+attesti la sussistenza dei presupposti che danno diritto alla detrazione
+sulle spese sostenute per le opere, rilasciato ai sensi dell’articolo 35 del
+decreto legislativo 9 luglio 1997, n. 241, dai soggetti indicati all’articolo
+3, comma 3, lettere a) e b), del regolamento di cui al decreto del
+Presidente della Repubblica 22 luglio 1998, n. 322, e dai responsabili
+dell’assistenza fiscale dei centri costituiti dai soggetti di cui all’articolo
+32 del citato decreto legislativo n. 241 del 1997;
+i) un’attestazione rilasciata dai soggetti obbligati di cui all’articolo
+3 del decreto legislativo 21 novembre 2007, n. 231, che intervengono
+nelle cessioni comunicate ai sensi del presente articolo, di avvenuta
+osservanza degli obblighi di cui agli articoli 35 e 42 del decreto
+legislativo n. 231 del 2007.
+6-ter. L’esclusione di cui al comma 6-bis opera anche con riguardo
+ai soggetti, diversi dai consumatori o utenti, come definiti dall’articolo
+3, comma 1, lettera a), del codice del consumo, di cui al decreto
+legislativo 6 settembre 2005, n. 206, che acquistano i crediti di imposta
+da una banca, o da altra società appartenente al gruppo bancario della
+medesima banca, con la quale abbiano stipulato un contratto di conto
+corrente, facendosi rilasciare una attestazione di possesso, da parte
+della banca o della diversa società del gruppo cedente, di tutta la
+documentazione di cui al comma 6-bis, lettere da a) a i).
+6-quater. Il mancato possesso di parte della documentazione di cui
+al comma 6-bis non costituisce, da solo, causa di responsabilità solidale
+per dolo o colpa grave del cessionario, il quale può fornire, con ogni
+mezzo, prova della propria diligenza o non gravità della negligenza.
+Sull’ente impositore grava l’onere della prova della sussistenza dell’elemento
+soggettivo del dolo o della colpa grave del cessionario, ai fini
+della contestazione del concorso del cessionario nella violazione e della
+sua responsabilità solidale ai sensi del comma 6. Rimane ferma
+l’applicazione dell’articolo 14, comma 1.bis.1, del decreto-legge 17
+maggio 2022, n. 50, convertito, con modificazioni, dalla legge 15 luglio
+2022, n. 91. ».
+
+        </div>
+    </li>
+
+  <li>
+        <div class="name">
+            10.2 di A.C. 1555 (Concorrenza)
+        </div>
+        <div class="amendment">
+            Emendamento 10.2
+Al comma 2, sostituire le parole da: in via provvisoria fino alla fine del comma, con le seguenti: confermati ai livelli fissati nelle predette Tabelle dell'allegato B del decreto del Presidente del Consiglio dei ministri 8 luglio 2003.
+
+        </div>
+        <div class="article">
+            Articolo 10
+
+comma 1
+Al fine di potenziare la rete mobile e
+garantire a utenti e imprese l’offerta di
+servizi di connettività di elevata qualità,
+senza pregiudizio per la salute pubblica,
+entro centoventi giorni dalla data di entrata
+in vigore della presente legge, i limiti
+di esposizione, i valori di attenzione e gli
+obiettivi di qualità di cui all’articolo 4,
+comma 2, della legge 22 febbraio 2001,
+n. 36, sono adeguati, secondo il procedimento
+ivi previsto, alla luce delle più recenti
+e accreditate evidenze scientifiche,
+nel rispetto delle regole, delle raccomandazioni
+e delle linee guida dell’Unione europea.
+Si applica il comma 3 dell’articolo 4
+della legge 22 febbraio 2001, n. 36.
+
+comma 2
+Scaduto il termine di cui al comma 1,
+in assenza di specifiche previsioni regolamentari
+di adeguamento e sino a quando le stesse non sono definitivamente adottate, i
+valori di attenzione e gli obiettivi di qualità
+di cui alle tabelle 2 e 3 dell’allegato B al
+decreto del Presidente del Consiglio dei
+ministri 8 luglio 2003, pubblicato nella Gazzetta
+Ufficiale n. 199 del 28 agosto del 2003,
+sono in via provvisoria e cautelativa fissati
+a un valore pari a 15 V/m, per quanto
+attiene all’intensità di campo elettrico E, a
+un valore pari a 0,039 A/m, per quanto
+attiene all’intensità di campo magnetico H,
+e a un valore pari a 0,59 W/m2, per quanto
+attiene alla densità di potenza D.
+
+coomma 3
+All’articolo 4, comma 1, lettera b),
+della legge 22 febbraio 2001, n. 36, sono
+apportate le seguenti modificazioni:
+a) le parole: « in particolare il Ministro
+della sanità » sono sostituite dalle seguenti:
+« in particolare il Ministro della
+salute »;
+b) dopo le parole: « alta frequenza »
+sono aggiunte le seguenti: « , e il Ministro
+delle imprese e del made in Italy effettua la
+raccolta e l’elaborazione dei dati relativi a
+sorgenti connesse ad impianti, apparecchiature
+e sistemi radioelettrici per usi civili di
+telecomunicazioni, da trasmettere al Ministero
+dell’ambiente e della sicurezza energetica,
+al Ministero della salute e al Comitato
+di cui all’articolo 6 al fine di implementare
+e sostenere le attività di monitoraggio
+ambientale e consentire una più
+efficiente e razionale gestione dello spettro
+elettromagnetico ».
+
+comma 4
+Le amministrazioni interessate provvedono
+all’attuazione delle disposizioni del
+presente articolo con le risorse umane,
+finanziarie e strumentali disponibili a legislazione
+vigente, senza nuovi o maggiori
+oneri per la finanza pubblica.
+
+        </div>
+    </li>
+
+  <li>
+        <div class="name">
+            13.2 di A.C. 1606 (Energia)
+        </div>
+        <div class="amendment">
+            Emendamento 13.2
+  Al comma 1, primo periodo, sostituire le parole: 200 milioni con le seguenti: 280 milioni.
+
+  Conseguentemente, al medesimo comma 1, primo periodo, aggiungere, in fine, le seguenti parole: e in misura pari a 280 milioni di euro per ciascuno degli anni 2025 e 2026.
+        </div>
+        <div class="article">
+            Articolo 13
+
+comma 1
+Il fondo di cui all’articolo 1, comma 488, della legge 30 dicembre
+2021, n. 234, è rifinanziato in misura pari a 200 milioni di euro per
+l’anno 2024 per gli interventi di cui all’articolo 1, comma 489, della
+legge 30 dicembre 2021, n. 234. All’onere di cui al primo periodo si
+provvede mediante corrispondente riduzione dell’autorizzazione di
+spesa di cui all’articolo 27, comma 17, del decreto-legge 19 maggio
+2020, n. 34, convertito, con modificazioni, dalla legge 17 luglio 2020,
+n. 77.
+        </div>
+    </li>
+
+</ul>
+</html>

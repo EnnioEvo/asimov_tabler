@@ -146,10 +146,12 @@
 
 			<tbody id="iters_table_body">
 			<tr id="templateRow" style="display: none;">
-				<td id="ramo" class="ramo">S</td>
+				<td id="ramo" class="ramo">
+					<a href="https://www.senato.it/leg/19/BGT/Schede/Ddliter/00000.htm" target="_blank">S</a>
+				</td>
 				<td id="numero_fase" class="numero_fase">
-					<a href="https://www.senato.it/leg/19/BGT/Schede/Ddliter/00000.htm"
-																		  target="_blank">000</a></td>
+					<a href="https://asimov.law/iter.html?id_iter=00000">000</a>
+				</td>
 				<td id="titolo" class="titolo" title="">
 					Ratifica ed esecuzione dell'Accordo tra la Repubblica italiana e la Repubblica di San Marino
 				</td>
@@ -278,7 +280,7 @@
 	function update_cell(element, item, field) {
 		try {
 			switch (field) {
-				case 'numero_fase':
+				case 'ramo':
 					var anchorElement = element.querySelector("a");
 					base_address = base_addresses[item['ramo']]
 					if (item['ramo'] == 'C') {
@@ -288,7 +290,14 @@
 					}
 					anchorElement.textContent = item[field]
 					break;
-				// throw new Error('Custom error message for numero_fase');
+
+				case 'numero_fase':
+					var anchorElement = element.querySelector("a");
+					base_address = "https://asimov.law/iter.html?id_iter={id_iter}"
+					anchorElement.href = base_address.replace('{id_iter}', item.id_iter);
+					anchorElement.textContent = item[field]
+					break;
+					// throw new Error('Custom error message for numero_fase');
 				case 'titolo':
 					// element.textContent = ellipse(item[field], 130);
 					element.textContent = item[field], 130;

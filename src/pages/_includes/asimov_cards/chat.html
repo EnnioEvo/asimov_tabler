@@ -27,7 +27,7 @@
 				
 				<div class="chat-bubble-body">
 					
-					<p data-component="message-text">testo del messaggio</p>
+					<p data-component="message-text"></p>
 					
 				</div>
 			</div>
@@ -49,7 +49,7 @@
 				
 				<div class="chat-bubble-body">
 					
-					<p data-component="message-text">testo del messaggio</p>
+					<p data-component="message-text"></p>
 					
 				</div>
 			</div>
@@ -64,7 +64,7 @@
 <div class="card" style="width: 40vw;">
 	<div class="row g-0" style="width: 40vw;">
 		<div class="col-12 col-lg-7 col-xl-9 d-flex flex-column">
-			<div class="card-body scrollable" style="height: 76vh; width: 38vw;">
+			<div class="card-body scrollable" style="height: 74vh; width: 38vw;">
 				<div class="chat" style="width: 38vw;">
 					<div id="chat-bubbles" class="chat-bubbles" style="width: 38vw;">
 
@@ -88,6 +88,7 @@
 
 	// components
 	const chatBubblesContainer = document.querySelector('.chat-bubbles');
+	const chatContainer = document.querySelector('.card-body.scrollable');
 	const sendButton = document.querySelector('[data-component="sendButton"]')
 	const bubblesTemplate = document.querySelector('#bubbles');
 	const sendIconTemplate = document.querySelector('[data-component="send-icon-template"]');
@@ -101,6 +102,12 @@
 	sendIcon.style.display = ''
 	stopIcon.style.display = 'none'
 
+	function markdownToHtml(markdownText) {
+		let htmlText = markdownText.replace(/\n/g, '<br>');
+		htmlText = htmlText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+		return htmlText;
+	}
+
 	function insertMessage(text, me) {
 		// Define the templates
 		const myMessageTemplate = document.querySelector('[data-component="my-message-template"]').cloneNode(true);
@@ -113,20 +120,21 @@
 		// Find the elements within the template that need to be filled
 		const messageTextElement = message.querySelector('[data-component="message-text"]');
 
-		// Set the text of the message
-		messageTextElement.textContent = text;
-
 		// Append the message to the chat
 		chatBubblesContainer.appendChild(message);
 
 		// Scroll to the bottom of the chat container
-		const chatContainer = document.querySelector('.card-body.scrollable');
+		chatContainer.scrollTop = chatContainer.scrollHeight;
+
+		// Set the text of the message
+		messageTextElement.textContent = me ? text : markdownToHtml(text);
 		chatContainer.scrollTop = chatContainer.scrollHeight;
 		
-		return message
+		return message;
 	}
 
 	insertMessage('Ciao, come posso aiutarti?', false)
+
 
 
     async function clickSendButton() {
@@ -165,7 +173,7 @@
 
 		// 6. Post chat request
         try {
-            const response = await fetch(`{{ site.data.endpoint[0].host }}/users/me/projects/chatbot?project_name=${projectName}`, {
+            const response = await fetch(chatEndpoint, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -176,12 +184,13 @@
             });
 
 			bubbles.style.display = 'none'; // Hide the bubble dots
-			AnswerMessageText.removeChild(bubbles)
-
+			AnswerMessageText.removeChild(bubbles);
             if (response.ok) {
                 const data = await response.json();
                 // Assuming 'data' contains the response message in a property named 'message'
 				AnswerMessageText.innerText = data['response']
+				// streamMessage(AnswerMessageText, data['response'])
+				// AnswerMessageText.innerHtml = markdownToHtml(data['response'])
             } else {
                 console.error('Failed to fetch:', response.statusText);
 				AnswerMessageText.innerText = 'Scusa, l\'invio del messaggio è fallito'
@@ -196,9 +205,15 @@
 
     }
 
-    // Remember to attach this function to your send button's onclick event
+
     sendButton.onclick = clickSendButton;
 
-
-	
+	// Enter key
+	const messageInput = document.querySelector('#message-input');
+	messageInput.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent default form submission
+        clickSendButton();
+    }
+	});
 </script>
