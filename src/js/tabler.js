@@ -10,6 +10,9 @@ import "./src/tab"
 import "./src/toast"
 import * as bootstrap from "bootstrap"
 import * as tabler from "./src/tabler"
+import DiffMatchPatch from 'diff-match-patch';
+const dmp = new DiffMatchPatch();
 
 globalThis.bootstrap = bootstrap
 globalThis.tabler = tabler
+globalThis.dmp = dmp

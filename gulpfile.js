@@ -29,7 +29,9 @@ const gulp = require('gulp'),
 	iconsTags = require('./node_modules/@tabler/icons/tags.json'),
 	iconsPkg = require('./node_modules/@tabler/icons/package.json'),
 	year = new Date().getFullYear(),
-	argv = yargs(process.argv).argv
+	argv = yargs(process.argv).argv,
+	diff_match_patch = require('diff-match-patch');
+
 
 let BUILD = false,
 	distDir = './.tmp',
