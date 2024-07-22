@@ -60,6 +60,9 @@ page-header-actions: visualization-header
 			<li class="nav-item">
 				<a href="#tabs-chat" class="nav-link" data-bs-toggle="tab">{% include ui/icon.html icon="messages" class=icon-class %}</a>
 			</li>
+			<li class="nav-item">
+				<a href="#tabs-checks" class="nav-link" data-bs-toggle="tab">{% include ui/icon.html icon="flag-2" class=icon-class %}</a>
+			</li>
 		</ul>
 	</div>
 	<div class="card-body">
@@ -107,6 +110,31 @@ page-header-actions: visualization-header
 			<div class="tab-pane" id="tabs-chat">
 				{% include asimov_cards/chat.html %}
 			</div>
+			<div class="tab-pane" id="tabs-checks">
+				<div class="row row-cards" style="width: 60vw;">
+					<div class="card">
+						<div class="ribbon bg-primary">Novità</div>
+						<div class="card-body">
+						  <h3 class="card-title">Scartato dal fascicolo</h3>
+						  <p class="text" id="discarded-amendments-label"></p>
+						</div>
+					  </div>
+					<div class="card">
+						<div class="ribbon bg-primary">Novità</div>
+						<div class="card-body">
+						<h3 class="card-title">Scartato dal provvedimento</h3>
+						<p class="text" id="discarded-provision-label"></p>
+						</div>
+					</div>
+					<div class="card">
+						<div class="ribbon bg-primary">In arrivo</div>
+						<div class="card-body">
+						<h3 class="card-title">Altri controlli</h3>
+						<p class="text" id="other-checks-label"></p>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -147,7 +175,6 @@ page-header-actions: visualization-header
 </style>
 
 <script>
-
 	var parameters_search = new URLSearchParams(window.location.href)
 	var project_name = parameters_search.entries().next().value[1]
 	document.querySelector('title').text = project_name
@@ -158,6 +185,7 @@ page-header-actions: visualization-header
 	const titoloComponent = document.getElementById('titolo');
 	const sintesiComponent = document.getElementById('sintesi');
 	const articleContentDiv = document.getElementById('articleContent');
+	const checksTab = document.getElementById('tabs-checks');
 	const parallelSwitch = document.getElementById('parallel-switch');
 	var selectedKey;
 
@@ -431,6 +459,14 @@ page-header-actions: visualization-header
 
 
 		populateAmendmentsList();
+
+		// View discarded text
+		discardedAmendmentsLabel = document.getElementById('discarded-amendments-label')
+		discardedProvisionLabel = document.getElementById('discarded-provision-label')
+		var discardedAmendments = visualizationData.discarded['amendments'] || '';
+		var discardedProvision = visualizationData.discarded['provision'] || '';
+		discardedAmendmentsLabel.innerHTML = discardedAmendments.replace(/\n/, '<br>');
+		discardedProvisionLabel.innerHTML = discardedProvision.replace(/\n/, '<br>');
 	};
 
 	document.addEventListener('DOMContentLoaded', function () {

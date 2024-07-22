@@ -10,7 +10,7 @@
 </svg>
 
 <div style="display: none;" data-component="asimov-message-template" class="chat-item">
-	<div class="row align-items-end{% if message.person-id == 0 %} justify-content-end{% endif %}" style="width: 38vw;">
+	<div class="row align-items-end{% if message.person-id == 0 %} justify-content-end{% endif %}" style="width: 50vw;">
 		<div class="col-auto">
 			<div class="avatar text-indigo bg-transparent" data-demo-color="">as</div>
 		</div>
@@ -36,7 +36,7 @@
 </div>
 
 <div style="display: none;" data-component="my-message-template" class="chat-item">
-	<div class="row align-items-end justify-content-end" style="width: 37vw;">
+	<div class="row align-items-end justify-content-end" style="width: 49vw;">
 		<div class="col-lg-6" style="width: 31vw;">
 			<div class="chat-bubble chat-bubble-me" style="width: 30vw;">
 				
@@ -61,17 +61,17 @@
 	</div>
 </div>
 
-<div class="card" style="width: 40vw;">
-	<div class="row g-0" style="width: 40vw;">
+<div class="card" style="width: 52vw;">
+	<div class="row g-0" style="width: 52vw;">
 		<div class="col-12 col-lg-7 col-xl-9 d-flex flex-column">
-			<div class="card-body scrollable" style="height: 74vh; width: 38vw;">
-				<div class="chat" style="width: 38vw;">
-					<div id="chat-bubbles" class="chat-bubbles" style="width: 38vw;">
+			<div class="card-body scrollable" style="height: 74vh; width: 50vw;">
+				<div class="chat" style="width: 50vw;">
+					<div id="chat-bubbles" class="chat-bubbles" style="width: 50vw;">
 
 					</div>
 				</div>
 			</div>
-			<div class="card-footer" style="width: 39.9vw;">
+			<div class="card-footer" style="width: 51.9vw;">
 				<div class="input-group input-group-flat">
 					<input id="message-input" type="text" class="form-control" autocomplete="off" placeholder="Scrivi un messaggio" />
 					<a data-component="sendButton" href="javascript:void(0);" onclick="" style="width: 1vw;" class="btn btn-icon" aria-label="send">
@@ -127,7 +127,7 @@
 		chatContainer.scrollTop = chatContainer.scrollHeight;
 
 		// Set the text of the message
-		messageTextElement.textContent = me ? text : markdownToHtml(text);
+		messageTextElement.innerText = me ? text : markdownToHtml(text);
 		chatContainer.scrollTop = chatContainer.scrollHeight;
 		
 		return message;
@@ -188,9 +188,9 @@
             if (response.ok) {
                 const data = await response.json();
                 // Assuming 'data' contains the response message in a property named 'message'
-				AnswerMessageText.innerText = data['response']
+				// AnswerMessageText.textContent = data['response']
 				// streamMessage(AnswerMessageText, data['response'])
-				// AnswerMessageText.innerHtml = markdownToHtml(data['response'])
+				AnswerMessageText.innerHtml = markdownToHtml(data['response'])
             } else {
                 console.error('Failed to fetch:', response.statusText);
 				AnswerMessageText.innerText = 'Scusa, l\'invio del messaggio è fallito'
