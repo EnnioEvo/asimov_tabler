@@ -94,9 +94,9 @@ page-header-actions: visualization-header
 							<div class="card-body markdown scrollable" style="height: 47vh;" id="amendmentAnalysis">
 								<!-- Identities div  -->
 								<label class="prototype" id="identities">
-									<p id="identical"></p> 
-									<p id="similar"></p>
-									<p id="relevant"></p>
+									<p style="margin-bottom: 3px;" id="identical"></p> 
+									<p style="margin-bottom: 3px;" id="similar"></p>
+									<p style="margin-bottom: 3px;" id="relevant"></p>
 								</label>	
 								<strong>Titolo</strong>
 								<textarea id="titolo" style="width:36vw; resize: both;"></textarea>
@@ -358,7 +358,7 @@ page-header-actions: visualization-header
 		function fillIdentityComponent(other_ids, component, preamble){
 			component.style.display = 'none';
 			if (other_ids){
-				component.innerHTML = preamble;
+				component.innerHTML = `<i>${preamble}</i>`;
 				other_ids.forEach((id) => {
 					let span = document.createElement('span');
 					span.className = 'badge bg-azure-lt';

@@ -91,6 +91,12 @@ function difflibAddRmWords(text1, text2) {
     diff = diff.replace(/[@\f]/g, '');
     diff = diff.replace(/(<(add|rm)>)(\W+)/g, '$3$1');
     diff = diff.replace(/(\W+)(<\/(add|rm)>)/g, '$2$1');
+    diff = diff.replace(
+        /([\w\.]+)<rm>([^<>]*?)<\/rm>([^\w<>]*)<add>([^<>]*?)<\/add>/g, 
+        '<rm>$1$2</rm>$3<add>$1$4</add>');
+    diff = diff.replace(
+        /<rm>([^<>]*?)<\/rm>([^\w<>]*)<add>([^<>]*?)<\/add>(\w+)/g, 
+        '<rm>$1$4</rm>$2<add>$3$4</add>');
     diff = diff.replace(/\n/g, '<br>');
     return diff;
 }
