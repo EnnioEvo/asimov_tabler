@@ -354,48 +354,37 @@ page-header-actions: visualization-header
 
 
 	function difflibAddRmWords(text1, text2) {
-		// Save new lines
-		text1 = text1.replace(/\n/g, ' Ω ');
-		text2 = text2.replace(/\n/g, ' Ω ');
-
 		// Mark punctuation with special character
-		text1 = text1.replace(/([^\w\s]+)/g, ' @$1@ ');
-		text2 = text2.replace(/([^\w\s]+)/g, ' @$1@ ');
-
-		// Split texts into words
-		let seq1 = text1.split(/\s/);
-		let seq2 = text2.split(/\s/);
-
-		// Convert sequences back to strings with spaces for diff_match_patch
-		let text1WithSpaces = seq1.join(' ');
-		let text2WithSpaces = seq2.join(' ');
+		text1 = text1.replace(/([^\w\s]+)/g, '\f@$1@\f');
+		text2 = text2.replace(/([^\w\s]+)/g, '\f@$1@\f');
 
 		// Compute the differences
-		let diffs = dmp.diff_main(text1WithSpaces, text2WithSpaces);
+		let dmp = globalThis.dmp;
+		let wordsToChars = globalThis.diff_wordsToChars_(text1, text2);
+		let diffs = dmp.diff_main(wordsToChars.chars1, wordsToChars.chars2, false);
+
+		// Convert the diff back to words
+		dmp.diff_charsToLines_(diffs, wordsToChars.wordArray);
+
 		dmp.diff_cleanupSemantic(diffs);
 
 		// Process the differences
 		let result = [];
-
 		for (let [operation, data] of diffs) {
-			// Split the diff data back into words
-			let words = data.split(/\s+/).filter(word => word.length > 0);
-
 			if (operation === 0) {
 				result.push(data);
 			} else if (operation === -1) {
-				result.push(`<rm>${words.join(' ')}</rm>`);
+				result.push(`<rm>${data}</rm>`);
 			} else if (operation === 1) {
-				result.push(`<add>${words.join(' ')}</add>`);
+				result.push(`<add>${data}</add>`);
 			}
 		}
 
 		// Join the result into a single string and remove the special character
-		let diff = result.join(' ')
-		diff = diff.replace(/Ω/g, '\n');
-		diff = diff.replace(/\s?<add>@(.*?)@<\/add>\s?/g, '$1');
-		diff = diff.replace(/\s?<rm>@(.*?)@<\/rm>\s?/g, '$1');
-		diff = diff.replace(/ @|@ /g, '');
+		let diff = result.join('')
+		// diff = diff.replace(/\s?<add>@(.*?)@<\/add>\s?/g, '$1');
+		// diff = diff.replace(/\s?<rm>@(.*?)@<\/rm>\s?/g, '$1');
+		diff = diff.replace(/[@\f]/g, '');
 		diff = diff.replace(/\n/g, '<br>');
 		return diff;
 	}
