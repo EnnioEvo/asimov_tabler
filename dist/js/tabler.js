@@ -7,10 +7,7 @@
 * Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
 */
 
-import DiffMatchPatch from 'diff-match-patch';
-const dmp = new DiffMatchPatch();
-const diff = dmp.diff_main('dogs bark', 'cats bark');
-console.log(diff)
+
 (function (factory) {
 	typeof define === 'function' && define.amd ? define(factory) :
 	factory();
