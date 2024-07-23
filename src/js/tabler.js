@@ -15,6 +15,7 @@ const dmp = new DiffMatchPatch();
 
 globalThis.bootstrap = bootstrap
 globalThis.tabler = tabler
+globalThis.dmp = dmp
 
 // dmp.prototype.diff_wordsToChars_ = function(text1, text2){
 function diff_wordsToChars_(text1, text2) {
@@ -57,4 +58,41 @@ function diff_wordsToChars_(text1, text2) {
 }
 
 globalThis.diff_wordsToChars_ = diff_wordsToChars_;
-globalThis.dmp = dmp
+
+function difflibAddRmWords(text1, text2) {
+    // Mark punctuation with special character
+    text1 = text1.replace(/([^\w\s]+)/g, '\f@$1@\f');
+    text2 = text2.replace(/([^\w\s]+)/g, '\f@$1@\f');
+
+    // Compute the differences
+    // let dmp = globalThis.dmp;
+    let wordsToChars = globalThis.diff_wordsToChars_(text1, text2);
+    let diffs = dmp.diff_main(wordsToChars.chars1, wordsToChars.chars2, false);
+
+    // Convert the diff back to words
+    dmp.diff_charsToLines_(diffs, wordsToChars.wordArray);
+
+    dmp.diff_cleanupSemantic(diffs);
+
+    // Process the differences
+    let result = [];
+    for (let [operation, data] of diffs) {
+        if (operation === 0 || data.search(/\w/)<0) {
+            result.push(data);
+        } else if (operation === -1) {
+            result.push(`<rm>${data}</rm>`);
+        } else if (operation === 1) {
+            result.push(`<add>${data}</add>`);
+        }
+    }
+
+    // Join the result into a single string and remove the special character
+    let diff = result.join('')
+    diff = diff.replace(/[@\f]/g, '');
+    diff = diff.replace(/(<(add|rm)>)(\W+)/g, '$3$1');
+    diff = diff.replace(/(\W+)(<\/(add|rm)>)/g, '$2$1');
+    diff = diff.replace(/\n/g, '<br>');
+    return diff;
+}
+
+dmp.difflibAddRmWords = difflibAddRmWords;

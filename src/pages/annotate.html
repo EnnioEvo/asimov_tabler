@@ -353,72 +353,50 @@ page-header-actions: visualization-header
 	}
 
 
-	function difflibAddRmWords(text1, text2) {
-		// Mark punctuation with special character
-		text1 = text1.replace(/([^\w\s]+)/g, '\f@$1@\f');
-		text2 = text2.replace(/([^\w\s]+)/g, '\f@$1@\f');
+	function updateIdentityLabelFromAmendment(amendmentData){
 
-		// Compute the differences
-		let dmp = globalThis.dmp;
-		let wordsToChars = globalThis.diff_wordsToChars_(text1, text2);
-		let diffs = dmp.diff_main(wordsToChars.chars1, wordsToChars.chars2, false);
-
-		// Convert the diff back to words
-		dmp.diff_charsToLines_(diffs, wordsToChars.wordArray);
-
-		dmp.diff_cleanupSemantic(diffs);
-
-		// Process the differences
-		let result = [];
-		for (let [operation, data] of diffs) {
-			if (operation === 0) {
-				result.push(data);
-			} else if (operation === -1) {
-				result.push(`<rm>${data}</rm>`);
-			} else if (operation === 1) {
-				result.push(`<add>${data}</add>`);
+		function fillIdentityComponent(other_ids, component, preamble){
+			component.style.display = 'none';
+			if (other_ids){
+				component.innerHTML = preamble;
+				other_ids.forEach((id) => {
+					let span = document.createElement('span');
+					span.className = 'badge bg-azure-lt';
+					span.dataset.id = id;
+					span.textContent = id;
+					span.addEventListener('click', function() {
+						let diff = dmp.difflibAddRmWords(
+							visualizationData.amendments_data[amendmentData.idx].body, 
+							visualizationData.amendments_data[id].body
+						);
+						amendmentContentDiv.innerHTML = diff;
+					});
+					component.appendChild(span);
+					component.appendChild(document.createTextNode(' '));
+				});
+				component.style.display = 'block';
 			}
 		}
 
-		// Join the result into a single string and remove the special character
-		let diff = result.join('')
-		// diff = diff.replace(/\s?<add>@(.*?)@<\/add>\s?/g, '$1');
-		// diff = diff.replace(/\s?<rm>@(.*?)@<\/rm>\s?/g, '$1');
-		diff = diff.replace(/[@\f]/g, '');
-		diff = diff.replace(/\n/g, '<br>');
-		return diff;
-	}
-
-
-	function updateIdentityLabelFromAmendment(amendmentData){
 		try {
-			var idts = amendmentData.identities.identical 
-			identicalComponent.style.display = 'none';
-			if (idts){
-				identicalComponent.innerHTML = 'Id. a '
-				idts.forEach((id) => {
-					identicalComponent.innerHTML += `<span class="badge bg-azure-lt" data-id="${id}">${id}</span> `;
-				});
-				identicalComponent.style.display = 'block';
-			};
-			var similars = amendmentData.identities.similar 
-			similarComponent.style.display = 'none';
-			if (similars){
-				similarComponent.innerHTML = 'Simile a ';
-				similars.forEach((id) => {
-					similarComponent.innerHTML += `<span class="badge bg-azure-lt" data-id="${id}">${id}</span> `;
-				});
-				similarComponent.style.display = 'block';
-			};
-			var relevants = amendmentData.identities.relevant 
-			relevantComponent.style.display = 'none';
-			if (relevants){
-				identicalComponent.innerHTML = 'Correlato a '
-				relevants.forEach((id) => {
-					relevantComponent.innerHTML += `<span class="badge bg-azure-lt" data-id="${id}">${id}</span> `;
-				});
-				relevantComponent.style.display = 'block';
-			};
+			var idts = amendmentData.identities.identical
+			fillIdentityComponent(
+				amendmentData.identities.identicals,
+				identicalComponent,
+				'Id. a '
+			);
+			
+			fillIdentityComponent(
+				amendmentData.identities.similar,
+				similarComponent,
+				'Simile a '
+			);
+
+			fillIdentityComponent(
+				amendmentData.identities.relevant,
+				relevantComponent,
+				'Correlato a '
+			);
 			
 		} catch (error) {
 			console.log(error)
@@ -428,6 +406,7 @@ page-header-actions: visualization-header
 	// Update the two columns with the corresponding data of the amendment
 	function updateColumns(amendmentKey) {
 			let amendmentData = visualizationData.amendments_data[amendmentKey];
+			amendmentData.idx = amendmentKey;
 			let articleKey = amendmentData.art_idx;
 			let articleContent = visualizationData.articles_data[articleKey];
 			selectedKey = amendmentKey
@@ -599,7 +578,8 @@ page-header-actions: visualization-header
 	}
 
 	document.addEventListener('keydown', function(event) {
-		if (event.altKey) {
+		// if (event.altKey) {
+		if (!document.activeElement.matches('#titolo, #sintesi')) {
 			let targetAmendment;
 			if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
 				event.preventDefault();
@@ -609,6 +589,7 @@ page-header-actions: visualization-header
 				navigateToAmendment('prev');
 			}
 		}
+		// }
 	});
 
 	// Call both functions and store their promises
