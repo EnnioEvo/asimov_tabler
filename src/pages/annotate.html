@@ -71,6 +71,8 @@ page-header-actions: visualization-header
 	<div class="card-body">
 		<div class="tab-content">
 			<div class="tab-pane active show" id="tabs-analysis">
+				<div class="mb-3 prototype" id="filter">
+                </div>
 				<div class="row g-0">
 					<label class="form-check form-switch" style="float: right; display: none;">
 						<input id="parallel-switch" class="form-check-input" type="checkbox" style="float: right;">
@@ -79,7 +81,7 @@ page-header-actions: visualization-header
 				</div>
 				<div class="card">
 					<div class="row g-0">
-						<div class="col-1 col-lg-1 col-xl-1 border-end" style="width: 6vw; ">
+						<div class="col-1 col-lg-1 col-xl-1 border-end" style="width: 6vw;">
 							<div class="card">
 								<div class="card-header" style="display: none;">
 								  <h3 class="card-title">Emendamenti</h3>
@@ -93,11 +95,12 @@ page-header-actions: visualization-header
 							</div>
 							<div class="card-body markdown scrollable" style="height: 47vh;" id="amendmentAnalysis">
 								<!-- Identities div  -->
-								<label class="prototype" id="identities">
+								<label id="identities">
 									<p style="margin-bottom: 3px;" id="identical"></p> 
 									<p style="margin-bottom: 3px;" id="similar"></p>
 									<p style="margin-bottom: 3px;" id="relevant"></p>
-								</label>	
+								</label>
+								<br>	
 								<strong>Titolo</strong>
 								<textarea id="titolo" style="width:36vw; resize: both;"></textarea>
 								<strong>Sintesi</strong>
@@ -223,6 +226,10 @@ page-header-actions: visualization-header
 	
 	var visualizationData;
 	var partialVisualizationData;
+
+	// filter utils
+	const tags = new Set();
+	const groups = new Set();
 
 	async function annotate() {
 		try {
@@ -352,6 +359,9 @@ page-header-actions: visualization-header
 		return text;
 	}
 
+	function collapseTags(html){
+		return html.replace(/<([a-z]+)[^<>]*>(.*?)<\/\1>/sgi, '$2');
+	}
 
 	function updateIdentityLabelFromAmendment(amendmentData){
 
@@ -366,9 +376,10 @@ page-header-actions: visualization-header
 					span.textContent = id;
 					span.addEventListener('click', function() {
 						let diff = dmp.difflibAddRmWords(
-							visualizationData.amendments_data[amendmentData.idx].body, 
-							visualizationData.amendments_data[id].body
+							collapseTags(visualizationData.amendments_data[amendmentData.idx].body), 
+							collapseTags(visualizationData.amendments_data[id].body)
 						);
+						diff = diff.replace(/^Emendamento /, '');
 						amendmentContentDiv.innerHTML = diff;
 					});
 					component.appendChild(span);
@@ -415,23 +426,21 @@ page-header-actions: visualization-header
 				articleContent='Articolo di riferimento non trovato.'
 			}
 
-			let content = ''
+			let amendmentContent = amendmentData.body
 			if(amendmentData.first_author){
-				let modifiedBody = amendmentData.body.replace(/^<strong>Emendamento.*?\n/, '');
+				let modifiedBody = amendmentContent.replace(/^<strong>Emendamento.*?\n/, '');
 				
-				content = `<b>${amendmentKey}</b>` +
+					amendmentContent = `<b>${amendmentKey}</b>` +
 							`<span class='pad'>\t\t${amendmentData.first_author}, ${amendmentData.group}<span><br>` +
 							`${modifiedBody}`;
 			}
-			else{
-				content = amendmentData.body
-			}
+			
 
-			content = replaceUnwantedTags(content);
+			amendmentContent = replaceUnwantedTags(amendmentContent);
 
 
 			// Set the content for the amendmentContentDiv and amendmentAnalysisDiv
-			amendmentContentDiv.innerHTML = content;
+			amendmentContentDiv.innerHTML = amendmentContent;
 			titoloComponent.value = amendmentData.titolo;
 			sintesiComponent.value = amendmentData.sintesi;
 			updateIdentityLabelFromAmendment(amendmentData)
@@ -476,7 +485,7 @@ page-header-actions: visualization-header
 			// Populate the offcanvas elements with quotation data
 			offcanvasTitle.textContent = quotationData.standardquote;
 			offcanvasTitle.href = quotationData.url;
-			quotationSummary.textContent = quotationData.note;
+			quotationSummary.innerHTML = markdownToHtml(quotationData.note);
 			quotationText.textContent = quotationData.quotetext.replace(/\W*il\W+presidente\W+della\W+repubblica.+emana\W+il\W+seguente\W+decreto\W*legge\W*/gsi, '');;
 
 			// Show the offcanvas
@@ -508,6 +517,10 @@ page-header-actions: visualization-header
 			let amendmentsData = visualizationData.amendments_data;
 			for (let emKey in amendmentsData) {
 				if (amendmentsData.hasOwnProperty(emKey)) {
+					//filter stuff
+					amendmentsData[emKey].classi.split(',').forEach(item => tags.add(item.trim()));
+					groups.add(amendmentsData[emKey].group);
+
 					let listItem = document.createElement('a');
 					listItem.href = '#';
 					listItem.className = 'list-group-item list-group-item-action';
@@ -528,8 +541,34 @@ page-header-actions: visualization-header
 			amendmentDiv.firstElementChild.click();
 		}
 
+		function createFilters() {
+			groups.forEach(group => {
+				if (group === null || group === '') {
+					group = "Nessun Gruppo";
+				}
+
+				const checkbox = document.createElement('input');
+				checkbox.type = "checkbox";
+				checkbox.classList.add("form-check-input");
+				checkbox.value = group;
+
+				const span = document.createElement('span');
+				span.classList.add("form-check-label");
+				span.appendChild(document.createTextNode(group));
+
+				const label = document.createElement('label');
+				label.classList.add("form-check");
+				label.appendChild(checkbox);
+				label.appendChild(span);
+
+				checkboxList = document.getElementById('filter');
+				checkboxList.appendChild(label);
+			})
+		}
+
 
 		populateAmendmentsList();
+		createFilters();
 
 		// View discarded text
 		discardedAmendmentsLabel = document.getElementById('discarded-amendments-label')
@@ -602,6 +641,9 @@ page-header-actions: visualization-header
 		
 		// Assuming visualizationData is your global variable to hold the visualization data
 		visualizationData = results[0];
+
+		//to delete
+		console.log(visualizationData);
 
 		// Process annotations and update visualizationData accordingly
 		const annotations = results[1];

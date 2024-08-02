@@ -150,6 +150,8 @@ page-header-actions: buttons
         listContainer.appendChild(rowTemplate);
     }
 
+    
+
     function addLoadingProject(projectName){
 		var listContainer = document.getElementById('projects_list');
         var rowTemplate = document.getElementById('item_template').cloneNode(true);
@@ -162,7 +164,12 @@ page-header-actions: buttons
         projectLink.removeAttribute('class');
         var deleteButton = rowTemplate.querySelector('[data-id="deleteButton"]');
         deleteButton.remove();
-        listContainer.appendChild(rowTemplate);
+        if (listContainer.firstChild) {
+            listContainer.insertBefore(rowTemplate, listContainer.firstChild);
+        } else {
+            listContainer.appendChild(rowTemplate);
+        }
+        return rowTemplate;
     }
 
 </script>

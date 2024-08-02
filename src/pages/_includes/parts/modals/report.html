@@ -137,7 +137,7 @@
         var formData = new FormData();
         formData.append('provision_file', provisionInput.files[0], provisionInput.files[0].name);
         formData.append('amendments_file', amendmentsInput.files[0], amendmentsInput.files[0].name);
-		addLoadingProject(projectNameInput.value)
+		loadingProjectElement = addLoadingProject(projectNameInput.value)
         try {
             const response = await fetch(`{{ site.data.endpoint[0].host }}/users/me/projects/?project_name=${projectNameInput.value}&institution=${selectedInstitution}`, {
                 method: 'POST',
@@ -148,7 +148,7 @@
 					'Authorization': `Bearer ${accessToken}`,
 				},
             });
-
+			loadingProjectElement.remove();
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
