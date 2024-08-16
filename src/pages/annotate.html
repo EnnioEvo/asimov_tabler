@@ -12,109 +12,221 @@ page-header-actions: visualization-header
 	document.documentElement.style.setProperty('--target-width', `84vw`);
 </script>
 <style>
-	\\ TODO make these two like these everywhere
-	.page-wrapper {
+	\\ TODO make these two like these everywhere .page-wrapper {
 		margin-left: 19vw;
 	}
-	.container-xl{
+
+	.container-xl {
 		margin-left: 1vw;
 		margin-right: 1vw;
 	}
-	\\ Dynamical half columns
-	:root {
-    --target-width: 84vw; /* Initial value, will be updated by JS */
+
+	\\ Dynamical half columns:root {
+		--target-width: 84vw;
+		/* Initial value, will be updated by JS */
 	}
-	.half-column{
+
+	.half-column {
 		width: calc((var(--target-width) - 6vw)/ 2);
 		/* width: 39vw */
 	}
-	.offcanvas-start{
+
+	.offcanvas-start {
 		width: 8vw;
 	}
-	.offcanvas-backdrop{
+
+	.offcanvas-backdrop {
 		display: none;
 	}
-	.form-switch .icon{
+
+	.form-switch .icon {
 		margin-right: 40px;
 		float: right;
 	}
-	add{
-        background: #cdff90;
-    }
-    rm{
-        color: red;
-        text-decoration: line-through;
-    }
-	.pad{
+
+	add {
+		background: #cdff90;
+	}
+
+	rm {
+		color: red;
+		text-decoration: line-through;
+	}
+
+	.pad {
 		margin: 5px;
 	}
-	.prototype{
+
+	.highlight {
+		background-color: yellow;
+	}
+
+	.prototype {
 		display: none;
+	}
+
+	.hidden {
+		display: none;
+	}
+
+	.icon-filter {
+		margin-right: 0;
+		width: 20;
+		height: 20;
+		padding-right: 6px;
 	}
 </style>
 
 
 <div class="card" style="width: 84.2vw; height: 96vh">
 	<div class="card-header">
-		<ul class="nav nav-tabs card-header-tabs{% if reverse %} flex-row-reverse{% endif %}{% if include.justified %} nav-fill{% endif %}" data-bs-toggle="tabs">
+		<ul class="nav nav-tabs card-header-tabs{% if reverse %} flex-row-reverse{% endif %}{% if include.justified %} nav-fill{% endif %}"
+			data-bs-toggle="tabs">
 			<li class="nav-item">
-				<a href="#tabs-analysis" class="nav-link active" data-bs-toggle="tab">{% include ui/icon.html icon="book" class=icon-class %}</a>
+				<a href="#tabs-analysis" class="nav-link active" data-bs-toggle="tab">{% include ui/icon.html
+					icon="book" class=icon-class %}</a>
 			</li>
 			<li class="nav-item">
-				<a href="#tabs-chat" class="nav-link" data-bs-toggle="tab">{% include ui/icon.html icon="messages" class=icon-class %}</a>
+				<a href="#tabs-chat" class="nav-link" data-bs-toggle="tab">{% include ui/icon.html icon="messages"
+					class=icon-class %}</a>
 			</li>
 			<li class="nav-item">
-				<a href="#tabs-checks" class="nav-link" data-bs-toggle="tab">{% include ui/icon.html icon="flag-2" class=icon-class %}</a>
+				<a href="#tabs-checks" class="nav-link" data-bs-toggle="tab">{% include ui/icon.html icon="flag-2"
+					class=icon-class %}</a>
 			</li>
 		</ul>
 	</div>
 	<div class="card-body">
-		<div class="tab-content">
+		<div class="tab-content d-flex flex-row">
 			<div class="tab-pane active show" id="tabs-analysis">
-				<div class="mb-3 prototype" id="filter">
-                </div>
 				<div class="row g-0">
 					<label class="form-check form-switch" style="float: right; display: none;">
 						<input id="parallel-switch" class="form-check-input" type="checkbox" style="float: right;">
 						{% include ui/icon.html icon="letter-case-toggle" class=icon-class%}
 					</label>
 				</div>
+				<div class="mb-3 prototype" id="filter">
+					<div class="d-flex flex-row">
+						<div class="dropdown flex-fill me-1">
+							<div class="input-group">
+								<span class="input-group-text">
+									<!-- Download SVG icon from http://tabler-icons.io/i/search -->
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+										fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+										stroke-linejoin="round" class="icon">
+										<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+										<path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
+										<path d="M21 21l-6 -6"></path>
+									</svg>
+								</span>
+								<input type="text" value="" class="form-control" placeholder="Search…"
+									aria-label="Search in website" id="search-input">
+								<button class="btn btn-outline-primary" type="button" id="search-filter-button">
+									<svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 0;"
+										class="icon-tabler icon-tabler-arrow-right" width="20" height="20"
+										viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+										stroke-linecap="round" stroke-linejoin="round">
+										<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+										<path d="M5 12l14 0" />
+										<path d="M13 18l6 -6" />
+										<path d="M13 6l6 6" />
+									</svg>
+								</button>
+							</div>
+							<div class="dropdown-menu w-100 p-3 overflow-auto" style="max-height: 75vh;"
+								id="search-preview"></div>
+						</div>
+						<button class="btn btn-outline-primary disabled mx-1" type="button" id="reset-filters-button">
+							{% include ui/icon.html icon="rotate-clockwise" color="green" size="lg" class="icon-tabler
+							icons-tabler-outline icon-tabler-rotate-clockwise icon-filter" %}
+						</button>
+						<button class="btn btn-outline-primary ms-1" id="toggle-more-options">
+							<svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 0;" width="20" height="20"
+								viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+								stroke-linecap="round" stroke-linejoin="round"
+								class="icon-tabler icons-tabler-outline icon-tabler-adjustments">
+								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+								<path d="M4 10a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+								<path d="M6 4v4" />
+								<path d="M6 12v8" />
+								<path d="M10 16a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+								<path d="M12 4v10" />
+								<path d="M12 18v2" />
+								<path d="M16 7a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+								<path d="M18 4v1" />
+								<path d="M18 9v11" />
+							</svg>
+						</button>
+					</div>
+
+					<div id="advanced-div" style="display: none;">
+						<div class="d-flex flex-row my-2">
+							<div class="dropdown w-50 me-2">
+								<div class="subheader mb-2">Gruppo parlamentare</div>
+								<button class="form-select text-start w-100" type="button" id="group-filter-button"
+									data-bs-toggle="dropdown" aria-expanded="false">
+									Seleziona Gruppo
+								</button>
+								<div class="dropdown-menu w-100" id="group-filter"></div>
+							</div>
+
+							<div class="dropdown w-50 ms-2">
+								<div class="subheader mb-2">Tag</div>
+								<button class="form-select text-start w-100" type="button" id="tag-filter-button"
+									data-bs-toggle="dropdown" aria-expanded="false">
+									Seleziona Tag
+								</button>
+								<div class="dropdown-menu w-100" id="tag-filter"></div>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
 				<div class="card">
 					<div class="row g-0">
 						<div class="col-1 col-lg-1 col-xl-1 border-end" style="width: 6vw;">
 							<div class="card">
 								<div class="card-header" style="display: none;">
-								  <h3 class="card-title">Emendamenti</h3>
+									<h3 class="card-title">Emendamenti</h3>
 								</div>
-								<div class="list-group list-group-flush scrollable overflow-auto" style="height: 85vh;" id="amendmentIdxs">
+								<div class="list-group list-group-flush scrollable overflow-auto" style="height: 85vh;"
+									id="amendmentIdxs">
 								</div>
-							  </div>
+							</div>
 						</div>
 						<div class="d-flex flex-column half-column">
-							<div class="card-body markdown scrollable" style="height: 38vh; white-space: pre-line;" id="amendmentContent">
+							<div class="card-body markdown scrollable" style="height: 38vh; white-space: pre-line;"
+								id="amendmentContent">
 							</div>
 							<div class="card-body markdown scrollable" style="height: 47vh;" id="amendmentAnalysis">
 								<!-- Identities div  -->
 								<label id="identities">
-									<p style="margin-bottom: 3px;" id="identical"></p> 
+									<p style="margin-bottom: 3px;" id="identical"></p>
 									<p style="margin-bottom: 3px;" id="similar"></p>
 									<p style="margin-bottom: 3px;" id="relevant"></p>
 								</label>
-								<br>	
+								<br>
 								<strong>Titolo</strong>
 								<textarea id="titolo" style="width:36vw; resize: both;"></textarea>
 								<strong>Sintesi</strong>
 								<textarea id="sintesi" style="width:36vw; resize: both;"></textarea>
 								<div id="saveButton">
-									{% include ui/button.html icon="device-floppy" icon-only=true class="btn-outline-primary"%}
+									{% include ui/button.html icon="device-floppy" icon-only=true
+									class="btn-outline-primary"%}
 								</div>
-								<label id="esito" class="half-column" style="display: flex; justify-content: center; align-items: center;"></label>
-								<label id="successLabel" style="display: none;">{% include ui/icon.html icon="circle-check" color="green" size="lg" class="mb-2" %}</label>
-								<label id="failureLabel" style="display: none;">{% include ui/icon.html icon="circle-x" color="red" size="lg" class="mb-2" %}</label>
+								<label id="esito" class="half-column"
+									style="display: flex; justify-content: center; align-items: center;"></label>
+								<label id="successLabel" style="display: none;">{% include ui/icon.html
+									icon="circle-check" color="green" size="lg" class="mb-2" %}</label>
+								<label id="failureLabel" style="display: none;">{% include ui/icon.html icon="circle-x"
+									color="red" size="lg" class="mb-2" %}</label>
 							</div>
 						</div>
-						<div class="col-6 col-lg-6 col-xl-6 d-flex flex-column half-column" style="width:33vw; white-space: pre-line;">
-							<div class="card-body markdown scrollable" style="height: 85vh; white-space: pre-line;" id="articleContent"></div>
+						<div class="col-6 col-lg-6 col-xl-6 d-flex flex-column half-column"
+							style="width:33vw; white-space: pre-line;">
+							<div class="card-body markdown scrollable" style="height: 85vh; white-space: pre-line;"
+								id="articleContent"></div>
 						</div>
 					</div>
 				</div>
@@ -128,18 +240,20 @@ page-header-actions: visualization-header
 						<div class="ribbon bg-primary">Novità</div>
 						<div class="card-body">
 							<details>
-							<summary class="card-title">{% include ui/icon.html icon="plus" class=icon-class %} Scartato dal fascicolo</summary>
-							<p class="text" id="discarded-amendments-label"></p>
-						  </details>
-						  <h3 ></h3>
-						  <p ></p>
+								<summary class="card-title">{% include ui/icon.html icon="plus" class=icon-class %}
+									Scartato dal fascicolo</summary>
+								<p class="text" id="discarded-amendments-label"></p>
+							</details>
+							<h3></h3>
+							<p></p>
 						</div>
-					  </div>
+					</div>
 					<div class="card">
 						<div class="ribbon bg-primary">Novità</div>
 						<div class="card-body">
 							<details>
-								<summary class="card-title">{% include ui/icon.html icon="plus" class=icon-class %} Scartato dal provvedimento</summary>
+								<summary class="card-title">{% include ui/icon.html icon="plus" class=icon-class %}
+									Scartato dal provvedimento</summary>
 								<p class="text" id="discarded-provision-label"></p>
 							</details>
 						</div>
@@ -148,8 +262,10 @@ page-header-actions: visualization-header
 						<div class="ribbon bg-primary">In arrivo</div>
 						<div class="card-body">
 							<details>
-								<summary class="card-title">{% include ui/icon.html icon="plus" class=icon-class %} Altri controlli</summary>
-								<p class="text" id="other-checks-label">I controlli di sicurezza non sono stati riportati.</p>
+								<summary class="card-title">{% include ui/icon.html icon="plus" class=icon-class %}
+									Altri controlli</summary>
+								<p class="text" id="other-checks-label">I controlli di sicurezza non sono stati
+									riportati.</p>
 							</details>
 						</div>
 					</div>
@@ -170,28 +286,33 @@ page-header-actions: visualization-header
 	</div>
 </div>
 
-<div class="offcanvas offcanvas-start" style="width: 18vw; resize: horizontal;" tabindex="-1" id="offcanvasStart" aria-labelledby="offcanvasStartLabel">
+<div class="offcanvas offcanvas-start" style="width: 18vw; resize: horizontal;" tabindex="-1" id="offcanvasStart"
+	aria-labelledby="offcanvasStartLabel">
 	<div class="offcanvas-header">
-		<h2 class="offcanvas-title" ><a id="offcanvasHeader" href="" target="_blank">Start offcanvas</a></h2>
-		<button id="closeOffcanvasButton" type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+		<h2 class="offcanvas-title"><a id="offcanvasHeader" href="" target="_blank">Start offcanvas</a></h2>
+		<button id="closeOffcanvasButton" type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+			aria-label="Close"></button>
 	</div>
 	<div class="offcanvas-body">
 		<strong>Sintesi</strong>
 		<p id="quotationSummary"></p>
 		<strong>Testo</strong>
 		<p id="quotationText" style="white-space: pre-line;"></p>
-		<div class="resize-handle" style="width: 5px; height: 100%; position: absolute; top: 0; right: 0; cursor: ew-resize;"></div>
+		<div class="resize-handle"
+			style="width: 5px; height: 100%; position: absolute; top: 0; right: 0; cursor: ew-resize;"></div>
 	</div>
 </div>
 <style>
-.quotation {
-    position: relative;
-    display: inline;
-    cursor: pointer;
-    color: blue;           /* Set the text color to blue */
-    text-decoration: underline; /* Underline the text to mimic a link */
-    background-color: inherit;
-}
+	.quotation {
+		position: relative;
+		display: inline;
+		cursor: pointer;
+		color: blue;
+		/* Set the text color to blue */
+		text-decoration: underline;
+		/* Underline the text to mimic a link */
+		background-color: inherit;
+	}
 </style>
 
 <script>
@@ -213,6 +334,10 @@ page-header-actions: visualization-header
 	const parallelSwitch = document.getElementById('parallel-switch');
 	var selectedKey;
 
+	//used for active workd filtering
+	let isWordFiltering = false;
+	let currentlyFilteredWord = '';
+
 	document.addEventListener('DOMContentLoaded', function () {
 		// Initialize the amendment content as needed here
 	});
@@ -222,8 +347,8 @@ page-header-actions: visualization-header
 	let offcanvas = document.getElementById('offcanvasStart')
 	let offCanvasBody = document.querySelector('.offcanvas-body');
 	let offcanvasToggleBtn = document.querySelector('a[data-bs-toggle="offcanvas"]');
-    
-	
+
+
 	var visualizationData;
 	var partialVisualizationData;
 
@@ -348,35 +473,35 @@ page-header-actions: visualization-header
 	function replaceUnwantedTags(text) {
 		// Replace <span...> and </span> with placeholders br
 		text = text.replace(/<(\/?span.*?|\/?strong|\/?b|\/?br)>/g, '@$1@');
-		
+
 		// Replace remaining < and > with temporary placeholders
 		text = text.replace(/<+/g, '«');
 		text = text.replace(/>+/g, '»');
-		
+
 		// Replace placeholders back to original tags
 		text = text.replace(/@(\/?span.*?|\/?strong|\/?b|\/?br)@/g, '<$1>');
-		
+
 		return text;
 	}
 
-	function collapseTags(html){
+	function collapseTags(html) {
 		return html.replace(/<([a-z]+)[^<>]*>(.*?)<\/\1>/sgi, '$2');
 	}
 
-	function updateIdentityLabelFromAmendment(amendmentData){
+	function updateIdentityLabelFromAmendment(amendmentData) {
 
-		function fillIdentityComponent(other_ids, component, preamble){
+		function fillIdentityComponent(other_ids, component, preamble) {
 			component.style.display = 'none';
-			if (other_ids){
+			if (other_ids) {
 				component.innerHTML = `<i>${preamble}</i>`;
 				other_ids.forEach((id) => {
 					let span = document.createElement('span');
 					span.className = 'badge bg-azure-lt';
 					span.dataset.id = id;
 					span.textContent = id;
-					span.addEventListener('click', function() {
+					span.addEventListener('click', function () {
 						let diff = dmp.difflibAddRmWords(
-							collapseTags(visualizationData.amendments_data[amendmentData.idx].body), 
+							collapseTags(visualizationData.amendments_data[amendmentData.idx].body),
 							collapseTags(visualizationData.amendments_data[id].body)
 						);
 						diff = diff.replace(/^Emendamento /, '');
@@ -396,7 +521,7 @@ page-header-actions: visualization-header
 				identicalComponent,
 				'Id. a '
 			);
-			
+
 			fillIdentityComponent(
 				amendmentData.identities.similar,
 				similarComponent,
@@ -408,75 +533,98 @@ page-header-actions: visualization-header
 				relevantComponent,
 				'Correlato a '
 			);
-			
+
 		} catch (error) {
 			console.log(error)
 		}
 	}
 
+	function highlightText(text, term) {
+		// Escape special characters in the term to use in the regex
+		const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+		const regex = new RegExp(`(${escapedTerm})`, 'gi');
+		// Split text into parts with the regex
+		const parts = text.split(regex);
+
+		// Handle leading and trailing spaces with &nbsp;
+		const taggedText = parts.map(part => {
+			if (regex.test(part)) {
+				return `<span class="bg-yellow-lt">${part}</span>`;
+			} else {
+				// Replace spaces with &nbsp; only if they are at the beginning or end
+				return part.replace(/^ /g, '&nbsp;').replace(/ $/g, '&nbsp;');
+			}
+		}).join('');
+
+		return `<span class="text-wrap">${taggedText}</span>`;
+	}
+
 	// Update the two columns with the corresponding data of the amendment
 	function updateColumns(amendmentKey) {
-			let amendmentData = visualizationData.amendments_data[amendmentKey];
-			amendmentData.idx = amendmentKey;
-			let articleKey = amendmentData.art_idx;
-			let articleContent = visualizationData.articles_data[articleKey];
-			selectedKey = amendmentKey
+		let amendmentData = visualizationData.amendments_data[amendmentKey];
+		amendmentData.idx = amendmentKey;
+		let articleKey = amendmentData.art_idx;
+		let articleContent = visualizationData.articles_data[articleKey];
+		selectedKey = amendmentKey;
 
-			if(articleContent==null){
-				articleContent='Articolo di riferimento non trovato.'
-			}
-
-			let amendmentContent = amendmentData.body
-			if(amendmentData.first_author){
-				let modifiedBody = amendmentContent.replace(/^<strong>Emendamento.*?\n/, '');
-				
-					amendmentContent = `<b>${amendmentKey}</b>` +
-							`<span class='pad'>\t\t${amendmentData.first_author}, ${amendmentData.group}<span><br>` +
-							`${modifiedBody}`;
-			}
-			
-
-			amendmentContent = replaceUnwantedTags(amendmentContent);
-
-
-			// Set the content for the amendmentContentDiv and amendmentAnalysisDiv
-			amendmentContentDiv.innerHTML = amendmentContent;
-			titoloComponent.value = amendmentData.titolo;
-			sintesiComponent.value = amendmentData.sintesi;
-			updateIdentityLabelFromAmendment(amendmentData)
-
-			//Adjust textarea heigth
-			titoloComponent.style.height = ""; // Reset the height to auto
-            titoloComponent.style.height = titoloComponent.scrollHeight + "px"; 
-			sintesiComponent.style.height = ""; // Reset the height to auto
-            sintesiComponent.style.height = sintesiComponent.scrollHeight + "px"; 
-
-			// Remove success/failure outcom
-			document.getElementById('esito').innerHTML = '';
-
-			// Set the content for the articleContentDiv
-			if (parallelSwitch.checked && amendmentData.parallel){
-				articleContentDiv.innerHTML = amendmentData.parallel;
-			}
-			else{
-				articleContentDiv.innerHTML = articleContent;
-			}
-
-			// Scroll back to the top of the content
-			amendmentContentDiv.scrollTop = 0;
-			articleContentDiv.scrollTop = 0;
-
-			// Highlight the active amendment in the list
-			document.querySelectorAll('.list-group-item').forEach((item) => {
-				item.classList.remove('active');
-			});
-			currentAm = document.querySelector(`[data-amendment-key="${amendmentKey}"]`)
-			currentAm.classList.add('active');
-			currentAm.ariaCurrent="true"
+		if (articleContent == null) {
+			articleContent = 'Articolo di riferimento non trovato.'
 		}
 
+		let amendmentContent = amendmentData.body
+		if (amendmentData.first_author) {
+			let modifiedBody = amendmentContent.replace(/^<strong>Emendamento.*?\n/, '');
+
+			amendmentContent = `<b>${amendmentKey}</b>` +
+				`<span class='pad'>\t\t${amendmentData.first_author.trim()}${amendmentData.group ? ", " + amendmentData.group : ""}<span><br>` +
+				`${modifiedBody}`;
+		}
+
+		amendmentContent = replaceUnwantedTags(amendmentContent);
+
+		// Set the content for the amendmentContentDiv and amendmentAnalysisDiv
+		amendmentContentDiv.innerHTML = amendmentContent;
+		titoloComponent.value = amendmentData.titolo;
+		sintesiComponent.value = amendmentData.sintesi;
+		if (isWordFiltering) {
+			amendmentContentDiv.innerHTML = highlightText(amendmentContent, currentlyFilteredWord);
+			//titoloComponent.value = highlightText(amendmentData.titolo, currentlyFilteredWord);
+			//sintesiComponent.value = highlightText(amendmentData.sintesi, currentlyFilteredWord);
+		}
+		updateIdentityLabelFromAmendment(amendmentData)
+
+		//Adjust textarea heigth
+		titoloComponent.style.height = ""; // Reset the height to auto
+		titoloComponent.style.height = titoloComponent.scrollHeight + "px";
+		sintesiComponent.style.height = ""; // Reset the height to auto
+		sintesiComponent.style.height = sintesiComponent.scrollHeight + "px";
+
+		// Remove success/failure outcom
+		document.getElementById('esito').innerHTML = '';
+
+		// Set the content for the articleContentDiv
+		if (parallelSwitch.checked && amendmentData.parallel) {
+			articleContentDiv.innerHTML = amendmentData.parallel;
+		}
+		else {
+			articleContentDiv.innerHTML = articleContent;
+		}
+
+		// Scroll back to the top of the content
+		amendmentContentDiv.scrollTop = 0;
+		articleContentDiv.scrollTop = 0;
+
+		// Highlight the active amendment in the list
+		document.querySelectorAll('.list-group-item').forEach((item) => {
+			item.classList.remove('active');
+		});
+		currentAm = document.querySelector(`[data-amendment-key="${amendmentKey}"]`)
+		currentAm.classList.add('active');
+		currentAm.ariaCurrent = "true"
+	}
+
 	function showQuotation(quote_id) {
-		const quotationData = visualizationData.quotations_data[quote_id-1];
+		const quotationData = visualizationData.quotations_data[quote_id - 1];
 		if (quotationData) {
 			const offcanvasTitle = document.getElementById('offcanvasHeader');
 			const quotationSummary = document.getElementById('quotationSummary');
@@ -493,17 +641,18 @@ page-header-actions: visualization-header
 
 			// following is to prevent offcanvas adding 'focusing' event
 			// bad practice since it disable adding new events to document
-			document.addEventListener = function(type, listener, options) {
-			console.warn(`Prevented adding event listener of type "${type}"`);};
+			document.addEventListener = function (type, listener, options) {
+				console.warn(`Prevented adding event listener of type "${type}"`);
+			};
 		}
 	}
 
-	function addEventToQuotations(){
+	function addEventToQuotations() {
 		// Add event listeners to all span elements with data-quoteid
 		spans = document.querySelectorAll('span[data-quoteid]')
 		spans.forEach(span => {
 			span.classList.add('quotation');
-			span.addEventListener('click', function() {
+			span.addEventListener('click', function () {
 				const quote_id = this.getAttribute('data-quoteid');
 				// When the span is clicked, call showQuotation function
 				showQuotation(quote_id);
@@ -511,7 +660,7 @@ page-header-actions: visualization-header
 		});
 	}
 
-	function fill_visualization(){
+	function fill_visualization() {
 		// Fill the first column with the ids of the amendments
 		function populateAmendmentsList() {
 			let amendmentsData = visualizationData.amendments_data;
@@ -524,7 +673,7 @@ page-header-actions: visualization-header
 					let listItem = document.createElement('a');
 					listItem.href = '#';
 					listItem.className = 'list-group-item list-group-item-action';
-					"list-group-item list-group-item-action active" 
+					"list-group-item list-group-item-action active"
 					listItem.textContent = emKey;
 					// Set the data attribute to store the amendment key for later use
 					listItem.dataset.amendmentKey = emKey;
@@ -537,35 +686,308 @@ page-header-actions: visualization-header
 					amendmentDiv.appendChild(listItem);
 				}
 			}
-
 			amendmentDiv.firstElementChild.click();
 		}
 
 		function createFilters() {
-			groups.forEach(group => {
-				if (group === null || group === '') {
-					group = "Nessun Gruppo";
+			const searchInput = document.getElementById('search-input');
+			const searchPreview = document.getElementById('search-preview');
+			const resetFiltersBtn = document.getElementById('reset-filters-button');
+
+			document.getElementById('toggle-more-options').addEventListener('click', event => {
+				const advancedDiv = document.getElementById('advanced-div');
+				advancedDiv.style.display = advancedDiv.style.display === 'block' ? 'none' : 'block';
+			});
+
+			function filterAmendments(event) {
+				const amendmentList = Array.from(amendmentDiv.children);
+				const cbTags = document.querySelectorAll('input[data-filter="tag"]:checked');
+				const cbGroups = document.querySelectorAll('input[data-filter="group"]:checked');
+
+
+				const selectedTags = new Set(Array.from(cbTags).map(cb => cb.value));
+				const selectedGroups = new Set(Array.from(cbGroups).map(cb => cb.value));
+				const searchQuery = isWordFiltering ? searchInput.value.toLowerCase() : '';
+				let preFilteredItems = [];
+				if (searchQuery) {
+					preFilteredItems = Object.entries(visualizationData.amendments_data)
+						.filter(([amKey, am]) => {
+							return (am.titolo.toLowerCase().includes(searchQuery) ||
+								am.sintesi.toLowerCase().includes(searchQuery) ||
+								collapseTags(am.body).toLowerCase().includes(searchQuery) ||
+								am.first_author.trim().toLowerCase().includes(searchQuery))
+						})
+						.map(([amKey, am]) => amKey);
 				}
 
-				const checkbox = document.createElement('input');
-				checkbox.type = "checkbox";
-				checkbox.classList.add("form-check-input");
-				checkbox.value = group;
+				if (selectedTags.size > 0) {
+					document.getElementById('tag-filter-button').textContent = 'Selezione';
+				} else {
+					document.getElementById('tag-filter-button').textContent = 'Seleziona Tag';
+				}
 
-				const span = document.createElement('span');
-				span.classList.add("form-check-label");
-				span.appendChild(document.createTextNode(group));
+				if (selectedGroups.size > 0) {
+					document.getElementById('group-filter-button').textContent = 'Selezione';
+				} else {
+					document.getElementById('group-filter-button').textContent = 'Seleziona Gruppo';
+				}
 
-				const label = document.createElement('label');
-				label.classList.add("form-check");
-				label.appendChild(checkbox);
-				label.appendChild(span);
+				// make clickable or disable reset filter button
+				// put here since every change on the filters calls this function
+				if (searchQuery || selectedTags.size > 0 || selectedGroups.size > 0) {
+					resetFiltersBtn.classList.remove('disabled');
+				} else {
+					resetFiltersBtn.classList.add('disabled');
+				}
 
-				checkboxList = document.getElementById('filter');
-				checkboxList.appendChild(label);
-			})
+				amendmentList.forEach(child => {
+					const tagList = visualizationData.amendments_data[child.dataset.amendmentKey].classi.split(',').map(s => s.trim());
+					if ((selectedTags.size === 0 || tagList.some(item => selectedTags.has(item))) &&
+						(selectedGroups.size === 0 || selectedGroups.has(visualizationData.amendments_data[child.dataset.amendmentKey].group)) &&
+						(!searchQuery || preFilteredItems.includes(child.dataset.amendmentKey))) {
+						child.classList.remove('hidden');
+					} else {
+						child.classList.add('hidden');
+					}
+				});
+
+				// simulate click on the first filtered amendment
+				const firstFilteredAm = amendmentDiv.querySelector(':not(.hidden)');
+				if (firstFilteredAm) {
+					updateColumns(firstFilteredAm.dataset.amendmentKey);
+					addEventToQuotations();
+				}
+			}
+
+			function resetFilters() {
+				//resets all filtered checkboxes
+				document.querySelectorAll('input[data-filter="tag"]:checked').forEach(cb => cb.checked = false);
+				document.querySelectorAll('input[data-filter="group"]:checked').forEach(cb => cb.checked = false);
+
+				//resets content of search field
+				searchInput.value = '';
+
+				//disables word filtering
+				isWordFiltering = false;
+				currentlyFilteredWord = '';
+
+				//triggers filterAmendments to actually display all
+				filterAmendments(event);
+			}
+
+			function createPreviewList(filteredItems, searchQuery) {
+				const maxVisibleItemsPerCategory = 4;
+
+				const wrapper = document.createElement('div');
+				wrapper.classList.add('mb-3');
+
+				const categoryPreview = document.createElement('div');
+				categoryPreview.classList.add('border', 'rounded');
+				filteredItems.forEach(([key, item], iterIndex) => {
+					const itemText = key.bold() + '&nbsp' + item;
+					const highlightedText = highlightText(itemText, searchQuery);
+					const previewItem = document.createElement('div');
+					previewItem.classList.add('dropdown-item');
+					if (iterIndex > 0) {
+						previewItem.classList.add('border-top');
+					}
+					if (iterIndex >= maxVisibleItemsPerCategory) {
+						previewItem.style.display = 'none';
+					}
+					previewItem.innerHTML = highlightedText;
+					previewItem.addEventListener('click', event => {
+						resetFilters();
+						const selAm = document.querySelector(`[data-amendment-key="${key}"]`);
+						selAm.click();
+						selAm.scrollIntoView({ block: 'start' });
+						searchPreview.classList.remove('show');
+					});
+					categoryPreview.appendChild(previewItem);
+				});
+
+				wrapper.appendChild(categoryPreview);
+
+				if (filteredItems.length >= maxVisibleItemsPerCategory) {
+					const showMoreLink = document.createElement('a');
+					showMoreLink.href = '#!';
+					//showMoreLink.classList.add('dropdown-item');
+					showMoreLink.textContent = 'Mostra altro...';
+					showMoreLink.addEventListener('click', function (event) {
+						event.preventDefault();
+						for (child of categoryPreview.children) {
+							child.style.display = 'block';
+						}
+						showMoreLink.style.display = 'none';
+					});
+					wrapper.append(showMoreLink);
+				}
+
+				searchPreview.append(wrapper);
+			}
+
+			function generateSearchPreview(searchQuery) {
+				// filters stuff converting it into an array [[key1,value1], [key2, value2], ...]
+				const filteredTitle = Object.entries(visualizationData.amendments_data)
+					.filter(([amKey, am]) => {
+						return am.titolo.toLowerCase().includes(searchQuery);
+					})
+					.map(([amKey, am]) => [amKey, am.titolo]);
+
+				const filteredSynthesis = Object.entries(visualizationData.amendments_data)
+					.filter(([amKey, am]) => {
+						return am.sintesi.toLowerCase().includes(searchQuery);
+					})
+					.map(([amKey, am]) => [amKey, am.sintesi]);
+
+				const filteredBody = Object.entries(visualizationData.amendments_data)
+					.filter(([amKey, am]) => {
+						return collapseTags(am.body).toLowerCase().includes(searchQuery);
+					})
+					.map(([amKey, am]) => [amKey, collapseTags(am.body)]);
+
+				const filteredAuthor = Object.entries(visualizationData.amendments_data)
+					.filter(([amKey, am]) => {
+						return am.first_author.trim().toLowerCase().includes(searchQuery);
+					})
+					.map(([amKey, am]) => [amKey, am.first_author.trim()]);
+
+				if (filteredTitle.length > 0) {
+					const lblTitle = document.createElement('div');
+					lblTitle.classList.add('subheader', 'mb-2');
+					lblTitle.textContent = 'Titoli';
+					searchPreview.appendChild(lblTitle);
+					createPreviewList(filteredTitle, searchQuery);
+				}
+
+				if (filteredSynthesis.length > 0) {
+					const lblSynthesis = document.createElement('div');
+					lblSynthesis.classList.add('subheader', 'mb-2');
+					lblSynthesis.textContent = 'Sintesi';
+					searchPreview.appendChild(lblSynthesis);
+					createPreviewList(filteredSynthesis, searchQuery);
+				}
+
+				if (filteredBody.length > 0) {
+					const lblBody = document.createElement('div');
+					lblBody.classList.add('subheader', 'mb-2');
+					lblBody.textContent = 'Contenuto emendamenti';
+					searchPreview.appendChild(lblBody);
+					createPreviewList(filteredBody, searchQuery);
+				}
+
+				if (filteredAuthor.length > 0) {
+					const lblAuthor = document.createElement('div');
+					lblAuthor.classList.add('subheader', 'mb-2');
+					lblAuthor.textContent = 'Autore';
+					searchPreview.appendChild(lblAuthor);
+					createPreviewList(filteredAuthor, searchQuery);
+				}
+
+				if ((filteredTitle.length === 0) && (filteredSynthesis.length === 0) && (filteredBody.length === 0) && (filteredAuthor.length === 0)) {
+					const noResultsItem = document.createElement('div');
+					noResultsItem.classList.add('dropdown-item', 'text-muted');
+					noResultsItem.style.pointerEvents = 'none'; // Make it non-clickable
+					noResultsItem.textContent = 'Nessun risultato';
+					searchPreview.appendChild(noResultsItem);
+				}
+			}
+
+			searchInput.addEventListener('input', event => {
+				const searchQuery = event.target.value.toLowerCase();
+				searchPreview.innerHTML = '';
+
+				if (searchQuery) {
+					generateSearchPreview(searchQuery)
+					searchPreview.classList.add('show');
+				} else {
+					searchPreview.classList.remove('show');
+				}
+
+			});
+
+			// Hide preview when clicking outside
+			document.addEventListener('click', (event) => {
+				if (!searchInput.contains(event.target) && !searchPreview.contains(event.target)) {
+					searchPreview.classList.remove('show');
+				} else {
+					if (searchInput.value && searchInput.contains(event.target)) {
+						searchPreview.classList.add('show');
+					}
+				}
+			});
+
+			function applyWordFilters() {
+				// check if there is content before filtering
+				if (searchInput.value.toLowerCase()) {
+					isWordFiltering = true;
+					currentlyFilteredWord = searchInput.value.toLowerCase();
+					//delegate filtering to the filterAmendments function
+					filterAmendments(event);
+					searchPreview.classList.remove('show');
+				}
+			}
+
+			searchInput.addEventListener('keydown', event => {
+				if (event.key === 'Enter') {
+					applyWordFilters();
+				}
+			});
+
+			document.getElementById('search-filter-button').addEventListener('click', event => {
+				applyWordFilters();
+			});
+
+			resetFiltersBtn.addEventListener('click', event => {
+				resetFilters();
+			});
+
+			const groupsDropdown = document.getElementById('group-filter');
+			const tagsDropdown = document.getElementById('tag-filter');
+
+			tags.forEach(tag => {
+				const tagCheckbox = document.createElement('input');
+				tagCheckbox.classList.add('form-check-input', 'm-0', 'me-2');
+				tagCheckbox.type = 'checkbox';
+				tagCheckbox.value = tag;
+				tagCheckbox.dataset.filter = 'tag'; //add data attribute to query select correct checkboxes
+				tagCheckbox.addEventListener('change', filterAmendments);
+
+
+				const tagLabel = document.createElement('label');
+				tagLabel.classList.add('dropdown-item');
+				tagLabel.appendChild(tagCheckbox);
+				tagLabel.appendChild(document.createTextNode(tag));
+
+				// used to avoid dropdown closing when clicking on the label
+				tagLabel.addEventListener('click', event => {
+					event.stopPropagation();
+				});
+
+				tagsDropdown.appendChild(tagLabel);
+
+			});
+
+			groups.forEach(group => {
+				const groupCheckbox = document.createElement('input');
+				groupCheckbox.classList.add('form-check-input', 'm-0', 'me-2');
+				groupCheckbox.type = 'checkbox';
+				groupCheckbox.value = group;
+				groupCheckbox.dataset.filter = 'group'; //add data attribute to query select correct checkboxes
+				groupCheckbox.addEventListener('change', filterAmendments);
+
+				const groupLabel = document.createElement('label');
+				groupLabel.classList.add('dropdown-item');
+				groupLabel.appendChild(groupCheckbox);
+				groupLabel.appendChild(document.createTextNode(group ? group : "Nessun gruppo"));
+
+				// used to avoid dropdown closing when clicking on the label
+				groupLabel.addEventListener('click', event => {
+					event.stopPropagation();
+				});
+
+				groupsDropdown.appendChild(groupLabel);
+			});
 		}
-
 
 		populateAmendmentsList();
 		createFilters();
@@ -581,14 +1003,14 @@ page-header-actions: visualization-header
 
 	document.addEventListener('DOMContentLoaded', function () {
 		function adjustOffcanvasWidth() {
-				const rect = amendmentContentDiv.getBoundingClientRect();
-				offcanvas.style.width = `${rect.left}px`; // Set the width
-			}
-    	adjustOffcanvasWidth();
+			const rect = amendmentContentDiv.getBoundingClientRect();
+			offcanvas.style.width = `${rect.left}px`; // Set the width
+		}
+		adjustOffcanvasWidth();
 		window.addEventListener('resize', adjustOffcanvasWidth);
 	});
 
-	document.getElementById('parallel-switch').addEventListener('change', function(event) {
+	document.getElementById('parallel-switch').addEventListener('change', function (event) {
 		updateColumns(selectedKey);
 		addEventToQuotations()
 	});
@@ -616,7 +1038,7 @@ page-header-actions: visualization-header
 		}
 	}
 
-	document.addEventListener('keydown', function(event) {
+	document.addEventListener('keydown', function (event) {
 		// if (event.altKey) {
 		if (!document.activeElement.matches('#titolo, #sintesi')) {
 			let targetAmendment;
@@ -638,12 +1060,9 @@ page-header-actions: visualization-header
 	Promise.all([fetch_visualization_data(), fetch_annotation_data()]).then((results) => {
 		// results[0] will be the data returned from fetch_visualization_data
 		// results[1] will be the data returned from fetch_annotation_data
-		
+
 		// Assuming visualizationData is your global variable to hold the visualization data
 		visualizationData = results[0];
-
-		//to delete
-		console.log(visualizationData);
 
 		// Process annotations and update visualizationData accordingly
 		const annotations = results[1];
@@ -661,15 +1080,15 @@ page-header-actions: visualization-header
 	}).catch(error => {
 		console.error("An error occurred:", error);
 	});
-	
+
 	var prototypes = document.getElementsByClassName('prototype');
-	
-	document.addEventListener('keypress', function(e) {
+
+	document.addEventListener('keypress', function (e) {
 		if (String.fromCharCode(e.which).toLowerCase() === 'x') {
 			e.preventDefault();
-		for (var i = 0; i < prototypes.length; i++) {
-			prototypes[i].style.display = prototypes[i].style.display === 'block' ? 'none' : 'block';
-		}
+			for (var i = 0; i < prototypes.length; i++) {
+				prototypes[i].style.display = prototypes[i].style.display === 'block' ? 'none' : 'block';
+			}
 		}
 	});
 
