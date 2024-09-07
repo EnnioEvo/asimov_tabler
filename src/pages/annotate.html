@@ -68,15 +68,23 @@ page-header-actions: visualization-header
 	.hidden {
 		display: none;
 	}
-
-	.icon-filter {
-		margin-right: 0;
-		width: 20;
-		height: 20;
-		padding-right: 6px;
+	
+	.dropdown-scroll {
+		max-height: 60vh;
 	}
-</style>
 
+	.star-icon {
+		cursor: pointer;
+		stroke: currentColor;
+		transition: color 0.3s ease;
+	}
+
+	.star-icon.selected {
+		fill: currentColor;
+	}
+
+	
+</style>
 
 <div class="card" style="width: 84.2vw; height: 96vh">
 	<div class="card-header">
@@ -110,78 +118,80 @@ page-header-actions: visualization-header
 						<div class="dropdown flex-fill me-1">
 							<div class="input-group">
 								<span class="input-group-text">
-									<!-- Download SVG icon from http://tabler-icons.io/i/search -->
-									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-										fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-										stroke-linejoin="round" class="icon">
-										<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-										<path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
-										<path d="M21 21l-6 -6"></path>
-									</svg>
+									{% include ui/icon.html icon="search" %}
 								</span>
 								<input type="text" value="" class="form-control" placeholder="Search…"
 									aria-label="Search in website" id="search-input">
 								<button class="btn btn-outline-primary" type="button" id="search-filter-button">
-									<svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 0;"
-										class="icon-tabler icon-tabler-arrow-right" width="20" height="20"
-										viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-										stroke-linecap="round" stroke-linejoin="round">
-										<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-										<path d="M5 12l14 0" />
-										<path d="M13 18l6 -6" />
-										<path d="M13 6l6 6" />
-									</svg>
+									{% include ui/icon.html icon="arrow-right" class="m-0"%}
 								</button>
 							</div>
 							<div class="dropdown-menu w-100 p-3 overflow-auto" style="max-height: 75vh;"
 								id="search-preview"></div>
 						</div>
-						<button class="btn btn-outline-primary disabled mx-1" type="button" id="reset-filters-button">
-							{% include ui/icon.html icon="rotate-clockwise" color="green" size="lg" class="icon-tabler
-							icons-tabler-outline icon-tabler-rotate-clockwise icon-filter" %}
-						</button>
 						<button class="btn btn-outline-primary ms-1" id="toggle-more-options">
-							<svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 0;" width="20" height="20"
-								viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-								stroke-linecap="round" stroke-linejoin="round"
-								class="icon-tabler icons-tabler-outline icon-tabler-adjustments">
-								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-								<path d="M4 10a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-								<path d="M6 4v4" />
-								<path d="M6 12v8" />
-								<path d="M10 16a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-								<path d="M12 4v10" />
-								<path d="M12 18v2" />
-								<path d="M16 7a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-								<path d="M18 4v1" />
-								<path d="M18 9v11" />
-							</svg>
+							{% include ui/icon.html icon="adjustments" class="m-0"%}
+						</button>
+						<button class="btn btn-outline-primary disabled mx-1" type="button" id="reset-filters-button">
+							{% include ui/icon.html icon="rotate-clockwise" class="m-0"%}
 						</button>
 					</div>
 
 					<div id="advanced-div" style="display: none;">
+						<div class="dropdown mt-2">
+							<div class="subheader mb-1">Autore</div>
+							<div class="input-group">
+								<span class="input-group-text">
+									{% include ui/icon.html icon="search" %}
+								</span>
+								<input type="text" value="" class="form-control" placeholder="Cerca Autore…"
+									aria-label="Search author" id="search-author">
+							</div>
+							<div class="dropdown-menu w-100 dropdown-scroll overflow-auto" id="author-filter"></div>
+						</div>
 						<div class="d-flex flex-row my-2">
 							<div class="dropdown w-50 me-2">
-								<div class="subheader mb-2">Gruppo parlamentare</div>
+								<div class="subheader mb-1">Gruppo parlamentare</div>
 								<button class="form-select text-start w-100" type="button" id="group-filter-button"
 									data-bs-toggle="dropdown" aria-expanded="false">
 									Seleziona Gruppo
 								</button>
-								<div class="dropdown-menu w-100" id="group-filter"></div>
+								<div class="dropdown-menu w-100 dropdown-scroll overflow-auto" id="group-filter"></div>
 							</div>
-
 							<div class="dropdown w-50 ms-2">
-								<div class="subheader mb-2">Tag</div>
+								<div class="subheader mb-1">Tag</div>
 								<button class="form-select text-start w-100" type="button" id="tag-filter-button"
 									data-bs-toggle="dropdown" aria-expanded="false">
 									Seleziona Tag
 								</button>
-								<div class="dropdown-menu w-100" id="tag-filter"></div>
+								<div class="dropdown-menu w-100 dropdown-scroll overflow-auto" id="tag-filter"></div>
 							</div>
 						</div>
+						<a class="mt-2" href="#!" id="export-selected-link">Esporta...</a>
+						<div class="modal modal-blur fade" id="export-modal" tabindex="-1" style="display: none;" aria-modal="true" role="dialog">
+							<div class="modal-dialog modal-dialog-centered" role="document">
+							  <div class="modal-content">
+								<div class="modal-header">
+								  <h5 class="modal-title">Esporta Emendamenti</h5>
+								  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<div class="btn-group w-100" role="group">
+										<input type="radio" class="btn-check" name="btn-radio-basic" id="btn-modal-selection" autocomplete="off">
+										<label for="btn-modal-selection" type="button" class="btn">Selezione</label>
+										<input type="radio" class="btn-check" name="btn-radio-basic" id="btn-modal-filtered" autocomplete="off">
+										<label for="btn-modal-filtered" type="button" class="btn">Filtrati</label>
+									</div>
+									<div id="export-modal-body"></div>
+								</div>
+								<div class="modal-footer">
+								  <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+								  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+								</div>
+							  </div>
+							</div>
+						  </div>
 					</div>
-
-
 				</div>
 				<div class="card">
 					<div class="row g-0">
@@ -196,8 +206,13 @@ page-header-actions: visualization-header
 							</div>
 						</div>
 						<div class="d-flex flex-column half-column">
-							<div class="card-body markdown scrollable" style="height: 38vh; white-space: pre-line;"
-								id="amendmentContent">
+							<div class="d-flex flex-row position-relative">
+								<button class="prototype position-absolute top-0 end-0 m-3" id="star-icon-container" style="z-index: 10; background: none; border: none; padding: 0;">
+									{% include ui/icon.html icon="star" class="icon-class star-icon text-primary"%}
+								</button>
+								<div class="card-body markdown scrollable pe-5" style="height: 38vh; white-space: pre-line;"
+									id="amendmentContent">
+								</div>
 							</div>
 							<div class="card-body markdown scrollable" style="height: 47vh;" id="amendmentAnalysis">
 								<!-- Identities div  -->
@@ -276,8 +291,6 @@ page-header-actions: visualization-header
 </div>
 
 
-
-
 <div class="card" style="display: none;">
 	<div class="card-body">
 		<a class="btn" data-bs-toggle="offcanvas" href="#offcanvasStart" role="button" aria-controls="offcanvasStart">
@@ -334,6 +347,10 @@ page-header-actions: visualization-header
 	const parallelSwitch = document.getElementById('parallel-switch');
 	var selectedKey;
 
+	//TEMP: should be given by api calls
+	let selectedAmendments;
+	let filteredAmendments;
+
 	//used for active workd filtering
 	let isWordFiltering = false;
 	let currentlyFilteredWord = '';
@@ -355,6 +372,7 @@ page-header-actions: visualization-header
 	// filter utils
 	const tags = new Set();
 	const groups = new Set();
+	const authors = new Set();
 
 	async function annotate() {
 		try {
@@ -621,6 +639,13 @@ page-header-actions: visualization-header
 		currentAm = document.querySelector(`[data-amendment-key="${amendmentKey}"]`)
 		currentAm.classList.add('active');
 		currentAm.ariaCurrent = "true"
+
+		// favourite amendment stuff
+		if(selectedAmendments[selectedKey]) {
+			document.querySelector('.star-icon').classList.add('selected');
+		} else {
+			document.querySelector('.star-icon').classList.remove('selected');
+		}
 	}
 
 	function showQuotation(quote_id) {
@@ -669,6 +694,7 @@ page-header-actions: visualization-header
 					//filter stuff
 					amendmentsData[emKey].classi.split(',').forEach(item => tags.add(item.trim()));
 					groups.add(amendmentsData[emKey].group);
+					authors.add(amendmentsData[emKey].first_author.trim());
 
 					let listItem = document.createElement('a');
 					listItem.href = '#';
@@ -689,10 +715,39 @@ page-header-actions: visualization-header
 			amendmentDiv.firstElementChild.click();
 		}
 
+		//TEMP: will be managed by api calls
+		selectedAmendments = Object.fromEntries(Object.keys(visualizationData.amendments_data).map(key => [key, false]));
+		// similar, but keeps track of filtered amendments
+		filteredAmendments = Object.fromEntries(Object.keys(visualizationData.amendments_data).map(key => [key, true]));
+
 		function createFilters() {
+			document.getElementById('star-icon-container').addEventListener('click', function(event) {
+				this.children[0].classList.toggle('selected');
+				selectedAmendments[selectedKey] = this.children[0].classList.contains('selected') ? true : false;
+        	});
+
+			document.getElementById('export-selected-link').addEventListener('click', event => {
+				// Show the modal
+				const myModal = new bootstrap.Modal(document.getElementById('export-modal'));
+            	myModal.show();
+			});
+
+			document.getElementById('btn-modal-selection').addEventListener('click', event => {
+				const listSelectedAmendments = Object.entries(selectedAmendments).filter(([key, value]) => value).map(([key]) => key);
+				document.getElementById('export-modal-body').innerHTML = `<p>Gli emendamenti selezionati sono: ${listSelectedAmendments}</p>`;
+			});
+
+			document.getElementById('btn-modal-filtered').addEventListener('click', event => {
+				const listFilteredAmendments = Object.entries(filteredAmendments).filter(([key, value]) => value).map(([key]) => key);
+				document.getElementById('export-modal-body').innerHTML = `<p>Gli emendamenti attualmente filtrati sono: ${listFilteredAmendments}</p>`;
+			});
+
 			const searchInput = document.getElementById('search-input');
 			const searchPreview = document.getElementById('search-preview');
 			const resetFiltersBtn = document.getElementById('reset-filters-button');
+
+			const searchAuthor = document.getElementById('search-author');
+			const authorsDropdown = document.getElementById('author-filter');
 
 			document.getElementById('toggle-more-options').addEventListener('click', event => {
 				const advancedDiv = document.getElementById('advanced-div');
@@ -703,10 +758,12 @@ page-header-actions: visualization-header
 				const amendmentList = Array.from(amendmentDiv.children);
 				const cbTags = document.querySelectorAll('input[data-filter="tag"]:checked');
 				const cbGroups = document.querySelectorAll('input[data-filter="group"]:checked');
+				const cbAuthors = document.querySelectorAll('input[data-filter="author"]:checked');
 
 
 				const selectedTags = new Set(Array.from(cbTags).map(cb => cb.value));
 				const selectedGroups = new Set(Array.from(cbGroups).map(cb => cb.value));
+				const selectedAuthors = new Set(Array.from(cbAuthors).map(cb => cb.value));
 				const searchQuery = isWordFiltering ? searchInput.value.toLowerCase() : '';
 				let preFilteredItems = [];
 				if (searchQuery) {
@@ -734,7 +791,7 @@ page-header-actions: visualization-header
 
 				// make clickable or disable reset filter button
 				// put here since every change on the filters calls this function
-				if (searchQuery || selectedTags.size > 0 || selectedGroups.size > 0) {
+				if (searchQuery || selectedTags.size > 0 || selectedGroups.size > 0 || selectedAuthors.size > 0 || searchAuthor.value) {
 					resetFiltersBtn.classList.remove('disabled');
 				} else {
 					resetFiltersBtn.classList.add('disabled');
@@ -744,14 +801,17 @@ page-header-actions: visualization-header
 					const tagList = visualizationData.amendments_data[child.dataset.amendmentKey].classi.split(',').map(s => s.trim());
 					if ((selectedTags.size === 0 || tagList.some(item => selectedTags.has(item))) &&
 						(selectedGroups.size === 0 || selectedGroups.has(visualizationData.amendments_data[child.dataset.amendmentKey].group)) &&
+						(selectedAuthors.size === 0 || selectedAuthors.has(visualizationData.amendments_data[child.dataset.amendmentKey].first_author.trim())) &&
 						(!searchQuery || preFilteredItems.includes(child.dataset.amendmentKey))) {
 						child.classList.remove('hidden');
+						filteredAmendments[child.dataset.amendmentKey] = true;
 					} else {
 						child.classList.add('hidden');
+						filteredAmendments[child.dataset.amendmentKey] = false;
 					}
 				});
 
-				// simulate click on the first filtered amendment
+				// select firts amendment on list
 				const firstFilteredAm = amendmentDiv.querySelector(':not(.hidden)');
 				if (firstFilteredAm) {
 					updateColumns(firstFilteredAm.dataset.amendmentKey);
@@ -763,9 +823,13 @@ page-header-actions: visualization-header
 				//resets all filtered checkboxes
 				document.querySelectorAll('input[data-filter="tag"]:checked').forEach(cb => cb.checked = false);
 				document.querySelectorAll('input[data-filter="group"]:checked').forEach(cb => cb.checked = false);
+				document.querySelectorAll('input[data-filter="author"]:checked').forEach(cb => cb.checked = false);
 
 				//resets content of search field
 				searchInput.value = '';
+				searchAuthor.value = '';
+				//necessary to reset dropdown of authors
+				searchAuthor.dispatchEvent(new Event('input', { bubbles: true }));
 
 				//disables word filtering
 				isWordFiltering = false;
@@ -784,7 +848,7 @@ page-header-actions: visualization-header
 				const categoryPreview = document.createElement('div');
 				categoryPreview.classList.add('border', 'rounded');
 				filteredItems.forEach(([key, item], iterIndex) => {
-					const itemText = key.bold() + '&nbsp' + item;
+					const itemText = key.bold() + '&nbsp;' + item;
 					const highlightedText = highlightText(itemText, searchQuery);
 					const previewItem = document.createElement('div');
 					previewItem.classList.add('dropdown-item');
@@ -841,9 +905,9 @@ page-header-actions: visualization-header
 
 				const filteredBody = Object.entries(visualizationData.amendments_data)
 					.filter(([amKey, am]) => {
-						return collapseTags(am.body).toLowerCase().includes(searchQuery);
+						return am.body.replace(/^<strong>Emendamento.*?\n/, '').toLowerCase().includes(searchQuery);
 					})
-					.map(([amKey, am]) => [amKey, collapseTags(am.body)]);
+					.map(([amKey, am]) => [amKey, am.body.replace(/^<strong>Emendamento.*?\n/, '')]);
 
 				const filteredAuthor = Object.entries(visualizationData.amendments_data)
 					.filter(([amKey, am]) => {
@@ -897,12 +961,11 @@ page-header-actions: visualization-header
 				searchPreview.innerHTML = '';
 
 				if (searchQuery) {
-					generateSearchPreview(searchQuery)
+					generateSearchPreview(searchQuery);
 					searchPreview.classList.add('show');
 				} else {
 					searchPreview.classList.remove('show');
 				}
-
 			});
 
 			// Hide preview when clicking outside
@@ -913,6 +976,10 @@ page-header-actions: visualization-header
 					if (searchInput.value && searchInput.contains(event.target)) {
 						searchPreview.classList.add('show');
 					}
+				}
+
+				if (!searchAuthor.contains(event.target) && !authorsDropdown.contains(event.target)) {
+					authorsDropdown.classList.remove('show');
 				}
 			});
 
@@ -937,6 +1004,29 @@ page-header-actions: visualization-header
 				applyWordFilters();
 			});
 
+			searchAuthor.addEventListener('focus', event => {
+				authorsDropdown.classList.add('show');
+			})
+
+			searchAuthor.addEventListener('input', event => {
+				const searchAuthorQuery = event.target.value.toLowerCase();
+				
+				[...authorsDropdown.children].forEach(item => {
+					if (searchAuthorQuery) {
+						const author = item.firstChild.value;
+						if(author.toLowerCase().includes(searchAuthorQuery)) {
+							item.lastChild.innerHTML = highlightText(author, searchAuthorQuery);
+							item.classList.remove('hidden');
+						} else {
+							item.classList.add('hidden');
+						}
+					} else {
+						item.lastChild.innerHTML = `<span>${item.firstChild.value}</span>`;
+						item.classList.remove('hidden');
+					}
+				});
+			});
+
 			resetFiltersBtn.addEventListener('click', event => {
 				resetFilters();
 			});
@@ -952,19 +1042,16 @@ page-header-actions: visualization-header
 				tagCheckbox.dataset.filter = 'tag'; //add data attribute to query select correct checkboxes
 				tagCheckbox.addEventListener('change', filterAmendments);
 
-
 				const tagLabel = document.createElement('label');
 				tagLabel.classList.add('dropdown-item');
 				tagLabel.appendChild(tagCheckbox);
 				tagLabel.appendChild(document.createTextNode(tag));
-
 				// used to avoid dropdown closing when clicking on the label
 				tagLabel.addEventListener('click', event => {
 					event.stopPropagation();
 				});
 
 				tagsDropdown.appendChild(tagLabel);
-
 			});
 
 			groups.forEach(group => {
@@ -979,7 +1066,6 @@ page-header-actions: visualization-header
 				groupLabel.classList.add('dropdown-item');
 				groupLabel.appendChild(groupCheckbox);
 				groupLabel.appendChild(document.createTextNode(group ? group : "Nessun gruppo"));
-
 				// used to avoid dropdown closing when clicking on the label
 				groupLabel.addEventListener('click', event => {
 					event.stopPropagation();
@@ -987,6 +1073,29 @@ page-header-actions: visualization-header
 
 				groupsDropdown.appendChild(groupLabel);
 			});
+
+			Array.from(authors).sort().forEach(author => {
+				const authorCheckbox = document.createElement('input');
+				authorCheckbox.classList.add('form-check-input', 'm-0', 'me-2');
+				authorCheckbox.type = 'checkbox';
+				authorCheckbox.value = author;
+				authorCheckbox.dataset.filter = 'author'; //add data attribute to query select correct checkboxes
+				authorCheckbox.addEventListener('change', filterAmendments);
+
+				const authorLabel = document.createElement('label');
+				authorLabel.classList.add('dropdown-item');
+				authorLabel.appendChild(authorCheckbox);
+				// I need a span here to highlight when searching
+				const lblSpan = document.createElement('span');
+				lblSpan.textContent = author;
+				authorLabel.appendChild(lblSpan);
+				// used to avoid dropdown closing when clicking on the label
+				authorLabel.addEventListener('click', event => {
+					event.stopPropagation();
+				});
+
+				authorsDropdown.appendChild(authorLabel);
+			})
 		}
 
 		populateAmendmentsList();
@@ -1014,7 +1123,6 @@ page-header-actions: visualization-header
 		updateColumns(selectedKey);
 		addEventToQuotations()
 	});
-
 
 	function findAdjacentAmendment(direction) {
 		const currentActive = document.querySelector('.list-group-item.active');
@@ -1091,7 +1199,4 @@ page-header-actions: visualization-header
 			}
 		}
 	});
-
-
-
 </script>
