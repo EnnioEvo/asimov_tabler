@@ -3,11 +3,12 @@
 {% assign hoverable = include.hoverable | default: false %}
 
 <div class="card{% if include.class %} {{ include.class }}{% endif %}" style="width: 70vw;">
-	<div class="card-header">
-		<h3 class="card-title">{{ include.title | default: 'Progetti' }}</h3>
-	</div>
-	<div id="projects_list" class="list-group list-group-flush{% if hoverable %} list-group-hoverable{% endif %}">
-        <div id="item_template" style="display: none;" class="list-group-item{% if checked-ids contains forloop.index %} active{% endif %}">
+    <div class="card-header">
+        <h3 class="card-title">{{ include.title | default: 'Progetti' }}</h3>
+    </div>
+    <div id="projects_list" class="list-group list-group-flush{% if hoverable %} list-group-hoverable{% endif %}">
+        <div id="item_template" style="display: none;"
+            class="list-group-item{% if checked-ids contains forloop.index %} active{% endif %}">
             <div class="row align-items-center">
                 <a data-id="projectButton" class="col text-truncate" href="/app.html">
                     <div class="text-reset d-block">Nessun progetto presente, creane uno!</div>
@@ -17,11 +18,13 @@
                     <span data-id="dateLabel" class="show text-secondary"></span>
                 </span>
                 <a data-id="deleteButton" class="col-auto">
-                    <span class="list-group-item-actions show text-secondary">{% include ui/icon.html icon="trash" %}</span>
+                    <span class="list-group-item-actions show text-secondary">{% include ui/icon.html icon="trash"
+                        %}</span>
                 </a>
             </div>
         </div>
-        <div id="void_template" style="display: none;" class="list-group-item{% if checked-ids contains forloop.index %} active{% endif %}">
+        <div id="void_template" style="display: none;"
+            class="list-group-item{% if checked-ids contains forloop.index %} active{% endif %}">
             <div class="row align-items-center">
                 <div data-id="projectButton" class="col text-truncate">
                     <div class="text-reset d-block">Nessun progetto presente, creane uno!</div>
@@ -29,7 +32,8 @@
                 </div>
             </div>
         </div>
-        <div id="loading_template" style="display: none;" class="list-group-item{% if checked-ids contains forloop.index %} active{% endif %}">
+        <div id="loading_template" style="display: none;"
+            class="list-group-item{% if checked-ids contains forloop.index %} active{% endif %}">
             <div class="row align-items-center">
                 <div class="col text-truncate">
                     <div class="text-reset d-block">Caricamento del progetto in corso</div>
@@ -45,6 +49,7 @@
 <style>
     /* CSS to change cursor on hover */
     [data-id="deleteButton"]:hover {
-        cursor: pointer; /* Changes the cursor to a pointer when hovering */
+        cursor: pointer;
+        /* Changes the cursor to a pointer when hovering */
     }
 </style>
